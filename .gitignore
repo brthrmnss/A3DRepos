@@ -1,0 +1,10 @@
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+bin-debug
+.flexproperties
+.settings
+.actionScriptProperties
+.project
