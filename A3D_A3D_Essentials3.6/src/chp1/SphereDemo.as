@@ -1,4 +1,4 @@
-package chp1
+package  chp1
 {
 	import away3d.primitives.Sphere;
 	
