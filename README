@@ -1,0 +1,12 @@
+Series of mini projects for 
+A3D Interfaces and basic project
+
+There are lot of symlinks that have been ignored
+
+
+SwcBuild - creates the standard swc to be used
+CNCReload - VOs, basic wrapper for deconstructor
+Configs - links to .builder files that are not included
+BasicDeconstructor - can we have meshes and boolean destroy them?
+
+Demos
