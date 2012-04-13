@@ -15,6 +15,12 @@ package
 		
 		public function Away3DTemplate():void
 		{
+
+			this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage ) ; 
+		}
+		
+		protected function onAddedToStage(event:Event):void
+		{
 			initUI();
 			initEngine();
 			initScene();
