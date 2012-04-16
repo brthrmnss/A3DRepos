@@ -2,6 +2,7 @@ package
 {
 	import Chapter06.Hinge;
 	import Chapter06.Square;
+	import Chapter06.Square2;
 	import Chapter06.Triangle;
 	import Chapter06.VerletPointTest;
 	import Chapter06.VerletStickTest;
@@ -16,12 +17,16 @@ package
 	import Chapter6Source.MD2ExternalDemo;
 	
 	import Chapter7Source.CameraDemo;
+	import Chapter7Source.CameraDemo_Dev2;
 	import Chapter7Source.CameraPropertiesDemo;
+	
+	import Chapter8Source.InteractivityDemo;
+	import Chapter8Source.InteractivityDemo2;
+	import Chapter8Source.MouseMoveDemo2;
 	
 	import chp1.SphereDemo;
 	
 	import flash.display.Sprite;
-	import Chapter06.Square2;
 	
 	public class Main extends Sprite
 	{
@@ -38,6 +43,7 @@ package
 			s = new MD2ExternalDemo(); 
 			s = new CameraPropertiesDemo()
 			s = new CameraDemo()
+			s = new CameraDemo_Dev2()
 			/*
 			s = new VerletPointTest()
 			s = new VerletStickTest()
@@ -46,6 +52,9 @@ package
 			s = new Hinge()
 				s = new Square2()
 					*/
+			s = new InteractivityDemo();
+			s = new InteractivityDemo2();
+			s = new MouseMoveDemo2(); 
 			this.addChild( s  ); 
 		}
 	}

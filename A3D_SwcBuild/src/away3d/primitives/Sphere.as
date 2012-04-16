@@ -33,7 +33,7 @@
             grid[0] = new Array(_segmentsW);
             
             for (i = 0; i < _segmentsW; ++i)
-                grid[0][i] = bottom;
+                grid[0][i] = bottom; //y would u put a vertex here?
 
             for (j = 1; j < _segmentsH; ++j) { 
                 var horangle:Number = j / _segmentsH * Math.PI;
