@@ -158,7 +158,8 @@ package Chapter8Source
 				);
 				throughScreenVector = 
 					throughScreenVector.add(camera.position);
-				
+				//so imagine screen point and camera point, now we have a line
+				//q: what other plane like objects are there?
 				groundPosition = 
 					groundPlane.getIntersectionLineNumbers(
 						camera.position, 
