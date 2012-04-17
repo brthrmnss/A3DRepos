@@ -21,7 +21,7 @@ package
 	import Chapter7Source.CameraPropertiesDemo;
 	
 	import Chapter8Source.InteractivityDemo;
-	import Chapter8Source.VisualizePlaneOps;
+	//import Chapter8Source.VisualizePlaneOps;
 	import Chapter8Source.MouseMoveDemo2;
 	
 	import chp1.SphereDemo;
@@ -53,7 +53,7 @@ package
 				s = new Square2()
 					*/
 			s = new InteractivityDemo();
-			s = new VisualizePlaneOps();
+			//s = new VisualizePlaneOps();
 			//s = new MouseMoveDemo2(); 
 			this.addChild( s  ); 
 		}
