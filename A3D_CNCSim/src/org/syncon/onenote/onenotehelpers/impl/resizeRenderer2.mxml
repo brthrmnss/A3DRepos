@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="onInit(event)"
+				autoDrawBackground="false">
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.edit.SelectionFormat;
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			public var lE : ListEntryVO = new ListEntryVO(); 
+			
+			override public function set data(value:Object):void
+			{
+				if(value != null)
+				{
+					if ( value == super.data ) 
+					{
+						return;
+					}
+					
+					super.data = value;
+					lE= value as ListEntryVO; 
+					this.ta.text = lE.contents; 
+					
+					//this.ta.addEventListener(FlexEvent.UPDATE_COMPLETE, this.onUpdateComplete ) 
+				}
+			}	
+			public function onUpdateComplete(e:Object):void
+			{
+				
+				this.ta.removeEventListener(FlexEvent.UPDATE_COMPLETE, this.onUpdateComplete ) 
+				if ( e != null ) 
+				{
+					this.callLater( this.onUpdateComplete , [null] )
+					return ; 
+				}
+				var dbg : Array = [this.height, this.ta.height]
+				//this.forceResize(); 
+				//this.minHeight = this.ta.height; 
+				this.invalidateSize()
+				var o : Object = this.owner as UIComponent
+				o.invalidateSize()
+			}
+			
+			public function forceResize() : void
+			{
+				this.ta.heightInLines = NaN; 
+				this.ta.invalidateDisplayList()
+				this.ta.invalidateSize()
+				this.ta.width = 50; 
+				var  measuredHeight_ : Number  = this.ta.measureText( this.ta.text ).height; 
+				trace('forced resize',  measuredHeight_, this.ta.height ) ; 
+			}
+			private var oldHeight : Number = 0; 
+			protected function ta_resizeHandler(event:ResizeEvent):void
+			{
+				return; 
+				if ( this.ta.height == this.oldHeight ) 
+					return; 
+				//return; 
+				this.oldHeight = this.ta.height; 
+				trace('resized',  this.ta.height );
+				this.dispatchEvent( new Event('resizeManually',true) ) 
+				//var  o : Object = this.owner; 
+				//this.callLater(o.dataProvider.refesh)
+				//o.dataProvider.refesh(); //.itemUpdated( this.data )
+				//this.height = this.ta.height; 
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				
+				//ta.textFlow.interactionManager.focusedSelectionFormat = new SelectionFormat(0x88C3FF, 1, "difference", 0x88C3FF, 1);
+				ta.textFlow.interactionManager.focusedSelectionFormat = new SelectionFormat(0x88C3FF, 1, "normal", 0xFFFFFF, 1);
+				ta.textFlow.interactionManager.unfocusedSelectionFormat = new SelectionFormat(0x88C3FF, 1, "normal", 0xFFFFFF,0);
+				ta.textFlow.interactionManager.inactiveSelectionFormat = new SelectionFormat(0x88C3FF, 1, "normal", 0xFFFFFF,0);			
+			}
+			
+		]]>
+	</fx:Script>
+	<!--<s:TextArea maxWidth="30" text="{data}"/>-->
+	<!--	<s:Group>
+	
+	-->
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000" weight="1"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xFefefe"/>
+		</s:fill>
+	</s:Rect>
+	<s:RichEditableText id="ta" resize="ta_resizeHandler(event)"  paddingBottom="2"
+						backgroundAlpha="0.0" focusEnabled="false"
+						focusThickness="2" 
+						tabFocusEnabled="false"
+						tabEnabled="false"
+						textAlign="left"
+						selectionHighlighting="always"
+						width="50"
+						/>
+	<!--	</s:Group>-->
+</s:ItemRenderer>

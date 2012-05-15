@@ -1,0 +1,74 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+
+/*@font-face { 
+	src: url("../assets/MyriadWebPro.ttf"); 
+	fontFamily: myFontFamily; 
+	embedAsCFF: false; 
+}       */
+
+@font-face {
+	src: url("fonts/Helvetica.ttf");	
+	fontFamily: myFontFamily;
+	embedAsCFF: true;
+}
+@font-face {
+	src: url("fonts/Helvetica Bold.ttf");	
+	fontWeight: bold; 
+	fontFamily: myFontFamily;
+	embedAsCFF: true;
+}
+@font-face {
+	src: url("fonts/Helvetica Oblique.ttf");	
+	fontStyle: italic; 
+	fontFamily: myFontFamily;
+	embedAsCFF: true;
+}
+@font-face {
+	src: url("fonts/HELVETICALTSTD BOLDOBL.OTF");	
+	fontStyle: italic; 
+	fontWeight: bold; 
+	fontFamily: myFontFamily;
+	embedAsCFF: true;
+}
+
+
+@font-face {
+	src: url("fonts/Helvetica.ttf");	
+	fontFamily: myFontFamily2;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/Helvetica Bold.ttf");	
+	fontWeight: bold; 
+	fontFamily: myFontFamily2;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/Helvetica Oblique.ttf");	
+	fontStyle: italic; 
+	fontFamily: myFontFamily2;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/HELVETICALTSTD BOLDOBL.OTF");	
+	fontStyle: italic; 
+	fontWeight: bold; 
+	fontFamily: myFontFamily2;
+	embedAsCFF: false;
+}
+ 
+/*.customStyle {
+	fontFamily: myFontFamily;
+	fontSize: 24;
+}   */
+
+s|global
+{
+/*	fontFamily: myFontFamily2;*/
+	fontFamily: myFontFamily;
+}
+ 
+s|Label
+{
+	fontFamily: myFontFamily;
+}

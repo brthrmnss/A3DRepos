@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:view="org.syncon.CncSim.view.*"
+		 xmlns:CncSim="org.syncon.CncSim.*"
+		 xmlns:view1="org.syncon2.utils.mobile.view.*"
+		 xmlns:ui="org.syncon.CncSim.view.ui.*"
+		 xmlns:component="org.virid.component.*"  initialize="group1_initializeHandler(event)"
+		 width="100%" height="100%" creationComplete="onInit(event)" xmlns:debug="org.syncon.CncSim.view.ui.old.components.debug.*" xmlns:components="org.syncon.CncSim.view.ui.old.components.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.ContextNightStand_PopupContext;
+			import org.syncon.CncSim.ContextNightStand_ViewsSubContext;
+			import org.syncon.CncSim.Virid_ViewsSubContext;
+			import org.syncon.CncSim.model.ViridConstants;
+			import org.syncon.CncSim.vo.ColorLayerVO;
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			import org.syncon.CncSim.vo.TextLayerVO;
+			protected function onInit(event:FlexEvent):void
+			{
+				var xx : ContextNightStand_ViewsSubContext = new ContextNightStand_ViewsSubContext()
+				this.context.addSubContext( xx ) ;
+				
+				var xxx : ContextNightStand_PopupContext = new ContextNightStand_PopupContext()
+				this.context.addSubContext( xxx ) ;
+				
+				var xxxx : Virid_ViewsSubContext = new Virid_ViewsSubContext()
+				this.context.addSubContext( xxxx ) ;
+				
+				
+				//this.currentState = 'Text'
+				this.currentState = 'normal'
+				
+				
+			}
+			
+			
+			
+			
+			private var _layer : LayerBaseVO = new LayerBaseVO() ;
+			public function get layer() : LayerBaseVO  { return this._layer;  }
+			public function set layer (str : LayerBaseVO ) : void
+			{
+				//return
+				//this.currentState = 'normal'
+				this._layer = str; 
+				/* 
+				this.size.layer = this.layer; 
+				if ( this.layer is ImageLayerVO ) 
+				{
+				this.currentState  = 'Image'; 
+				image.layer =layer  as ImageLayerVO
+				}				
+				if ( layer is TextLayerVO ) 
+				{
+				this.currentState = 'Text'; 
+				text.layer = layer as TextLayerVO
+				}
+				if ( layer is ColorLayerVO ) 
+				{
+				this.currentState = 'Color'; 
+				colorR.layer = layer as ColorLayerVO
+				}	  		
+				*/
+				if ( layer is TextLayerVO ) 
+				{
+					var txtLayer : TextLayerVO = layer as TextLayerVO; 
+					if ( txtLayer.subType == ViridConstants.SUBTYPE_ENGRAVE ) 
+					{
+						this.currentState = 'engrave'; 
+						this.engravePanel.layer = layer as TextLayerVO
+					}
+					else
+					{
+						this.currentState = 'Text'; 
+						text.layer = layer as TextLayerVO
+					}
+					
+				}
+				if ( layer is ImageLayerVO ) 
+				{
+					this.currentState = 'normal'; 
+					designPanel.layer = layer as ImageLayerVO
+				}
+				if ( layer is ColorLayerVO ) 
+				{
+					this.currentState = 'normal'; 
+					designPanel.layer = layer; // layer as ColorLayerVO
+				}
+				if ( layer == null ) 
+				{
+					this.currentState = 'noLayers'; 
+				}
+				return; 
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = 'normal'
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<CncSim:ContextNightStand id="context" contextView="{this}"/> 
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout />
+		
+	</s:layout>	
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State  name="engrave"/>
+		<s:State name="Text"/>
+		<s:State name="noLayers"/>
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition toState="*" autoReverse="true">
+			<s:Parallel>
+				<!--<s:Resize target="{this}" duration="300"  />-->
+				<s:Fade targets="{[this.engravePanel, this.designPanel, this.text]}" duration="300" />
+			</s:Parallel>
+			
+		</s:Transition>
+	</s:transitions>	
+	
+	
+	<s:Group width="884" height="350">
+		
+		<s:Group width="100%">
+			<s:HGroup>
+				<s:VGroup width="350" >
+					
+					<components:MainMenuBar height="67" width="350"/>
+					<s:Spacer height="-1"/>
+					
+					<!--<component:engrave_panel includeIn="engrave" width="350" height="260"/>-->
+					<s:SkinnableContainer  id="panels" creationPolicy="all"> 
+						
+						<components:PanelEngrave id="engravePanel" 
+												 alpha="0" alpha.engrave="1"
+												 includeIn="engrave"  width="350" height="260" />
+						<!--<component:text_panel  includeIn="engrave" width="350" height="260" />-->
+						<!-- need this to be here to be mediated first for the show_EMPTY_LAYER event -->
+						<components:PanelDesign id="designPanel"  
+												alpha="0" alpha.normal="1"
+												visible="false" visible.normal="true" width="350" height="260" />
+						<components:PanelText id="text" 
+													  alpha="0" alpha.Text="1"
+													  includeIn="Text" width="350" height="260"/> 
+						<components:PanelNoLayers id="noLayers" 
+											 alpha="0" alpha.noLayers="1"
+											 includeIn="noLayers" width="350" height="260"/> 
+					</s:SkinnableContainer> 
+					<!--<component:design_panel includeIn="normal" width="350" height="260"/>
+					-->
+				</s:VGroup>	
+				
+				<s:Spacer width="20"/>
+				
+				<components:transformation_stage id="transformationStage" width="267" productSource="images/product_hero1.jpg"/>
+			</s:HGroup>
+			<components:layer_cart_panel  id="layerList" right="0" width="170"/>
+		</s:Group>
+		
+		<!--<component:LayerList id="list" />-->
+	 <!--<debug:UndoList id="list" y="100"  visible="false" alpha="0" right="0" /> -->
+	</s:Group>
+
+	
+</s:Group>

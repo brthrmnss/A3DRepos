@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<controls:ScreenView xmlns:mx="http://www.adobe.com/2006/mxml"
+					 xmlns:controls="openplug.elips.controls.*"
+					 xmlns:alarm="org.syncon.TalkingClock.view.mobile.alarm.*"
+					 xmlns:screenClasses="openplug.elips.controls.screenClasses.*"
+					  color="0"
+					 creationComplete="onInit(event)">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon2.utils.openplug.IPlatformGlobals;
+			import org.syncon2.utils.openplug.controller.CustomEvent;
+			/**
+			 * This screen lauches configs ... user can never see it b/c other screens do not include a back button 
+			 * 
+			 * */
+			static public const TRY_AGAIN : String = 'tryAgain' ; 
+			static public const GO_BACK : String = 'goBack'; 
+			static public const DATA_CHANGED : String = 'DATA_CHANGED';
+			static public const SET_RINGTONE : String = 'SET_RINGTONE' 
+			static public const SET_NOTIFICATION : String = 'SET_NOTIFICATION'; 	
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			/**
+			 * the action to call when complete
+			 * */
+			public var fxAction: Function;
+			public var _data:Object;
+			
+			public var defaultConfig : MobileMenuConfigVO
+			static public var PlatformGlobals : IPlatformGlobals;
+			protected function onInit(event:FlexEvent):void
+			{
+				
+				//PlatformGlobals.fxMediate( this ); 
+				 PlatformGlobals.fxMediate( this  ) ; 
+				/* NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.btnRingTone, this.onRingtone ) 
+				NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.btNotification, this.onNotification )  */
+				PlatformGlobals.addPlatformListClickEvent( this.list, this.list1_itemClickHandler )  
+				PlatformGlobals.addPlatformClickEvent( this.btnBack, this.onBack ) ; 
+			}
+			
+			public function onBack(e:Event) : void
+			{
+				this.dispatchEvent( new Event( GO_BACK  ) ) ; 
+			}
+			
+			public function onRingtone(e:Object) : void
+			{
+				this.dispatchEvent( new Event( SET_RINGTONE ) ) ; 
+			}
+			
+			public function  onNotification(e:Object) : void
+			{
+				this.dispatchEvent( new Event( SET_NOTIFICATION ) ) 
+			}
+			
+			override public function set data ( dd : Object ) : void
+			{
+				this._data = dd; 
+				this.fxAction = dd as Function
+				this.dispatchEvent( new Event( DATA_CHANGED ) ) ; 
+			}
+			
+			protected function list1_itemClickHandler(event: Event):void
+			{
+				//this.dispatchEvent( new CustomEvent('viewStory', evt.item )  )
+				if (PlatformGlobals.ELIPS  )
+				{
+					this.dispatchEvent( new CustomEvent(LIST_CHANGED, event['item']  )  )//ItemTouchTapEvent
+				}
+				if (PlatformGlobals.flex  )
+				{
+					this.dispatchEvent( new CustomEvent(LIST_CHANGED, event['itemRenderer']['data']  )  )//ItemTouchTapEvent
+				}				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Button id="btnBack" left="10" top="10" minWidth="150" width="100" minHeight="100" label="Back"
+			   fontSize="24"/>
+	
+	
+	<mx:ArrayCollection id="dp" source="{[]}"/>
+	
+	<mx:VBox id="holderList"   width="100%"   top="120" bottom="0"
+			 >
+		<controls:Label id="txtLabel" fontSize="24" text="Menu" paddingLeft="10"/>
+		<mx:Canvas width="100%" height="100%">
+			<!--
+			<controls:List id="list" width="100%" height="100%" backgroundColor="0xFFFFFF"
+			dataProvider="{dp}" predefinedItemRenderer="DefaultListItemRenderer3"
+			rowHeight="70" styleName="lstStyle"/>
+			-->
+			<controls:List id="list" width="100%" height="100%" dataProvider="{dp}"
+						   itemRenderer="org.syncon2.utils.openplug.ui.comp.MenuActionItemRenderer"
+						   rowHeight="70" styleName="lstStyle"/>
+		</mx:Canvas>
+		<!--
+		<controls:Button id="btnRingTone" label="Ringtone"/>
+		<controls:Button id="btNotification" label="Notification"/>-->
+	</mx:VBox>
+	
+	
+</controls:ScreenView>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.core.IUIComponent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			
+			private function trashEnterHandler(e:DragEvent):void {
+				if ((e.dragInitiator as List).id == 'colorList') {
+					trashGlow.alpha = 1;
+					DragManager.acceptDragDrop(e.currentTarget as IUIComponent);
+				}
+			}
+			private function trashExitHandler(e:DragEvent):void {
+				trashGlow.alpha = 0;
+			}
+			private function trashDropHandler(e:DragEvent):void {
+				trashGlow.alpha = 0;
+				//since dragMoveEnable is true, the item is automatically removed
+				//from the source list (aka it is "moved")
+				
+				//if dragMoveEnable were false, we'd need to do this to removed it
+				//var idx:int = (e.dragInitiator as List).selectedIndex;
+				//colorList.dataProvider.removeItemAt(idx);
+			}
+			
+			private function setBackgroundEnterHandler(e:DragEvent):void {
+				if ((e.dragInitiator as List).id == 'colorList') {
+					help.visible = true;
+					DragManager.acceptDragDrop(e.currentTarget as IUIComponent);
+				}
+			}
+			private function setBackgroundExitHandler(e:DragEvent):void {
+				help.visible = false;
+			}
+			private function setBackgroundDropHandler(e:DragEvent):void {
+				help.visible = false;
+				var obj:Object = (e.dragInitiator as List).selectedItem;
+				bgColor.color = obj['color'];
+				
+				//recreate the original item since it is moved
+				var idx:int = (e.dragInitiator as List).selectedIndex;
+				colorList.dataProvider.addItemAt(obj, idx);
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		
+		s|Panel {
+			dropShadowVisible: false;
+			borderColor: #666666;
+		}
+		s|List {
+			borderVisible: false;
+		}
+/* 		s|List.drop {
+			skinClass:ClassReference('skins.DropIndicatorListSkin');
+		} */
+	</fx:Style>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#f8f8f8" ratio="0" />
+				<s:GradientEntry id="bgColor" color="#cccccc" ratio="1" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Panel title="Palette" left="8" top="8" width="120">
+		
+		<s:List id="paletteList" left="3" right="3" top="3" bottom="3"
+				dragEnabled="true"
+				itemRenderer="org.syncon.CncSim.view.subview.ColorBoxRenderer" >
+			
+			<s:ArrayList>
+				<fx:Object label="Red" color="#ff0000" />
+				<fx:Object label="Blue" color="#2255ff" />
+				<fx:Object label="Purple" color="#ff00ff" />
+			</s:ArrayList>
+			
+			<s:layout>
+				<s:VerticalLayout paddingLeft="7" paddingRight="7" paddingTop="7" paddingBottom="7" gap="7" />
+			</s:layout>
+		</s:List>
+	</s:Panel>
+	
+	<s:Panel title="Color List" left="136" top="8" bottom="8" width="248">
+		<s:List id="colorList" left="3" right="3" top="3" bottom="3"
+				dragEnabled="true"
+				dropEnabled="true"
+				dragMoveEnabled="true"
+				itemRenderer="org.syncon.CncSim.view.subview.ColorBoxRenderer"
+				styleName="drop">
+			
+			<!-- we MUST have a blank array -->
+			<s:ArrayList></s:ArrayList>
+			
+			<s:layout>
+				<s:VerticalLayout paddingLeft="7" paddingRight="7" paddingTop="7" paddingBottom="7" gap="7" />
+			</s:layout>
+		</s:List>
+	</s:Panel>
+	
+	<!-- trash can icon: http://cheezen.deviantart.com/art/Desktop-Icons-111879928 -->
+	<s:Panel id="trash" title="Trash" right="8" top="8" width="110" height="150"
+			 dragEnter="trashEnterHandler(event)"
+			 dragExit="trashExitHandler(event)"
+			 dragDrop="trashDropHandler(event)">
+		
+		<s:BitmapImage source="@Embed('assets/AppIcon72.png')" horizontalCenter="0" verticalCenter="0">
+			<s:filters>
+				<s:GlowFilter id="trashGlow" blurX="16" blurY="16" color="#3399ff" alpha="0" />
+			</s:filters>
+		</s:BitmapImage>
+	</s:Panel>
+	
+	<s:Panel id="bgPanel" title="Set Background" right="8" top="166" width="110" height="150"
+			 dragEnter="setBackgroundEnterHandler(event)"
+			 dragExit="setBackgroundExitHandler(event)"
+			 dragDrop="setBackgroundDropHandler(event)">
+		
+		<s:Label id="help" left="0" right="0" bottom="4" visible="false"
+				 textAlign="center" 
+				 fontSize="10" fontFamily="Verdana" color="#999999"
+				 text="drop here to set background color" />
+	</s:Panel>
+	
+</s:Group>

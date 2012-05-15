@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 bottom="0" width="100%" height="80" creationComplete="onInit()"
+		 initialize="group1_initializeHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.components.Button;
+			private var dict: Dictionary = new Dictionary(true); ;
+			
+			public function onInit():void
+			{
+				
+			}
+			public function load(styleName : String, buttons : Array):void
+			{
+				
+				for each ( var o : Array in buttons ) 
+				{
+					var btn : Button = new Button()
+					btn.label = o[0]
+					dict[btn]=o[1]
+					btn.addEventListener(MouseEvent.CLICK, this.onClick, false, 0, true ) 
+					this.holder.addElement( btn )
+				}
+			}			
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				var fx : Function = this.dict[event.currentTarget] 
+				if ( fx != null ) fx()
+				
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				var color : uint = this.getStyle( 'chromeColor2' )
+				this.filllColor.color = color; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<!--		<s:filters>
+		<s:DropShadowFilter alpha="0.5" angle="45.0" blurX="4.0" blurY="4.0" color="#000000"
+		distance="4.0" hideObject="false" inner="false" knockout="false"
+		quality="2" strength="1"/>
+		</s:filters>-->
+		<s:fill>
+			<s:SolidColor id="filllColor" color="#1D1D1D"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect left="0" right="0" top="1" bottom="1">
+		<s:stroke>
+			<s:SolidColorStroke alpha="0.3" color="#FFFFFF"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Rect x="0" y="0" left="0" right="0" top="0" bottom="0" alpha="0.2">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry alpha="1" color="#FFFFFF" ratio="0"/>
+				<s:GradientEntry alpha="0" color="#FFFFFF" ratio="0.3"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	<s:Line id="lineBottom"  bottom="0" left="0" right="0">
+		<s:stroke>
+			<s:SolidColorStroke color="#404040"  weight="1"/>
+		</s:stroke>
+	</s:Line>
+	
+	<!-- top shadow -->
+	<s:Rect left="0" right="0" top="-4" height="4" alpha="0.4">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry alpha="0" color="#0" ratio="0"/>
+				<s:GradientEntry alpha="1" color="#0" ratio="1"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Line id="lineTop" x="0" y="0" left="0" right="0">
+		<s:stroke>
+			<s:SolidColorStroke caps="none" color="#1E1E1F" joints="miter" miterLimit="4" weight="1"/>
+		</s:stroke>
+	</s:Line>
+	
+	<s:HGroup id="holder" left="0" right="0" top="0" bottom="0" width="100%" gap="0" paddingLeft="5"
+			  paddingRight="5" verticalAlign="middle">
+	</s:HGroup>
+	
+	
+</s:Group>

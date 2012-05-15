@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:smallComponents="org.syncon.CncSim.view.ui.old.smallComponents.*"
+		 width="400" height="100%" creationComplete="onInit(event)">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			
+			import spark.events.IndexChangeEvent;
+			static public const  CHANGE_LIST : String = 'changeList'  ; 
+			static public const  REMOVE_LAYER : String = 'REMOVE_LAYER'  ; 
+			private var eventDelayTilMouseUp:CustomEvent;
+			/**
+			 * When removing a later do not select it first 
+			 * so we delay selection until after a layer has been removed.
+			 * */
+			protected function list_changeHandler(event: IndexChangeEvent, wait : Boolean = false):void
+			{
+				if ( event.newIndex == - 1) 
+					return; 
+				
+				if ( wait ) 
+				{
+					this.callLater( this.list_changeHandler, [event, true])
+				}
+				
+				this.eventDelayTilMouseUp = new CustomEvent( CHANGE_LIST,  
+					this.list.dataProvider.getItemAt(event.newIndex)  )
+				/* 	this.dispatchEvent( new CustomEvent( CHANGE_LIST,  
+				this.list.dataProvider.getItemAt(event.newIndex)  ) ) */
+			}
+			
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function list_mouseUpHandler(event:MouseEvent):void
+			{
+				if ( this.eventDelayTilMouseUp == null  ) 
+					return; 
+				try {
+					this.dispatchEvent( eventDelayTilMouseUp ) ;
+					this.eventDelayTilMouseUp = null; 
+				}
+				catch ( e : Error ) {}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--This component will need to know via json:
+		Any prearranged layers
+		-->
+		
+		<!--This compnent will recieve signals from controller 
+		to pop, state for undo / redo
+		flip/side or reset stage
+		new image/layer loaded - when library assets have been loaded
+		-->
+		
+		<!--This component will send signals to controller/model for:
+		layer deleted or (rearranged? if easy)
+		
+		display notice - whenever user clicks question mark - let the main application handle displaying a message to the users
+		-->
+	</fx:Declarations>
+	
+	
+	<s:VGroup id="menu" width="100%">
+		
+		
+		
+		
+		<!--
+		<smallComponents:LayerListItemRenderer labelText="Layer 1"/>	
+		<s:Line width="100%">
+		<s:stroke>
+		<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+		</s:Line>
+		<smallComponents:LayerListItemRenderer labelText="Layer 2"/>
+		<s:Line width="100%">
+		<s:stroke>
+		<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+		</s:Line>
+		-->
+		
+		<s:List id="list" width="100%" height="300" borderVisible="false"
+				change="list_changeHandler(event)" contentBackgroundAlpha="0"
+				focusAlpha="0" mouseUp="list_mouseUpHandler(event)" 
+				itemRenderer="org.syncon.CncSim.view.ui.old.smallComponents.LayerListItemRenderer_V2">
+			<s:layout>
+				<s:VerticalLayout gap="0" paddingBottom="0" paddingLeft="0" paddingRight="0"/>
+			</s:layout>
+			
+		</s:List>
+		
+		<s:VGroup width="100%">
+			<s:Group width="100%"  toolTip="Price of the Product">
+				<s:Label   text="Product Price"/>
+				<s:Label id="txtLighterPrince" textAlign="right" right="18" styleName="price" text="$0.00"/>
+			</s:Group>
+			<s:Group width="100%"  toolTip="Price for this face only">
+				<s:Label   text="SubTotal"/>
+				<s:Label id="subCost" textAlign="right" right="18" styleName="price" text="$0.00"/>
+			</s:Group>
+			<s:Group width="100%"  toolTip="Total Product Price">
+				<s:Label   text="Total"/>
+				<s:Label id="txtTotal" textAlign="right" right="18" styleName="price" text="$0.00"/>
+			</s:Group>
+		</s:VGroup>
+
+		
+		
+		
+		
+	</s:VGroup>
+</s:Group>

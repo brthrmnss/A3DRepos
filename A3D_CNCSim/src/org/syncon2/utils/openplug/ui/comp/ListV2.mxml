@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<controls:ScreenView xmlns:mx="http://www.adobe.com/2006/mxml"
+					 xmlns:controls="openplug.elips.controls.*"
+					 xmlns:alarm="org.syncon.TalkingClock.view.mobile.alarm.*"
+					 xmlns:screenClasses="openplug.elips.controls.screenClasses.*" clipContent="true"
+					 creationComplete="onInit(event)">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			/**
+			 * This screen lauches configs ... user can never see it b/c other screens do not include a back button 
+			 * 
+			 * */
+			static public const TRY_AGAIN : String = 'tryAgain' ; 
+			static public const GO_BACK : String = 'goBack'; 
+			static public const DATA_CHANGED : String = 'DATA_CHANGED';
+			static public const SET_RINGTONE : String = 'SET_RINGTONE' 
+			static public const SET_NOTIFICATION : String = 'SET_NOTIFICATION'; 	
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			/**
+			 * the action to call when complete
+			 * */
+			public var fxAction: Function;
+			public var _data:Object;
+			
+			public var itemRendererClass:Class;
+			
+			protected function onInit(event:FlexEvent):void
+			{
+			/* 	NightStandConstants.PlatformGlobals.addPlatformListClickEvent( this.list, this.list1_itemClickHandler )  
+				NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.btnBack, this.onBack ) ;  */
+			}
+			
+			public function onBack(e:Event) : void
+			{
+				this.dispatchEvent( new Event( GO_BACK  ) ) ; 
+			}
+			
+			public function onRingtone(e:Object) : void
+			{
+				this.dispatchEvent( new Event( SET_RINGTONE ) ) ; 
+			}
+			
+			public function  onNotification(e:Object) : void
+			{
+				this.dispatchEvent( new Event( SET_NOTIFICATION ) ) 
+			}
+
+			public function set itemRenderer( i : IFactory ) : void
+			{
+				
+			}
+			  public function set dataProvider ( dd :  ArrayCollection ) : void
+			{
+				var productRenderer:ClassFactory = new ClassFactory(itemRendererClass);
+				//productRenderer.properties = { showProductImage: true };
+				//myList.itemRenderer = 
+				this.holderList.removeAllChildren(); 
+				
+				for each ( var o : Object in dd ) 
+				{
+					var lister :   DisplayObject = productRenderer.newInstance()   as DisplayObject
+						this.holderList.addChild( lister ) ; 
+						lister['data'] = o; 
+						
+				}
+			}
+	 
+			
+		]]>
+	</mx:Script>
+ 
+	
+	<mx:VBox id="holderList"   height="100%" width="100%" paddingLeft="0" paddingRight="0" verticalGap="0"
+			 paddingTop="0" paddingBottom="0">
+	 
+	</mx:VBox>
+	
+	
+</controls:ScreenView>

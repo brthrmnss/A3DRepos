@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			 xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:mx="library://ns.adobe.com/flex/mx" 
+			 y="3" horizontalCenter="0"
+			 blendMode="normal">
+ 
+	
+		<s:Group>
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+		
+
+		<s:Group x="4">
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+		
+		<s:Group x="8">
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+				
+		
+		<s:Group x="12">
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+				
+		
+		<s:Group x="16">
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+				
+		
+		<s:Group x="20">
+			<s:Rect   height="2"   x="1" y="0" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="2"   y="1" width="2" >
+				<s:fill>
+					<s:SolidColor color="0xB6BABF" />
+				</s:fill>
+			</s:Rect> 	
+			<s:Rect   height="1"   y="1"  x="1" width="1" >
+				<s:fill>
+					<s:SolidColor color="0xECEFF1" />
+				</s:fill>
+			</s:Rect> 
+		</s:Group>
+				
+		
+ 
+</s:Group>

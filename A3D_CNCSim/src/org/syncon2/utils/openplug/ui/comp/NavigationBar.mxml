@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   backgroundColor="0xdedede" 
+		   height="70" width="100%"   styleName="naviBar"
+		   creationComplete="{init()}" xmlns:mob="openplug.elips.controls.*"
+		   >
+	
+	<mx:Script>
+		<![CDATA[
+			import mvc.controller.CustomEvent;
+			import mvc.controller.GetStoryTriggerEvent;
+			
+			import mx.collections.ArrayCollection;
+			
+			import openplug.elips.controls.TextInput;
+			import openplug.elips.events.ItemTouchTapEvent;
+			
+			import outside.PlatformGlobals; 
+			[Bindable] public var dp : ArrayCollection = new ArrayCollection()
+			public var creationComplete : Boolean = false; 
+			static public var SetHeight : Number = 0 ; 
+			public function init()  : void
+			{
+				var ee : Label
+				var ede : TextInput
+				this.creationComplete = true ; 
+				
+				PlatformGlobals.addPlatformClickEvent( this.btnLeft, this.btnLeft_clickHandler ) 
+				PlatformGlobals.addPlatformClickEvent( this.btnRight, this.btnRight_clickHandler )
+				
+				this.fontSizeS    = this._fontSize; 
+				this.label = this._label; 
+				
+				this.leftLabel = this._labelLeft
+				this.rightLabel = this._labelRight
+				this.rightLabel2 = this._labelRight2
+				
+				if ( SetHeight> 0 ) 
+					this.height = SetHeight
+			}
+			public var fxLeft : Function
+			public var fxRight:Function
+			public var fxRight2:Function
+			private var _label:String = '';
+			private var _fontSize:Number;
+			private var _labelRight:String;
+			private var _labelRight2:String;
+			private var _labelLeft:String;
+			private function onWidgetSelect(evt: ItemTouchTapEvent):void
+			{
+				//this.dispatchEvent( new CustomEvent('viewStory', evt.item )  )
+				this.dispatchEvent( new GetStoryTriggerEvent(GetStoryTriggerEvent.GET_STORY, evt.item )  )
+			}			
+			
+			private function btnLeft_clickHandler(e:Event):void
+			{
+				if ( fxLeft != null ) 
+					fxLeft(); 
+			}
+			
+			private function btnRight_clickHandler(e:Event):void
+			{
+				if ( fxRight != null ) 
+					fxRight(); 
+			}
+			
+			private function btnRight2_clickHandler(e:Event):void
+			{
+				if ( fxRight2 != null ) 
+					fxRight2(); 
+			}
+			
+			
+			
+			public function set leftLabel ( s : String ) : void
+			{
+				this._labelLeft = s; 
+				if ( this.creationComplete == false ) 
+					return; 
+				if ( this._labelLeft == null || this._labelLeft == '' ) 
+				{
+					this.btnLeft.visible = false; 
+					return;
+				}
+				this.btnLeft.label = _labelLeft; 
+				this.btnLeft.visible = true; 
+				
+			}
+			
+			public function set rightLabel( s : String ) : void
+			{
+				this._labelRight = s; 
+				if ( this.creationComplete == false ) 
+					return; 
+				if ( this._labelRight == null || this._labelRight == '' ) 
+				{
+					this.btnRight.visible = false; 
+					return;
+				}
+				this.btnRight.label = _labelRight; 
+				this.btnRight.visible = true; 
+			}
+			public var btnRight2 : Button
+			public function set rightLabel2( s : String ) : void
+			{
+				this._labelRight2 = s; 
+				if ( this.creationComplete == false ) 
+					return; 
+				if ( this._labelRight2 == null || this._labelRight2 == '' ) 
+				{
+					if ( this.btnRight2 != null ) 
+						this.btnRight2.visible = false; 
+					return;
+				}
+				if ( this.btnRight2 == null ) 
+				{
+					this.btnRight2 = new  Button () 
+					this.btnRight2 .setStyle('fontWeight', 'bold' ) 
+					this.holderRight.addChildAt( this.btnRight2, 0  )
+					this.btnRight2.percentHeight = 100; 
+					PlatformGlobals.addPlatformClickEvent( this.btnRight2, this.btnRight2_clickHandler )
+				}
+				this.btnRight2.label = _labelRight2; 
+				this.btnRight2.visible = true; 
+			}
+			
+			
+			
+			override public function set label( s : String ) : void
+			{
+				//some util to do that quikcly ..
+				//this.btnRight.visible = true;
+				this._label = s; 
+				super.label = s; 
+				
+				if ( creationComplete == false  ) 
+					return
+					
+					this.txtBack.text = _label
+				this.txtFront.text =_label 
+			}
+			
+			public function set fontSizeS( s :  Number ) : void
+			{
+				this._fontSize = s 
+				if ( creationComplete == false  ) 
+					return;
+				this.txtBack.setStyle('fontSize', s ); 
+				this.txtFront.setStyle('fontSize', s ); 
+			}
+		]]>
+	</mx:Script>
+	<!-- 
+	<mx:Canvas styleName="naviBar" width="50" height="70" >
+	</mx:Canvas>
+	
+	
+	
+	<mx:Canvas styleName="btnStyle"  x="50" width="50" height="70" >
+	</mx:Canvas>
+	
+	<mx:Canvas backgroundColor="0xFF00000" styleName="btnStyle"  x="100" width="50" height="70" >
+	</mx:Canvas>
+	-->
+	<mob:Label id="txtBack"  verticalCenter="1" horizontalCenter="1" textAlign="center"
+			   fontWeight="bold" fontSize="40"
+			   width="100%" minWidth="64"
+			   color="0" />
+	<mob:Label id="txtFront" verticalCenter="0" horizontalCenter="0" textAlign="center"
+			   width="100%" fontWeight="bold" fontSize="40"
+			   minWidth="64"
+			   color="0xFFFFFF"/>
+	
+	
+	<mob:Button visible="false"  fontWeight="bold"
+				label="Action" left="10" id="btnLeft" verticalCenter="0" top="10" bottom="10"/>
+	
+	<mx:HBox id="holderRight" verticalCenter="0"  top="10" bottom="10"   right="10" >
+		<mob:Button fontWeight="bold"  visible="false" label="Action" id="btnRight"  height="100%" />
+	</mx:HBox>
+	<!--
+	<mob:Button visible="false" label="Action"  right="10" id="btnRight" verticalCenter="0"  top="10" bottom="10"/>
+	-->
+</mx:Canvas>

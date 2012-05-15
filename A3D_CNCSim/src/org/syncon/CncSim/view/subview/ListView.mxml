@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark" viewActivate="view1_viewActivateHandler(event)"
+		xmlns:Local="Local.*" activate="view1_activateHandler(event)"
+		xmlns:mobile="org.syncon.TalkingClock.view.mobile.*"
+		creationComplete="onInit(event)" destructionPolicy="auto" title="Our Daily Bread Viewer">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.NightStand.vo.OdbVO;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.ViewNavigatorEvent;
+			
+			static public const TRY_AGAIN : String = 'tryAgain' ; 
+			static public const SETTINGS : String = 'settings'
+			static public const GO_BACK : String = 'goBack'; 
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			protected function onInit(event:FlexEvent):void
+			{
+				this.dispatchEvent( new CustomEvent('mediate', this) ) ; 
+			}
+			protected function listChangeHandler(event:IndexChangeEvent):void
+			{
+				var index:int = event.newIndex;
+				if ( index > -1 ) 
+					var item :    OdbVO = this.list.dataProvider.getItemAt( index )  as OdbVO; 
+				trace('change sent'); 
+				this.dispatchEvent( new   CustomEvent( LIST_CHANGED, item , false ) ) ; 
+				
+			}
+			public function onBack() : void
+			{
+				this.dispatchEvent( new Event( GO_BACK  ) ) ; 
+			}
+			
+			public function onTryAgain() : void
+			{
+				this.dispatchEvent( new Event( TRY_AGAIN ) ) ; 
+			}
+			
+			protected function view1_activateHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				
+			}
+			
+			protected function onSettings():void
+			{
+				this.dispatchEvent( new Event( SETTINGS  ) ) ; 
+			}
+			
+		]]>
+	</fx:Script>
+ <s:actionContent>
+	 <s:Button label="S"  click="onSettings()" />
+ </s:actionContent>
+	 
+	<!-- the list of all the comments -->
+	<s:List id="list" width="100%" top="0" bottom="70" change="listChangeHandler(event)"
+			contentBackgroundAlpha="0" contentBackgroundColor="#FFFFFF"
+			itemRenderer="org.syncon.NightStand.view.mobile.ODBRenderer">
+		<s:layout>
+			<s:VerticalLayout gap="0" paddingLeft="0"/>
+		</s:layout> 
+	</s:List>
+ 
+	<mobile:TextAreaLabel id="txtLoading" visible="true" width="100%" text="Loading..."
+						  textAlign="center" verticalCenter="-40"/>
+	<s:VGroup id="txtError" visible="false" horizontalAlign="center" horizontalCenter="-40"
+			  verticalCenter="0">
+		<mobile:TextAreaLabel width="100%" text="Failed loading devotions. Retry later"
+							  textAlign="center"/>
+		<s:HGroup horizontalAlign="center">
+			
+			<s:Button label="Go Back" click="onBack()"/>
+			<s:Button label="Retry" click="onTryAgain()" />
+			
+		</s:HGroup>
+	</s:VGroup>
+	
+</s:View>

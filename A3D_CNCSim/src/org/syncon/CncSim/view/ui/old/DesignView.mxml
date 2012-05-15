@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" creationComplete="onInit(event)" xmlns:ui="org.syncon.CncSim.view.ui.*" xmlns:impl="org.syncon.onenote.onenotehelpers.impl.*">
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.onenote.onenotehelpers.base.Viewer3;
+			import mx.events.FlexEvent;
+			public static var UPDATE_JSON:String='UpdateJSON';
+			[Bindable] public var controller : Viewer3 = new  Viewer3(); 
+			protected function onInit(event:FlexEvent):void
+			{
+				//this.controller.setup( onenote_lister, measureList, workspace, groupBg, scroller ) ; 
+			}		
+			
+			public function export(str : String ) : void
+			{
+			}
+			
+			protected function onRedo(event:MouseEvent):void
+			{
+			}
+			
+			protected function onCopy(event:MouseEvent):void
+			{
+			}
+			protected function onUndo(event:MouseEvent):void
+			{
+			}
+			protected function onPaste(event:MouseEvent):void
+			{
+			}			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	<!--<ui:onenote_lister id="measureList" visible="false" disableClickingActions="true"
+						   disableRolloverActions="true" disableTakingFocus="true" scrollMode="true"/>
+	 -->
+ 
+	<!--<impl:viewer2  y="50" id="viewer22" height="500" width="500" /> -->
+	<impl:viewer2_store   id="viewer22" height="250" width="250" /> 
+	
+	<!-- <ui:DesignViewList id="list" />-->
+</s:Group>

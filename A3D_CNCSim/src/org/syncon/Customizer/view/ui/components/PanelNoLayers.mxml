@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:skins="org.syncon.Customizer.view.skins.*"
+		 xmlns:component="org.virid.component.*"
+		 width="100%" height="100%">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.Customizer.vo.TextLayerVO;
+			public static const CHANGE_FACE:String='CHANGE_FACE';
+			
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			public function   layer (layer_ : TextLayerVO ) : void
+			{
+				
+				this.dispatchEvent( new Event(CHANGE_FACE )  ) ; 
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:Rect width="100%" height="100%" radiusX="8" radiusY="8">
+		<s:fill>
+			<s:SolidColor color="0xffffff"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Rect>
+	
+	
+	<s:Label fontSize="14" horizontalCenter="0" styleName="Arial grayTxt" 
+			 text="USE THE CIRCULAR ARROW TO TURN &#13;THE HANDWARMER OVER TO &#13;ENGRAVE THE BACK SURFACE" textAlign="center" verticalCenter="0"/>
+	
+</s:Group>

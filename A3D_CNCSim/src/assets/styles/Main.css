@@ -1,0 +1,298 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace br  "org.syncon2.utils.mobile.view.*";
+@namespace mobile "org.syncon.TalkingClock.view.mobile.itemrenderers.*";
+@namespace pRenders  "org.syncon.TalkingClock.view.popup.*";
+@namespace AlarmViews  "org.syncon.TalkingClock.view.mobile.alarm.*";
+
+s|ActionBar
+{
+	chromeColor: #0D58AF;
+	titleAlign: center;
+	chromeColor: #2E2E30;
+	
+}
+
+br|BottomBar
+{
+	chromeColor2: #0D58AF;
+	chromeColor2: #2E2E30;
+}
+
+mobile|ThemeRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txt-title-style: txtTitleStyle;
+	txt-username-style: txtDarkGray;
+	txt-time-ago-style: txtLightGray;
+	txt-points-style: txtDarkGray;	
+	txt-url-style: txtLightGray;		
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+/*	separator: Embed(source='/styles/images/separator.png' );*/
+ 
+/*	background: Embed(source='/styles/images/background_up.png', 
+		scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+
+mobile|ThemeRenderer
+{
+/*	background: Embed(source='/styles/images/background_down.png',
+		scaleGridLeft=50, scaleGridTop=20, scaleGridRight=51, scaleGridBottom=21 );*/
+}
+ 
+.txtDarkGray
+{
+	font-size: 20;
+	color: #959595;
+/*	font-family: _sans;*/
+}
+.txtTitleStyle
+{
+	font-size: 24;
+	color: #000000;
+	font-weight:bold; 
+/*	font-family: _sans;*/
+}
+
+.txtLightGray
+{
+	font-size: 20;
+	color: #959595;
+	font-family: _sans;
+}
+
+.sectionTitle
+{
+/*	fontSize: 24;*/
+	font-weight:bold; 
+}
+
+/**
+make slightly smaller
+*/
+.subText
+{
+	color: #a2a2a2;
+}
+
+AlarmViews|SB_SoundRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txt-title-style: txtTitleStyle_SB_SoundRenderer;
+	backgroundAlpha: 1;
+	background-color: #FFFFFF;
+}
+.txtTitleStyle_SB_SoundRenderer
+{
+	font-size: 16;
+	color: #000000;
+	/*	font-family: _sans;*/
+}
+pRenders|SelectOptionListRenderer
+{
+	padding-top: 20;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 20;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txt-title-style: txtTitleStyle_SelectOptionListRenderer;
+	backgroundAlpha: 1;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+.txtTitleStyle_SelectOptionListRenderer
+{
+	font-size: 30;
+	color: #000000;
+	/*	font-family: _sans;*/
+}
+pRenders|SelectableListRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txt-title-style: txtTitleStyle_White;
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+pRenders|RadioListRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txt-title-style: txtTitleStyle_White;
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+.txtTitleStyle_White
+{
+	font-size: 24;
+	color: #FFFFFF;
+	font-weight:bold; 
+	/*	font-family: _sans;*/
+}
+.txtTitleStyle_Black
+{
+	font-size: 24;
+	color: #000000;
+	font-weight:bold; 
+	/*	font-family: _sans;*/
+}
+AlarmViews|MainMenuRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txtMainMenuStyle: txtMainMenuStyle;
+	txtAlarmNameStyle: txtAlarmNameStyle;
+	txtAlarmRepeatStyle: txtAlarmRepeatStyle;	
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+
+.txtMainMenuStyle
+{
+	font-size: 24;
+	 	color: #464646; 
+	font-weight:bold;  
+	font-style:italic;
+}
+
+
+
+AlarmViews|VoicesRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txtNameStyle: txtVoicesRendererNameStyle;
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+
+.txtVoicesRendererNameStyle
+{
+	font-size: 24;
+	color: #464646; 
+	font-weight:bold;  
+	font-style:italic;
+}
+
+
+AlarmViews|SoundRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txtNameStyle: txtSoundRendererNameStyle;
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+
+.txtSoundRendererNameStyle
+{
+	font-size: 24;
+	color: #464646; 
+	font-weight:bold;  
+	font-style:italic;
+}
+
+
+AlarmViews|AlarmRenderer
+{
+	padding-top: 15;
+	padding-left: 10;
+	padding-right: 10;
+	padding-bottom: 15;
+	horizontal-gap: 10;
+	vertical-gap: 10;
+	
+	txtAlarmTimeStyle: txtAlarmTimeStyle;
+	txtAlarmNameStyle: txtAlarmNameStyle;
+	txtAlarmRepeatStyle: txtAlarmRepeatStyle;	
+	backgroundAlpha: 0;
+	background-color: #FFFFFF;
+	/*	separator: Embed(source='/styles/images/separator.png' );*/
+	
+	/*	background: Embed(source='/styles/images/background_up.png', 
+	scaleGridLeft=10, scaleGridTop=20, scaleGridRight=11, scaleGridBottom=21 ); */
+}
+.txtAlarmTimeStyle
+{
+	font-size: 24;
+/*	color: #FFFFFF;*/
+	font-weight:bold; 
+}
+.txtAlarmNameStyle
+{
+	font-size: 24;
+/*	color: #FFFFFF;*/
+	font-weight:bold; 
+}
+.txtAlarmRepeatStyle
+{
+	font-size: 24;
+/*	color: #FFFFFF;*/
+	font-weight:bold; 
+}
+
+
+

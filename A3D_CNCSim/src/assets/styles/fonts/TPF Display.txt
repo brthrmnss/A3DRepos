@@ -1,0 +1,19 @@
+typophil font library
+package Display ver.1.0
+-------------------------------
+
+author:
+christoph scheiblhofer
+
+fonts:
+TPF Display
+TPF Display Symbol
+
+usage:
+free for private use
+if you are interested into using it commercial, or to distribute it please contact me for price informations!
+
+-------------------------------
+1999 (c) christoph scheiblhofer
+email: typophil@virtual-lands.org
+http://typophil.virtual-lands.org

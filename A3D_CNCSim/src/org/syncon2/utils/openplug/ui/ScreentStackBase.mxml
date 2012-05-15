@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   creationComplete="onInit()" initialize="onInitliaize(event)" >
+ 
+	<mx:Script>
+		<![CDATA[
+			import org.syncon2.utils.mobile.controller.SwitchScreensCommand;
+			import org.syncon2.utils.mobile.controller.SwitchScreensTriggerEvent;
+			
+			import mx.containers.ViewStack;
+			import mx.core.Container;
+			import mx.events.FlexEvent;
+			
+			import org.robotlegs.mvcs.Context;
+			
+			protected function onInitliaize(event:FlexEvent):void
+			{
+			}
+			/* 
+			static public var  serverBase : String = 'http://localhost:7126/'
+			public static function getProxy(url:String):URLRequest
+			{
+				var req:URLRequest = new URLRequest(serverBase+"play_sound");
+				//req.method = URLRequestMethod.POST;
+				
+				var postData:URLVariables = new URLVariables();
+				postData.url =url
+				req.data = postData;
+				
+				return req;
+			}
+			public function fxChangeSound( url : String ) : URLRequest
+			{
+				return null; 
+			}
+			 */
+			protected function onInit():void
+			{
+				SwitchScreensCommand.fxSwitchScreens = this.changeView; 
+				
+				SwitchScreensCommand.appSelectedItem = this.getSelectedItem; 
+				SwitchScreensCommand.app = this; 
+				
+				SwitchScreensTriggerEvent.SkipHistoryOn = [SwitchScreensTriggerEvent.menu]
+				SwitchScreensTriggerEvent.AltActions[SwitchScreensTriggerEvent.menu] = this.GoToMenu 
+				
+				return; 
+			}
+			
+			public function getSelectedItem() : Object
+			{
+				return this.holder.selectedChild
+			}
+			
+			
+			protected var currentScreen : String = ''; 
+			public function changeView(screen : String, data : Object = null ):void
+			{
+				var defaultScreen : String = 'holder'; //or top index ....
+				/* if ( currentScreen == screen ) //10/25/11 this is a wzard .... ignore it 
+				return;  */
+				if ( screen == '' || screen == null  ) 
+					screen = this.holder.getChildAt( 0  )['id']
+				if ( this.holderParent != null ) 
+				{
+					o = holderParent[screen]
+				}
+				else
+				{
+					var o :  Container = this[screen]
+				}
+				this.holder.selectedChild = o; 
+				o.data = data; 
+				this.currentScreen = screen; 
+				if ( o.hasOwnProperty('showing' ) ) 
+				{
+					o['showing'](); 
+				}
+				o.dispatchEvent( new Event('showing')); 
+				//o.dispatchEvent( new FlexEvent(FlexEvent.DATA_CHANGE) ) ;//('showing')); 
+				this.currentScreen = screen; 
+			}
+			
+			
+			
+			public function GoToMenu() : void
+			{
+				var arrOfMenuItems :Object = null 
+				var _holder : Object = this.holder; 
+				
+				//initially this is not set 
+				if ( this.currentScreen == '' && this.holder.selectedChild != null ) 
+					this.currentScreen = this.holder.selectedChild.id; 
+				
+				if ( this.holderParent != null ) 
+				{
+					_holder = holderParent;
+				}
+				if ( _holder.hasOwnProperty(this.currentScreen) &&  _holder[this.currentScreen] != null ) 
+				{
+					if ( _holder[this.currentScreen].hasOwnProperty('menuProvider2') ) 
+						arrOfMenuItems = _holder[this.currentScreen]['menuProvider2']
+				}
+				this.context.dispatchEvent( SwitchScreensTriggerEvent.GoTo( SwitchScreensTriggerEvent.menu, arrOfMenuItems, true )  ) 
+				//this.asdf(); 
+				//goToScreen2( 	 SwitchScreensTriggerEvent.GoTo(SwitchScreensTriggerEvent.menu )  )   
+			}
+			
+			/**
+			 * 
+			 * */
+			public function goToView( e :  Event  ) : void
+			{
+				this.context.dispatchEvent(  e  ) ; 
+			}
+			
+			protected function holder_initializeHandler(event:FlexEvent):void
+			{
+				if ( this.holder.hasOwnProperty('isCreatingAllChildren' )  == false ) 
+					return; 
+				// TODO Auto-generated method stub
+				this.holder['isCreatingAllChildren'] = false; 
+				this.holder.setStyle(' isCreatingAllChildren', false ) ; 
+			}
+			
+			public var holder : ViewStack;
+			/**
+			 * An elsewhere viewStack
+			 * */
+			public var holderParent:Object;
+			
+			
+			
+			public function getScreen( screen : String ) : Object
+			{
+				if ( screen == '' || screen == null  ) 
+					return  this.holder.getChildAt( 0  )//['id']
+				return   holderParent[screen]
+			}
+			
+			
+			public var context : Context; 
+			
+			public function mediate( ui  : Object ) : void
+			{
+				this.context.mediatorMap.createMediator(ui ) ; 
+			}
+		]]>
+	</mx:Script>
+	
+	
+</mx:Canvas>

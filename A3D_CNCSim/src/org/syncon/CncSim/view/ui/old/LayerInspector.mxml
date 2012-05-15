@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" creationComplete="onInit(event)" xmlns:ui="org.syncon.CncSim.view.ui.*" xmlns:old="org.syncon.CncSim.view.ui.old.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.vo.ColorLayerVO;
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			import org.syncon.CncSim.vo.TextLayerVO;
+			public static const UPDATE_JSON:String='UpdateJSON';
+			
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			private var _layer : LayerBaseVO = new LayerBaseVO() ;
+			public function get layer() : LayerBaseVO  { return this._layer;  }
+			public function set layer (str : LayerBaseVO ) : void
+			{
+				this._layer = str; 
+				this.size.layer = this.layer; 
+				if ( this.layer is ImageLayerVO ) 
+				{
+					this.currentState  = 'Image'; 
+					image.layer =layer  as ImageLayerVO
+				}				
+				if ( layer is TextLayerVO ) 
+				{
+					this.currentState = 'Text'; 
+					text.layer = layer as TextLayerVO
+				}
+				if ( layer is ColorLayerVO ) 
+				{
+					this.currentState = 'Color'; 
+					colorR.layer = layer as ColorLayerVO
+				}				
+			}
+			
+			protected function onRedo(event:MouseEvent):void
+			{
+			}
+			
+			protected function onCopy(event:MouseEvent):void
+			{
+			}
+			protected function onUndo(event:MouseEvent):void
+			{
+			}
+			protected function onPaste(event:MouseEvent):void
+			{
+			}			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="Text" />
+		<s:State name="Image" />
+		<s:State name="Color" />		
+	</s:states>
+	
+	<s:VGroup>
+		<old:LayerTextInspector id="text" includeIn="Text" />
+		<old:LayerImageInspector id="image" includeIn="Image" />
+		<old:LayerColorInspector id="colorR" includeIn="Color" />
+		<old:LayerInspectorSizeLocation id="size" />
+	</s:VGroup>
+
+</s:Group>

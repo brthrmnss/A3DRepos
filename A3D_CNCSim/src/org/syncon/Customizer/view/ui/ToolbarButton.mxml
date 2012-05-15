@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Button xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		   color="#CECECE" useHandCursor="true" buttonMode="true"
+		  iconPlacement="top"    skinClass="org.syncon.Customizer.view.skins.IconButtonSkin"
+		 >
+	<fx:Script>
+		<![CDATA[
+			override public function set  label(value:String):void
+			{
+				value = value.toUpperCase(); 
+				super.label = value; 
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+</s:Button>

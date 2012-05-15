@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:component="org.virid.component.*"
+		 xmlns:components="org.syncon.CncSim.view.ui.old.components.*"
+		 width="270" height="340" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var _prodImage:String = "";
+			private var creationCompleteCalled:Boolean = false;
+			private var _prodImageReverese:Boolean = false;
+			
+			static public const SWITCH_FACE : String = 'switchFace' 
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.creationCompleteCalled = true
+				this.productSource = this._prodImage; 
+				
+			}
+			public function set productSource(newImage:String):void
+			{
+				//this.txtText = string;
+				this._prodImage = newImage; 
+				if ( this.creationCompleteCalled == false ) return; 
+				this.productImageArea.source = newImage; 
+			}
+			
+			protected function switchSide_clickHandler(event:MouseEvent):void
+			{
+				/* 
+				this.productImageArea.source = (_prodImageReverese)?"assets/images/product_hero1r.jpg":"assets/images/product_hero1.jpg"; 
+				_prodImageReverese = !_prodImageReverese;
+				*/
+				this.dispatchEvent( new Event(SWITCH_FACE) ) 
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		
+		<s:Fade id="fxFade" duration="500" target="{this.cover}"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--This component will need to know via json:
+		Nothing
+		-->
+		
+		<!--This compnent will recieve signals from controller 
+		switch from design/engrave mode
+		add layer/image
+		switch side
+		-->
+		
+		<!--This component will send signals to controller/model for:
+		layer edited / tranformed / moved
+		request to change sides
+		edit item button clicked
+		
+		display notice - whenever user clicks question mark - let the main application handle displaying a message to the users
+		-->
+	</fx:Declarations>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0" radiusX="8" radiusY="8">
+		<s:fill>
+			<s:SolidColor color="0xffffff"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<!-- transform stage-->
+	<components:DesignView id="designView" width="100%" height="100%" horizontalCenter="0"
+						   verticalCenter="0"/>
+	
+	<s:Rect id="cover" visible="false" left="0" right="0" top="0" bottom="0" alpha="0.0" radiusX="8"
+			radiusY="8">
+		<s:fill>
+			<s:SolidColor color="0xffffff"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Group width="100%" height="100%">
+		
+		
+		<mx:Canvas horizontalCenter="0" verticalCenter="0">
+			<s:Image id="productImageArea" visible="false" source=""/>
+		</mx:Canvas>
+		
+		
+		<s:Group height="16" horizontalCenter="0">
+			<s:Rect left="0" right="0" top="0" bottom="0" radiusX="10" radiusY="10"
+					topLeftRadiusX="0" topLeftRadiusY="0" topRightRadiusX="0" topRightRadiusY="0">
+				<s:fill>
+					<s:SolidColor color="0xffffff"/>
+				</s:fill>
+				<s:stroke>
+					<s:SolidColorStroke color="0xe9e9e9"/>
+				</s:stroke>
+			</s:Rect>
+			<s:Line width="{holderProductTitle.width}">
+				<s:stroke>
+					<s:SolidColorStroke color="0xffffff"/>
+				</s:stroke>
+			</s:Line>
+			<s:HGroup id="holderProductTitle" paddingLeft="10" paddingRight="10">
+				<s:Label styleName=" Arial" text="Product "/>
+				<s:Label id="txtProductName" styleName="grayTxt Arial" text="Zippo Lighter"/>
+				
+			</s:HGroup>
+		</s:Group>
+		
+		
+		
+		
+		
+		
+		
+		<s:Group bottom="0" width="100%" height="15" horizontalCenter="0">
+			<s:Image id="btnSwitchSide" left="3" bottom="3" buttonMode="true"
+					 click="switchSide_clickHandler(event)" mouseChildren="false"
+					 source="assets/images/flip.png" toolTip="Switch Sides" useHandCursor="true"/>
+			<!--icon="assets/images/flip.png" skinClass="org.virid.skins.IconBasedBtnSkin" iconPlacement="top"-->
+			
+			<s:HGroup horizontalCenter="0" paddingLeft="5" paddingRight="5">
+				
+				<s:Rect left="0" right="0" top="0" bottom="0" radiusX="10" radiusY="10">
+					<s:fill>
+						<s:SolidColor color="0xffffff"/>
+					</s:fill>
+					<s:stroke>
+						<s:SolidColorStroke color="0xc1c1c1"/>
+					</s:stroke>
+				</s:Rect>
+				<s:Label id="zoomLevel" visible="false" includeInLayout="false"
+						 styleName="redTxt Arial" text="100%"/>			
+				
+			</s:HGroup>
+			
+			
+			
+			<s:Button id="zoom" visible="false" right="0" bottom="0" icon="assets/images/zoom.jpg"
+					  iconPlacement="top" includeInLayout="false"
+					  skinClass="org.syncon.CncSim.view.skins.IconBasedBtnSkin"/>
+		</s:Group>
+		
+		
+		
+	</s:Group>
+</s:Group>

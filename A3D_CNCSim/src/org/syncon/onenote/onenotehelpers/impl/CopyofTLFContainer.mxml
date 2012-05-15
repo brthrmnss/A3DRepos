@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"   
+		 initialize="init()" 
+		 >
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+ 
+			 
+	 
+		
+		<fx:Script>
+			<![CDATA[
+				import flashx.textLayout.compose.StandardFlowComposer;
+				import flashx.textLayout.container.ContainerController;
+				import flashx.textLayout.conversion.TextConverter;
+				import flashx.textLayout.edit.EditManager;
+				import flashx.textLayout.edit.SelectionState;
+				import flashx.textLayout.elements.TextFlow;
+				import flashx.textLayout.events.CompositionCompleteEvent;
+				import flashx.textLayout.events.DamageEvent;
+				import flashx.textLayout.events.SelectionEvent;
+				import flashx.textLayout.events.StatusChangeEvent;
+				import flashx.undo.UndoManager;
+				
+				private var _textFlow:TextFlow = null;
+				private var _container:Sprite = null;
+				private var _selectionState:SelectionState;
+				
+				private function init():void
+				{
+					
+					// create a sprite to hold the TextLines
+					_container = new Sprite();
+					holder.rawChildren.addChild(_container);
+				}
+				public function set text( s : String ) : void
+				{
+					var textFlow  : TextFlow = TextConverter.importToFlow( s, TextConverter.PLAIN_TEXT_FORMAT );			
+					this.textFlow = textFlow
+					  var simpleTextAndImages:String = "<TextFlow xmlns='http://ns.adobe.com/textLayout/2008' fontSize='14' textIndent='0' marginBottom='15' paddingTop='6' paddingLeft='6'><p><img id='img' source='assets/flash.jpg' /></p><p><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel dolor ut urna tristique facilisis vel nec urna. Fusce eget tellus varius velit fringilla egestas. Pellentesque in mauris in felis gravida tincidunt. </span></p></TextFlow>";
+					
+						this.textFlow = TextConverter.importToFlow(simpleTextAndImages, TextConverter.TEXT_LAYOUT_FORMAT);
+					
+						
+					this.setWidth(400)
+				}
+				public function set textFlow(newFlow:TextFlow):void
+				{
+					// clear any old flow if present
+					if (_textFlow)
+					{
+						_textFlow.flowComposer = null;
+						_textFlow = null;
+					}
+					_textFlow = newFlow;
+					if (_textFlow)
+					{
+						_textFlow.flowComposer = new StandardFlowComposer();
+						_textFlow.flowComposer.addController(new ContainerController(_container,holder.width,holder.height));
+						
+						// Event listeners
+						_textFlow.addEventListener(SelectionEvent.SELECTION_CHANGE, selectionChangeListener, false, 0, true);
+						_textFlow.addEventListener(StatusChangeEvent.INLINE_GRAPHIC_STATUS_CHANGE, graphicStatusChangeEvent, false, 0, true);
+						_textFlow.addEventListener(CompositionCompleteEvent.COMPOSITION_COMPLETE, compositionCompleteHandler, false, 0, true);
+						//_textFlow.addEventListener(DamageEvent.DAMAGE, damageHandler, false, 0, true);
+						
+						// make _textFlow editable with undo 
+						_textFlow.interactionManager = new EditManager(new UndoManager());
+						// initialize with a selection before the first character
+						_textFlow.interactionManager.selectRange(0,0);
+						
+						// compose the new textFlow and give it focus
+						_textFlow.flowComposer.updateAllControllers();
+						_textFlow.interactionManager.setFocus();
+					}
+				}
+				
+				private function selectionChangeListener(event:SelectionEvent):void
+				{
+					_selectionState = event.selectionState;
+				}
+				
+				
+				private function graphicStatusChangeEvent(event:StatusChangeEvent):void
+				{
+					// recompose if the evt is from an element in this textFlow
+					_textFlow.flowComposer.updateAllControllers();
+				}
+				
+				private function damageHandler(event:DamageEvent):void
+				{
+					_textFlow.flowComposer.updateAllControllers();
+					addEventListener(Event.ENTER_FRAME, onEnterFrame);
+					
+					function onEnterFrame(e:Event):void
+					{
+						removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+						
+						var boundaries:Rectangle = (_textFlow.flowComposer.getControllerAt(0) as ContainerController).getContentBounds();
+					}
+				}
+				
+				private function compositionCompleteHandler(event:CompositionCompleteEvent):void
+				{
+					waitForTheChange();
+				}
+				
+				private function waitForTheChange():void
+				{
+					//_textFlow.flowComposer.updateAllControllers();
+					addEventListener(Event.ENTER_FRAME, onEnterFrame);
+					
+					function onEnterFrame(e:Event):void
+					{
+						removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+						
+						var compoitionH:Number = (_textFlow.flowComposer.getControllerAt(0) as ContainerController).compositionHeight;
+						var boundaryH:Number =  _textFlow.flowComposer.getControllerAt(0).getContentBounds().height;
+						compoitionH = Math.ceil(compoitionH);
+						boundaryH = Math.ceil(boundaryH);
+						
+						//setSize(textArea.width, boundaryH);
+						if(boundaryH > compoitionH){
+							setSize(holder.width, boundaryH);
+						}
+						else{
+							if( (compoitionH-boundaryH) > 10 ){
+								setSize(holder.width, boundaryH);
+							}
+						}
+					}
+				}
+				
+				private function setSize(w:int,h:int):void
+				{
+					this.width = w;
+					this.height = h;
+					holder.width = width;
+					holder.height = height;
+					if (_textFlow){
+						_textFlow.flowComposer.getControllerAt(0).setCompositionSize(w,h);
+						//_textFlow.flowComposer.composeToPosition();
+						_textFlow.flowComposer.updateAllControllers();
+					}
+				}
+				
+				public function setWidth(w:int):void
+				{
+					this.width = w;
+					holder.width = width;
+					if (_textFlow)
+					{
+						_textFlow.flowComposer.getControllerAt(0).setCompositionSize(w,holder.height);
+						//_textFlow.flowComposer.composeToPosition();
+						_textFlow.flowComposer.updateAllControllers();
+					}
+				}
+				
+				public function getHeight() : Number
+				{
+					var h : Number = this.holder.height; 
+					return h; 
+				}
+				
+				public function onResize() : void
+				{
+					if ( this.holder.height == 0 ) 
+						return; 
+				//	onGo()
+				}
+				public function onGo()  : void
+				{
+					this.dispatchEvent( new Event( 'measureDone' ) )  
+				}
+			]]>
+		</fx:Script>
+		
+		<mx:Canvas
+			 borderStyle="solid" y="25"
+			id="holder" resize="this.onResize()" width="400" minHeight="16" />
+		<s:Button  label="up" click="onGo()" />
+</s:Group>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 creationComplete="onInit(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.Customizer.vo.ColorLayerVO;
+			import org.syncon.Customizer.vo.ItemRendererHelpers;
+			import org.syncon.Customizer.vo.LayerBaseVO;
+			
+			//public var list : ListVO; 
+			
+			//public var dp : ArrayCollection = new ArrayCollection(); 
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			public var creationComplete : Boolean = false; 
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				this.creationComplete = true
+			}
+			private function init():void {
+				
+			}
+			
+			public var layer : ColorLayerVO = new ColorLayerVO(); 
+			public var active:Boolean=true;
+			public var resizedOnce:Boolean;
+			private var lastLayer:ColorLayerVO;
+			
+			public function set data ( value :   Object ) : void
+			{
+				this.img.source = null; 
+				
+				layer = value as ColorLayerVO
+				if ( this.parentDocument == null ) 
+					return; 
+				this.parentDocument.resetting= true; 
+				this.img.height = NaN ; 
+				this.img.width = NaN; 
+				
+				if ( layer == null ) 
+				{
+					this.img.source = null; 
+					return; 
+				}
+				this.img.source  = layer.url; 
+				this.resizedOnce = false; 
+				s.listenForObj( layer, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				if ( this.parentDocument != null ) 
+				{
+					var d : Object = this.parentDocument.parentDocument
+				}
+				if ( this.active == false ) 
+					return; 
+				if ( layer == null ) 
+					return; 
+				if ( this.lastLayer != this.layer ) 
+				{
+					this.bgColor.color = this.layer.color; 
+				}
+				else
+				{
+					if ( this.layer.propChanged == 'color' )
+					{
+						this.bgColor.color = this.layer.color; 
+					}					
+					this.layer.propChanged = null
+				}
+				this.lastLayer =  this.layer
+				
+			}
+			
+			protected function img_resizeHandler(event:ResizeEvent):void
+			{
+				if ( this.active == false ) 
+					return; 
+				if ( this.layer == null ) 
+					return; 
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( isNaN(this.img.height ) ) 
+					return;
+				if ( this.img.height == 0 ) 
+					return;
+				
+				this.resizedOnce = true; 
+				this.height = this.img.height; 
+				this.width = this.img.width; 
+				
+				/* this.layer.height = this.img.height; 
+				this.layer.width = this.img.width;  */
+				this.layer.nonChromeWidth = this.width; 
+				this.layer.nonChromeHeight = this.height; 
+				this.layer.update(); 
+				
+				if ( this.parentDocument.resetting== true ) 
+				{
+					this.parentDocument.resetting=  false;
+					this.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				}
+				
+				
+				//this.parentDocument.parentDocument.height = this.img.height; 
+				//this.parentDocument.parentDocument.width = this.img.width; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+			protected function onComplete(event:Event):void
+			{
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( this.active == false ) 
+					return; 
+				// TODO Auto-generated method stub
+				//this.dispatchEvent( ) ) ; 
+				//this.callLater( this.dispatchEvent, [new ResizeEvent(ResizeEvent.RESIZE)] )
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	<s:Image id="img" blendMode="erase" complete="onComplete(event)" alpha="0.6"
+			 resize="img_resizeHandler(event)"/>
+	<s:Group id="colorLayer" width="100%" height="100%" maskType="alpha" mask="{this.img}">
+		<s:Rect left="0" right="0" top="0" bottom="0">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1"/>
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor id="bgColor" color="#FF0000"/>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	
+</s:Group>

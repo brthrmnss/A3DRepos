@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  xmlns:comps="org.syncon.comps.*" 
+					  backgroundColor="0xFFFFFF" 
+					  creationComplete="onInit()" 
+					  implements="org.syncon.popups.view.IPopup" 
+					  xmlns:popup="org.syncon.evernote.basic.view.popup.*"					  
+					  >
+ 
+  <fx:Script>
+    <![CDATA[
+		import mx.core.UIComponent;
+		import mx.events.ResizeEvent;
+		
+		import org.syncon.popups.view.IPopup;
+		
+		import sss.Shelpers.Shelpers.ShelpersPopups;
+		import sss.Shelpers.Shelpers.ShelpersUI;
+		import sss.Shelpers.Shelpers.other.TweenerHelpers;
+		import sss.Shelpers.Shelpers.ui.PopupCode;
+      
+	  public var inUse:Boolean = false;
+		private var creationComplete:Boolean = false
+					
+    
+      public function onInit() : void
+      {
+		  this.creationComplete = true
+		this.popupCode.center()
+      var localPa : Object = 	this.parentApplication
+      var localPar : UIComponent = 	this.parentDocument     as UIComponent 
+	localPar.addEventListener(ResizeEvent.RESIZE, this.onParentAppResize, false, 0 , true ) 
+	//ShelpersUI.pad( this, 10 ) 
+		
+      }
+ 
+
+		private var _popupCode :PopupCode; 
+		public function get  popupCode () : PopupCode { return _popupCode  } 
+		public function set  popupCode ( _popupCode_ : PopupCode) : void {   _popupCode = _popupCode_  } 
+		
+		public function create( app:Object ): IPopup
+		{
+			var popup:popup_confirm = new popup_confirm()
+			popup.popupCode = PopupCode.Create(popup, app) 
+			return popup
+		}
+		
+		public function show()  : void
+		{
+			return;
+			this.open()
+		}
+		public function hide( ) : void
+		{
+			this.close()
+		}
+		
+      
+      
+      public function onParentAppResize (e : Event )  : void
+      {
+		  this.popupCode.center();
+      }
+      public function close():void
+      {
+		  if ( this.noFx != null ) this.noFx()
+		  this.popupCode.close()
+      }
+ 
+	  	  
+
+      public function onNo():void
+      {
+      		this.close()
+      }
+
+      public function onYes():void
+      {
+      		if ( this.yesConfirmMode ) 
+      		{
+      			var args : Array = this.args 
+      			if ( args  == null )
+      				args = []
+      			//args.push( true ) 
+      			this.yesFx.apply( this, args )  
+      			//this.yesFx( true )
+      			this.close(); 
+      			return 
+      		}
+      		this.yesFx()
+      		this.close()
+      }
+      
+      public var yesConfirmMode : Boolean = true; //tis is the default mode, must b echanged if u want to call a sperate NO functio n 
+      
+      public var args : Array = new Array(); 
+      
+       public function open( msg :  String, yesFx : Function, noFx : Function = null,
+       	titleLbl_ : String = '', yesBtn : String = '', noBtn : String = '', args : Array = null ) : void
+      {
+      	this.message = msg
+      	this.yesConfirmMode = true
+      	this.yesFx = yesFx
+      	this.noFx = noFx
+      	this.args = args
+		this.titleLbl = titleLbl_
+      	if ( yesBtn != '' && yesBtn != null ) { this.yesMessage = yesBtn }
+      	else
+      	{
+      		this.yesMessage = 'Ok'
+      	}
+      	if ( noBtn != '' && noBtn != null  ) { this.noMessage = noBtn }  
+      	else
+      	{
+      		this.noMessage = 'Cancel'
+      	}   
+		this.popupCode.open( false, true, true)
+			
+		this.btn_no.setFocus();
+      } 
+/*       
+      static public function newP ( msg :  String, yesFx : Function, noFx : Function = null,titleLbl : String = '', yesBtn : String = '', noBtn : String = '' ) : ConfirmPopup
+      {
+      	var u : ConfirmPopup = new ConfirmPopup()
+      	u.message = msg
+      	u.yesFx = yesFx
+      	u.noFx = noFx
+      	if ( yesBtn == '' ) { u.yesMessage = yesBtn }
+      	if ( noBtn == '' ) { u.noMessage = noBtn }     
+      	return u 	
+      } 
+	   */
+	
+ 	[Bindable] public var noFx :  Function; 
+ 	[Bindable] public var yesFx : Function;
+	  
+ 	[Bindable] public var titleLbl : String = 'Alert';	  
+	  
+ 	[Bindable] public var noMessage : String = 'Cancel';
+ 	[Bindable] public var yesMessage : String = 'Continue';
+    [Bindable] public var message : String = 'Are you sure you wish to proceed?';
+    
+    ]]>
+  </fx:Script>
+	
+	
+	<s:Rect width="100%" height="100%" >
+		<s:stroke>
+			<s:SolidColorStroke color="0" />
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Rect top="2" right="2" bottom="2" left="2" >
+		<s:fill>
+			<s:SolidColor color="0xEDF6F7" />
+		</s:fill>
+	</s:Rect>
+	
+	<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="10" paddingLeft="10">
+		<popup:PopupHeader   id="lbl_msg" label="{this.titleLbl}" 
+							 padding="0"  width="100%"/>
+		<s:Label   text="{this.message}" width="310" />
+		<s:HGroup width="100%" horizontalAlign="right">
+	 	 	<mx:Button   label="{this.yesMessage}"  click="onYes()"  id="btn_yes"/>
+			<mx:Button   label="{this.noMessage}"  click="onNo()"  id="btn_no"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:SkinnableContainer>

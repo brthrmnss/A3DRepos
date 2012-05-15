@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="false"
+				depth="0" depth.hovered="1"
+				width="10" height="10"
+				creationComplete="itemrenderer1_creationCompleteHandler(event)"
+				click="itemrenderer1_clickHandler(event)"> 
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var creationCompleteCalled:Boolean = false;
+			private var _swatchColor:uint = 0xff0000;
+			
+			public function set swatchColor(color:uint):void
+			{
+				//this.txtText = string;
+				this._swatchColor = color; 
+				if ( this.creationCompleteCalled == false ) return; 
+				this.mainSwatch.color = this._swatchColor; 
+			}
+			
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.creationCompleteCalled = true;
+				this.swatchColor = this._swatchColor;
+				
+			}
+			
+			protected function itemrenderer1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				//alert('punch');
+				//trace('crunch');
+				//this.parentDocument.selectedColorSwatch.color = this.mainSwatch.color;
+				if(this.parentDocument.hasOwnProperty("changeColor2") )
+				{
+				this.parentDocument.changeColor2 = this.mainSwatch.color; 
+				}
+				else
+				{
+					this.parentDocument.changeColor = this.mainSwatch.color; 
+					
+				}
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="hovered" />
+	</s:states>
+	
+	<s:postLayoutTransformOffsets>
+		<mx:TransformOffsets id="offsets" x.hovered="-5" y.hovered="-5" scaleX.hovered="2" scaleY.hovered="2" />
+	</s:postLayoutTransformOffsets>	
+	
+	<s:transitions>
+		<mx:Transition fromState="normal" toState="hovered" autoReverse="true">
+			<s:Animate target="{offsets}" duration="200">
+				<s:SimpleMotionPath property="scaleX" />
+				<s:SimpleMotionPath property="scaleY" />
+				<s:SimpleMotionPath property="x" />
+				<s:SimpleMotionPath property="y" />
+			</s:Animate>
+		</mx:Transition>
+		<mx:Transition fromState="hovered" toState="normal" autoReverse="true">
+			<s:Animate target="{offsets}" duration="200">
+				<s:SimpleMotionPath property="scaleX" />
+				<s:SimpleMotionPath property="scaleY" />
+				<s:SimpleMotionPath property="x" />
+				<s:SimpleMotionPath property="y" />
+			</s:Animate>
+		</mx:Transition>
+	</s:transitions>	
+	
+	
+	<s:Rect id="rect" width="10" height="10"  >
+		<s:fill >
+			<s:SolidColor id="mainSwatch" />
+		</s:fill>
+	</s:Rect>
+	
+</s:ItemRenderer>

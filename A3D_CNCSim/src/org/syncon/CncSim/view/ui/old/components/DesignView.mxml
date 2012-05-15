@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:ui="org.syncon.CncSim.view.ui.*"
+		 xmlns:impl="org.syncon.onenote.onenotehelpers.impl.*"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.onenote.onenotehelpers.base.Viewer3;
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			
+			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	 
+	<impl:viewer2_store id="viewer22" width="100%" height="100%" loadDefault="false" clipAndEnableScrolling="true"/> 
+ 
+</s:Group>

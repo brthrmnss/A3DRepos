@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   width="100%" height="100%"
+		   horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+		   creationComplete="init()" xmlns:view="mvc.view.*"
+		   implements="mx.controls.listClasses.IListItemRenderer" xmlns:mob="openplug.elips.controls.*"
+		   >
+	<mx:Script>
+		<![CDATA[
+			import org.syncon2.utils.openplug.Constants;
+			import org.syncon2.utils.openplug.ui.comp.MobileMenuItemVO;
+			/**
+			 * Assume person is using strings
+			 * */
+			[Bindable] public var story :  Object = new Object();//( new XMLList() )
+			public var menuItem : MobileMenuItemVO ;
+			override public function set data(value:Object):void
+			{
+				if(value != null)
+				{
+					if ( value == super.data ) 
+						return;					
+					super.data = value;
+					menuItem = null; 
+					if ( data is MobileMenuItemVO ) 
+						menuItem = data as MobileMenuItemVO
+					this.story = value  
+					if ( this.creationComplete == false )
+						return;
+					//this.base.data = value;
+					this.modifyF() 
+				}				
+				
+			}
+			
+			public function init() :void
+			{
+				
+				this.creationComplete = true
+				//this.base.data = this.data; 
+				this.modifyF() 
+				this.timer.addEventListener(TimerEvent.TIMER, this.onHeldDownForTimerDuration ) ;
+				if ( Constants.PlatformGlobals.flex )
+				{
+					this.txtName.addEventListener('mouseDown', this.canvas1_touchBeginHandler ) 
+					this.txtName.addEventListener('mouseUp', this.canvas1_touchEndHandler )
+				}
+			}
+			public var creationComplete : Boolean = false; 
+			private var timer: Timer = new Timer(1500, 1);
+			
+			private function modifyF():void
+			{
+				if ( ! this.creationComplete ) 
+					return; 
+				/* if ( this.story.description == null ) 
+				return;  */
+				if ( this.story == null ) 
+					return; 
+				this.txtName.text = this.story.toString()
+				if ( this.menuItem !=  null ) 
+				{
+					this.txtName.text = this.menuItem.label
+				}
+			}
+			
+			/* 		protected function canvas1_touchBeginHandler(event:TouchEvent):void
+			{
+			//this.timer.start(); 				
+			}
+			
+			protected function canvas1_touchEndHandler(event:TouchEvent):void
+			{
+			//this.timer.stop()
+			} */
+			protected function canvas1_touchBeginHandler(event: Event):void
+			{
+				//this.timer.start(); 				
+			}
+			
+			protected function canvas1_touchEndHandler(event:Event):void
+			{
+				//	this.timer.stop()
+			}
+			public function onHeldDownForTimerDuration(e:Event):void
+			{
+				//this.dispatchEvent( new CustomEvent( SoundBoardHomeView.HELD_DOWN, this.data ) ); 
+			}
+			
+		]]>
+	</mx:Script>
+	<!--<view:NewsListItemRendererBase id="base" />-->
+	<mob:Text text="New"  id="txtName"  color="0"     paddingLeft="10" paddingTop="10"
+			  width="100%"  maxHeight="40" fontWeight="bold" fontSize="20"/>
+	
+</mx:Canvas>

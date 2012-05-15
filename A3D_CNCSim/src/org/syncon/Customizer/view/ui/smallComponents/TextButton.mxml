@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="100%" height="34"
+		  initialize="button1_initializeHandler(event)"
+		  
+		  rollOver="button1_rollOverHandler(event)"
+		  rollOut="button1_rollOutHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var creationCompleteCalled:Boolean = false;
+			private var _iconSource:String = '';
+			private var _labelName:String = '';
+			public var _selected:Boolean;
+			
+			public function set selected(selected:Boolean):void{
+				
+				_selected = selected;
+				if(_selected){
+					this.currentState="selected";
+				}
+				else{
+					this.currentState="normal";	
+				}
+			}
+			
+			protected function button1_initializeHandler(event:FlexEvent):void
+			{
+				this.creationCompleteCalled = true;
+				this.label = this._labelName;
+				this.icon = this._iconSource;
+			}
+			
+			protected function button1_rollOverHandler(event:MouseEvent):void
+			{
+				this.currentState = "hovered";
+			}
+			
+			
+			public function changeColorToNormal() : void
+			{
+				var newColor:ColorTransform =  new ColorTransform();
+				newColor.color = 0xbbbbbb;
+				this.iconDisplay.transform.colorTransform = newColor;
+			}
+			
+			public function changeColorToRed(): void
+			{
+				//change main icon color
+				var newColor:ColorTransform =  new ColorTransform();
+				newColor.color = 0xf6171c;
+				this.iconDisplay.transform.colorTransform = newColor;
+				
+			}
+			protected function button1_rollOutHandler(event:MouseEvent):void
+			{
+				if(_selected){
+					this.currentState = "selected";
+					return;
+				}
+				this.currentState = "normal";
+				 
+			}
+			
+			
+			public function set icon(imageSource:String):void
+			{
+				//this.txtText = string;
+				this._iconSource = imageSource; 
+				if ( this.creationCompleteCalled == false ) return; //let creationcomplete handle this
+				this.iconDisplay.source = this._iconSource; 
+			}
+			
+			public function set label(text:String):void
+			{
+				//this.txtText = string;
+				this._labelName = text; 
+				if ( this.creationCompleteCalled == false ) return; //let creationcomplete handle this
+				this.labelDisplay.text = this._labelName; 
+			}
+			
+
+			protected function state1_enterStateHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeColorToRed()
+			}
+			
+			protected function stateNormal_enterStateHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.changeColorToNormal()
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:Linear id="easing"/>
+	</fx:Declarations>
+	<s:states> 
+		<s:State name="normal"   enterState="stateNormal_enterStateHandler(event)" />
+		<s:State name="hovered" enterState="state1_enterStateHandler(event)"/> 
+		<s:State name="disabled"/> 
+		<s:State name="selected"  enterState="state1_enterStateHandler(event)"/> 
+	</s:states> 
+	
+	<s:transitions>
+		<mx:Transition toState="hovered" >
+			<s:Parallel>
+				<s:Move targets="{[iconDisplay]}" duration="200" />
+				<!--<s:AnimateColor target="{this.iconDisplay}" duration="200"  />-->
+				<s:Animate target="{iconDisplay}"  duration="400" easer="{easing}" />
+			</s:Parallel>
+			
+		</mx:Transition>
+		<mx:Transition fromState="current" toState="hovered" >
+			<s:Parallel>
+				<s:Move targets="{[iconDisplay]}" duration="200" />
+				<!--<s:AnimateColor target="{this.iconDisplay}" duration="200"  />-->
+				<s:Animate target="{iconDisplay}"  duration="400" easer="{easing}" />
+			</s:Parallel>
+			
+		</mx:Transition>
+		<mx:Transition toState="normal" >
+			<s:Parallel>
+				<s:Move targets="{[iconDisplay]}" duration="200" />
+				<!--<s:AnimateColor target="{this.iconDisplay}" duration="200"  />-->
+				<s:Animate target="{iconDisplay}"  duration="200" easer="{easing}" />
+			</s:Parallel>
+		</mx:Transition>
+		<mx:Transition toState="selected" >
+			<s:Parallel>
+				<s:Move targets="{[iconDisplay]}" duration="200" />
+				<!--<s:AnimateColor target="{this.iconDisplay}" duration="200"  />-->
+				<s:Animate target="{iconDisplay}"  duration="200" easer="{easing}" />
+			</s:Parallel>
+		</mx:Transition>
+	</s:transitions>	
+
+	<s:BitmapImage id="iconDisplay" 
+				   width="25" height="20"  y.normal="5" y.hovered="3" y.selected="4" x="0" 
+				   smooth="true" smoothingQuality="high" 
+				   >
+	</s:BitmapImage>
+	<s:Label id="labelDisplay"
+			 textAlign="left" styleName="bbbTxt" styleName.hovered="redTxt" styleName.selected="redTxt"
+			 maxDisplayedLines="1"
+			 x="30" y="0"
+			 >
+	</s:Label>
+</s:Group>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2009/04/29/using-virtual-layout-on-a-spark-list-control-in-flex-gumbo/ -->
+<!-- http://www.jeffryhouser.com/index.cfm/2011/1/25/How-do-you-force-rendereres-to-refresh-in-a-spark-list -->
+<s:Group name="Spark_List_layout_useVirtualLayout_test"
+		 xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 initialize="init();">
+	
+	<fx:Script>
+		<![CDATA[
+			/**
+			 * uSE THE refrehs function to do a manual resizing instantly 
+			 * */
+			import mx.collections.ArrayCollection;
+			//public var dp : ArrayCollection = new ArrayCollection(); 
+			private function init():void {
+				var idx:uint;
+				var len:uint = 15;
+				var arr:Array = [];
+				for (idx=0; idx<len; idx++) {
+					arr.push("Item #" + idx);
+				}
+				arrList = new ArrayCollection(arr);
+				this.list.scroller.setStyle('verticalScrollPolicy', 'off');			
+				this.list.addEventListener( 'resizeManually', this.onResizeManually  )
+			}
+			
+			private function onResizeManually(e:Event):void
+			{
+				this.callLater( this.arrList.refresh )	
+				return; 
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var numDigits : int =  Math.random()*20 
+				this.list.dataProvider.addItem( 'New thing ... ' + (Math.random()*12) .toFixed(numDigits)  )
+				this.callLater( pat2 )
+				//this.list.dataProvider.addItem( '' )
+				this.arrList.refresh()
+				this.callLater( this.arrList.refresh )	
+				this.list.layout.measure()
+				
+				
+			}
+			
+			private function pat2() : void
+			{
+				//this.list.invalidateSize()
+				//this.list.dataProvider.removeItemAt( this.list.dataProvider.length -1 ) 
+				//this.list.dataProvider.refresh()
+				//this.list.dataGroup.invalidateDisplayList();
+			}
+			
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				//this.arrList.itemUpdated(
+				//this.list.updateRenderer(
+				//this.list.dataGroup.invalidateDisplayList();
+				// TODO Auto-generated method stub
+				this.arrList.refresh()
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:ArrayCollection  id="arrList" />
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	
+	<s:HGroup>
+		<s:Button label="Add" click="button1_clickHandler(event)" />
+		<s:Button label="Refresh" click="button2_clickHandler(event)" />
+	</s:HGroup>
+	
+	<s:List id="list"  
+			x="-20" y="0"
+			focusEnabled="false"   
+			tabFocusEnabled="false" tabEnabled="false"
+			dataProvider="{arrList}" itemRenderer="org.syncon.onenote.onenotehelpers.impl.resizeRenderer"
+			allowMultipleSelection="true"   contentBackgroundColor="0xFFFFFF"
+			contentBackgroundAlpha="0.8"
+			>
+		<s:layout>
+			<s:VerticalLayout useVirtualLayout="false"  
+							  variableRowHeight="true"     paddingLeft="10" paddingTop="10" paddingBottom="10"
+							  requestedMinRowCount="1"/>
+		</s:layout>
+	</s:List>
+	
+	
+</s:Group>

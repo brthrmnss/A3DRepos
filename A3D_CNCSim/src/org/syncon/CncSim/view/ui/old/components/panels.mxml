@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"  creationComplete="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" 
+		 xmlns:smallComponents="org.syncon.CncSim.view.ui.old.smallComponents.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.model.ViridConstants;
+			import org.syncon.CncSim.vo.ColorLayerVO;
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			
+			public static const CHANGE_FONT_FAMILY:String='CHANGE_FONT_FAMILY';
+			public static const CHANGE_COLOR:String='CHANGE_COLOR';
+			public static const ADD_UPLOAD_IMAGE:String='ADD_UPLOAD_IMAGE';
+			public static const ADD_IMAGE:String='ADD_IMAGE';
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				//send up initial color
+				//this.dispatchEvent( new CustomEvent(CHANGE_COLOR, this.selectedColorSwatch.color ) ) ; 
+			}
+			
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			
+			private var _layer :  LayerBaseVO = new LayerBaseVO() ;
+			public function get layer()  : LayerBaseVO { return this._layer } 
+			public function set layer (layer_ :  LayerBaseVO ) : void
+			{
+				s.listenForObj( layer_, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this._layer = layer_; 
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				//this.txt.text = this.layer.text
+				//this.fontFamily.selectedItem = this.layer.fontFamily
+				//this.fontSize.selectedItem = this.layer.fontSize; 
+				//.chkVisible.selected = this.layer.visible ; 
+				//this.txt.maxChars
+				this.rowOne.alpha = 1; 
+				this.secondRow.alpha = 1; 
+				this.thirdRow.alpha = 1
+				this.rowOne.enabled = true; 
+				this.secondRow.enabled = true; 
+				this.thirdRow.enabled = true;
+				if ( this.layer == null )
+				{
+					this.rowOne.alpha = 0.2
+					this.rowOne.enabled = false; 
+					
+					this.secondRow.alpha = 0.2
+					this.secondRow.enabled = false; 
+					
+					this.thirdRow.alpha = 0.2
+					this.thirdRow.enabled = false; 
+					return; 
+				}
+				
+				if (  this.layer.type != ColorLayerVO.Type ) 
+				{
+					this.rowOne.alpha = 0.2; 
+					this.rowOne.enabled = false; 
+				}
+				//b/c of oddity in how viriid has proompt layers ..
+				//we don' remove them, so when they are invisible 
+				//they should'nt be removed from ui
+				if ( this.layer.visible == false && this.layer.prompt_layer )
+				{
+					this.layer = null; //unload the layer ... 
+					//move this to mediator so ti is clearer
+					return;
+				}
+				
+				if ( layer.type == ImageLayerVO.Type )
+				{
+					var imageLayer : ImageLayerVO = layer as ImageLayerVO
+					if (  imageLayer.image_source ==ViridConstants.IMAGE_SOURCE_UPLOAD ) 
+					{
+						this.secondRow.alpha = 1; 
+						this.thirdRow.alpha = 0.2
+						this.thirdRow.enabled = false; 
+					}
+					else if ( imageLayer.image_source ==ViridConstants.IMAGE_SOURCE_CLIPART ) 
+					{
+						this.thirdRow.alpha = 1; 
+						this.secondRow.alpha = 0.2
+						this.secondRow.enabled = false; 
+					}
+				}
+				else
+				{
+					this.secondRow.alpha = 0.2; 
+					this.secondRow.enabled = false; 
+					this.thirdRow.alpha = 0.2; 
+					this.thirdRow.enabled = false; 
+				}
+			}
+			
+			
+			
+			
+			public function get getSelectedColor() : uint
+			{
+				return this.selectedColorSwatch.color;
+			}
+			
+			protected function openClipart_clickHandler(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( ADD_IMAGE) ) ;
+			}
+			
+			protected function openImageUpload_clickHandler(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( ADD_UPLOAD_IMAGE) ) ;
+			}
+			
+			
+			public function set changeColor( u : uint ) : void
+			{
+				this.selectedColorSwatch.color = u; 
+				this.dispatchEvent( new CustomEvent(CHANGE_COLOR, u ) ) ; 
+			}
+			
+			
+			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--This component will need to know via json:
+		number of designable layers
+		If we are loading and old design
+		Colors for background layer
+		
+		-->
+		
+		<!--This compnent will recieve signals from controller 
+		to pop, state for undo / redo
+		flip/side or reset stage
+		new image loaded - when library assets have been loaded
+		-->
+		
+		<!--This component will send signals to controller/model for:
+		layer changed or added - this will save for undo / redo states
+		display library - to load new images
+		add new layer - so controller can update right-most cart
+		
+		display notice - whenever user clicks question mark - let the main application handle displaying a message to the users
+		-->
+	</fx:Declarations>
+	<s:Rect radiusX="8" radiusY="8" top="0" left="0" right="0" bottom="0">
+		<s:fill >
+			<s:SolidColor color="0xffffff" />
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:VGroup 
+		width="100%" 
+		paddingBottom="10" paddingLeft="12" paddingRight="16" paddingTop="10"
+		gap="20">
+		
+		<!-- 1st Row-->
+		<s:Group id="rowOne" 
+				 width="100%" height="50" >
+			
+			<s:Label y="8" text="Change  Color" fontSize="16" verticalCenter="0"/>
+			
+			<s:TileGroup id="backgroundColorChooser" 
+						 width="100" height="30"
+						 horizontalCenter="0"
+						 horizontalGap="0" verticalGap="0" verticalCenter="0">
+				<smallComponents:color_swatch swatchColor="0xff00ff"/>
+				<smallComponents:color_swatch swatchColor="0x009dda"/>
+				<smallComponents:color_swatch swatchColor="0xd51c29"/>
+				<smallComponents:color_swatch swatchColor="0x1e145c"/>
+				<smallComponents:color_swatch swatchColor="0x019947"/>
+				<smallComponents:color_swatch swatchColor="0xf3c3a0"/>
+				<smallComponents:color_swatch swatchColor="0x166571"/>
+				<smallComponents:color_swatch swatchColor="0xc38957"/>
+				<smallComponents:color_swatch swatchColor="0xe3e0db"/>
+				<smallComponents:color_swatch swatchColor="0x937842"/>
+				<smallComponents:color_swatch swatchColor="0x030000"/>
+				<smallComponents:color_swatch swatchColor="0xf4e200"/>
+				<smallComponents:color_swatch swatchColor="0xedaec7"/>
+				<smallComponents:color_swatch swatchColor="0x91c7ef"/>
+				<smallComponents:color_swatch swatchColor="0x8c9300"/>
+				<smallComponents:color_swatch swatchColor="0xdd211d"/>
+				<smallComponents:color_swatch swatchColor="0x73bab2"/>
+				<smallComponents:color_swatch swatchColor="0x79a4d8"/>
+				<smallComponents:color_swatch swatchColor="0xb8a76b"/>
+				<smallComponents:color_swatch swatchColor="0x9592cf"/>
+				<smallComponents:color_swatch swatchColor="0xf9d200"/>
+				<smallComponents:color_swatch swatchColor="0x72253d"/>
+				<smallComponents:color_swatch swatchColor="0x01a1b1"/>
+				<smallComponents:color_swatch swatchColor="0xb59309"/>
+				<smallComponents:color_swatch swatchColor="0x912690"/>
+				<smallComponents:color_swatch swatchColor="0x007fbd"/>
+				<smallComponents:color_swatch swatchColor="0x8dcc71"/>
+				<smallComponents:color_swatch swatchColor="0xc43630"/>
+				<smallComponents:color_swatch swatchColor="0x707f81"/>
+				
+				
+			</s:TileGroup>
+			
+			<s:Group id="selectedColor" right="0" verticalCenter="0">
+				<s:Rect id="color" width="60" height="30" >
+					<s:fill>
+						<s:SolidColor id="selectedColorSwatch" color="0x166571"/>
+					</s:fill>
+				</s:Rect>
+			</s:Group>
+			
+			
+		</s:Group>
+		
+		
+		
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="0xe9e9e9"/>
+			</s:stroke>
+		</s:Line>
+		
+		
+		<!-- 2nd Row-->
+		<s:Group id="secondRow" 
+				 width="100%" height="50">
+			
+			<s:VGroup   paddingRight="5" verticalCenter="0">
+				<s:HGroup width="200" paddingTop="8" >
+					<s:Label text="Upload  an  Image" fontSize="16"/> 
+					<s:Label text="$14.95" styleName="price" paddingTop="1"/>
+				</s:HGroup>
+				<s:Label bottom="0" left="0" fontSize="12" text="Upload an Image from your computer" styleName="note" />
+			</s:VGroup>
+			
+			<s:Image id="openImageUpload" verticalCenter="0" 
+					 right="0" width="60" height="30"
+					 click="openImageUpload_clickHandler(event)"
+					 buttonMode="true" useHandCursor="true" mouseChildren="false"
+					 source="assets/images/upload.jpg"
+					 smooth="true"/>
+			
+		</s:Group>
+		
+		
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="0xe9e9e9"/>
+			</s:stroke>
+		</s:Line>
+		
+		
+		<!-- 3rd Row-->
+		<s:Group id="thirdRow" 
+				 width="100%" height="50" verticalCenter="0">
+			
+			<s:VGroup verticalCenter="0">
+				<s:HGroup width="200" paddingTop="10">
+					<s:Label text="Browse zippo image library" fontSize="16"  />
+					<s:Label text="$9.95/Image"
+							 styleName="price" paddingTop="1" paddingLeft="-4"/>
+				</s:HGroup>
+				<s:Label bottom="0" left="0" fontSize="12" text="A variety of borders, backgrounds and themes" styleName="note" />
+			</s:VGroup>
+			
+			<s:Image id="openClipart" smooth="true"
+					 right="0" width="60" height="30" click="openClipart_clickHandler(event)"
+					 buttonMode="true" useHandCursor="true" mouseChildren="false"
+					 source="assets/images/browse.jpg" verticalCenter="0"/>
+			
+		</s:Group>
+		
+	</s:VGroup>
+</s:Group>

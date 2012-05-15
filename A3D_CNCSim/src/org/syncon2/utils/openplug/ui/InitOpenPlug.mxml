@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="1" height="1" creationComplete="onInit(event)" initialize="onInitilze(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			import org.syncon2.utils.mobile.controller.SwitchScreensCommand;
+			import org.syncon2.utils.mobile.controller.SwitchScreensTriggerEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import openplug.elips.controls.Alert;
+			
+			import org.robotlegs.mvcs.Context;
+			import org.syncon.RosettaStone.controller.ConfigCommand;
+			import org.syncon.TalkingClock.model.NightStandConstants;
+			import org.syncon.popups.controller.default_commands.ShowAlertMessageCommand2;
+			import org.syncon2.utils.data.GoThroughEach;
+			import org.syncon2.utils.file.FileAir2_Air;
+			import org.syncon2.utils.file.LoadFiles_Air;
+			import org.syncon2.utils.openplug.PlatformGlobals_OpenPlug;
+			import org.syncon2.utils.sound.PlaySound_OpenPlug;
+			
+			import outside.PlatformGlobals;
+			
+			
+			protected function onInitilze(event:FlexEvent):void
+			{
+				/* PopupModel.fxGetApp = this.getApp */
+				GoThroughEach.PauseFirstAndLast = true
+				NightStandConstants.flex = false; 
+				NightStandConstants.PlaySound = new PlaySound_OpenPlug(); 
+				//LoadConfig_Flex.baseFolder = 'G:/My Documents/work/mobile3/SoundboardFlex/bin-debug/'
+				NightStandConstants.PlatformGlobals = new PlatformGlobals_OpenPlug(); 
+				NightStandConstants.FileLoader = new  LoadFiles_Air (); 
+				//var t :  Array = [Capabilities.version, File.applicationDirectory.nativePath]
+				PlatformGlobals.fxShowAlert = Alert.show
+				PlatformGlobals.fxMediate = this.mediateUI; 
+				//PlatformGlobals.setFxMediate( this.mediateUI )
+				NightStandConstants.PlatformGlobals.setFxMediate(  this.mediateUI );  
+				NightStandConstants.debug = true
+				SwitchScreensCommand.fxSwitchScreens = this.goToScreen2; 
+				SwitchScreensCommand.forceFlex = true; 
+				SwitchScreensCommand.getScreenByName = getScreen; 
+				SwitchScreensCommand.getAppWidth = getAppWidth; 
+				SwitchScreensCommand.history.push(    SwitchScreensTriggerEvent.GoTo( ) ) ; 
+				ShowAlertMessageCommand2.fxAlert = Alert.show
+				if ( File.applicationDirectory.nativePath.indexOf('G:') == 0 )
+				{
+					Context.debugging = true;
+					PlatformGlobals_OpenPlug.onComputer_ = true; 
+				}
+				
+				//return
+				
+				var t :  Array = [  File.applicationDirectory.nativePath, File.applicationStorageDirectory.nativePath]
+				/**
+				 * When on cpu load from bin-debug plz
+				 * appdirectory will be bindebug ... ondeviit is in the storage 
+				 * */
+				if ( File.applicationDirectory.nativePath.indexOf('G:') == 0 )
+				{
+					NightStandConstants.loadFolder = 'jjudy'
+					FileAir2_Air.baseFolder = File.applicationDirectory
+				}
+				FileAir2_Air.baseFolder = File.applicationDirectory.resolvePath('assets/')
+				ConfigCommand.CONFIG_LOCATION =   File.applicationStorageDirectory.nativePath; // 'G:/My Documents/work/mobile3/SoundboardFlex/bin-debug/assets/'
+				
+				//NightStandConstants.loadFolder = 'gow'
+				/* 
+				NightStandConstants.PlatformGlobals.show(  File.applicationDirectory.nativePath );
+				
+				NightStandConstants.PlatformGlobals.show(  File.applicationStorageDirectory.nativePath );
+				
+				for each ( var j : File in File.applicationDirectory.getDirectoryListing())
+				{
+				NightStandConstants.PlatformGlobals.show(  j.name  );
+				} 
+				*/
+				//}
+				this.getMyPhoneSetting(); 
+			}
+			
+			public var mediateUI  : Function; 
+			public var goToScreen2 : Function; 
+			public var getScreen : Function; 
+			public var getAppWidth : Function; 
+			protected function onInit(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			/***
+			 * 
+			 * Need the mediation function to be set as soon as possible 
+			 * */
+			public function reInit() : void
+			{
+				this.onInitilze( null ) 
+			}
+			
+			private function getMyPhoneSetting():void
+			{
+				import openplug.elips.services.SystemAPI;
+				//Alert.show( openplug.elips.services.SystemAPI.getDeviceUID(), 'id' ) ; 
+				trace( 'device id', openplug.elips.services.SystemAPI.getDeviceUID() )
+				if ( openplug.elips.services.SystemAPI.getDeviceUID().toLowerCase() == 'a10000136c5e48' ) 
+					NightStandConstants.personalMachine = true; 
+				'A10000136C5E48'
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

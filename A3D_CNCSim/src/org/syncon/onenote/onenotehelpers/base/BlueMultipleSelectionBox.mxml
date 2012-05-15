@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group 
+		 xmlns:fx="http://ns.adobe.com/mxml/2009"  
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 creationComplete="onInit()"
+		 >
+	
+	<fx:Script>
+		<![CDATA[
+			private function onInit():void {
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Rect top="0" bottom="0" left="0" right="0">
+		<s:stroke>
+			<s:SolidColorStroke weight="1" color="0x2B86DF"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="#5AADFF" alpha="0.22"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Line right="0" left="0" top="0" >
+		<s:stroke>
+			<s:SolidColorStroke weight="1" color="#7BB9EC"/>
+		</s:stroke>
+	</s:Line>
+	
+	<s:Line left="0" top="0" bottom="0" >
+		<s:stroke>
+			<s:SolidColorStroke weight="1" color="#7BB9EC"/>
+		</s:stroke>
+	</s:Line>	
+	
+</s:Group>

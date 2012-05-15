@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"  
+		 creationComplete="onInit(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			import org.syncon.CncSim.vo.TextLayerVO;
+			
+			import spark.events.TextOperationEvent;
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			public var creationComplete : Boolean = false; 
+			
+			
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				this.creationComplete = true
+			}
+			private function init():void {
+			}
+			
+			private var _layer : TextLayerVO = new TextLayerVO(); 
+			
+			public function get layer():TextLayerVO
+			{
+				return _layer;
+			}
+			
+			public function set layer(value:TextLayerVO):void
+			{
+				if ( value == null ) 
+				{
+					trace('set textlayer layer to null')
+				}
+				_layer = value;
+			}
+			
+			private var resetNext:Boolean;
+			public var active:Boolean=true;
+			private var lastLayer:TextLayerVO;
+			private var lastTextChecked:String='';
+			private var lastOffBy:Number=1;
+			private var lastTextCount:int;
+			private var lastTxtSize:int;
+			private var lastTimeCheckedText:String;
+			private var countOfResizeAttempts:Object;
+			
+			public function set data ( value :   Object ) : void
+			{
+				this.txt.text = ''; 
+				this.txtEdit.text = ''; 
+				this.resetNext = true; 
+				
+				this.bg.visible = false; 
+				this.bg.height = 0;  
+				this.bg.width =0;// this.layer.width; 
+				
+				layer = value as TextLayerVO
+				if ( layer != null ) 
+				{
+					trace('layer_text_item_renderer', layer, layer.text, this, this.parent ) ; 
+				}
+				s.listenForObj( layer, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				if ( layer == null ) 
+				{
+					lastLayer = null
+					this.txt.text = ''; 
+					this.txtEdit.text = ''; 
+					return; 
+				}
+				
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				if ( this.active == false ) 
+					return; 
+				if ( layer == null ) 
+				{
+					lastLayer = null
+					return;
+				}
+				
+				
+				newLayerSetAllProps = false 
+				if ( this.lastLayer != this.layer ) 
+				{
+					//this.layer.prepareForDispaly(); //this should update all properties 
+					//just in case forget
+					this.layer.adjustDisplayText(); 
+					this.layer.setFontSize(); 
+					var newLayerSetAllProps :  Boolean = true; 
+					
+					this.lastTextChecked = ''; 
+				}
+				
+				if ( this.layer.propChanged == 'fontSize' || newLayerSetAllProps  )
+				{
+					trace( 'set font size', layer.fontSize  ) 
+					if ( isNaN( this.layer.overrideFontSize ) )  
+					{
+						this.txt.setStyle('fontSize', this.layer.fontSize ) ;
+					}
+					else
+					{
+						this.txt.setStyle('fontSize', this.layer.overrideFontSize ) ;
+					}
+					this.txtMeasure.setStyle('fontSize', layer.fontSize ) ;
+				}
+				if ( this.layer.propChanged == 'fontFamily'  || newLayerSetAllProps )
+				{
+					if ( this.layer.fontFamily != null ) 
+					{
+						this.txt.setStyle('fontFamily', layer.fontFamily ) ;
+						this.txtMeasure.setStyle('fontFamily', layer.fontFamily ) ;
+					}
+					else
+					{
+						this.layer.fontFamily = this.txt.getStyle('fontFamily'); 
+						
+						this.layer.update( 'fontFamily' ) ; 
+					}
+					//this.txt.setStyle('fontFamily', layer.fontFamily ) ;
+				}
+				if ( this.layer.propChanged == 'color'   || newLayerSetAllProps )
+				{
+					this.txt.setStyle('color', layer.color ) ;
+					this.txtMeasure.setStyle('color', layer.color ) ;					
+				}		
+				if ( this.layer.propChanged ==TextLayerVO.PROP_TEXT_ALIGN  || newLayerSetAllProps )
+				{
+					this.txt.setStyle('textAlign', layer.horizontalTextAlignment  ) ;
+					this.txtMeasure.setStyle('textAlign', layer.horizontalTextAlignment  ) ;					
+				}		
+				if ( this.layer.propChanged ==TextLayerVO.PROP_VERTICAL_TEXT_ALIGN  || newLayerSetAllProps )
+				{
+					this.txt.setStyle('verticalAlign', layer.verticalTextAlignment  ) ;
+					this.txtMeasure.setStyle('verticalAlign', layer.verticalTextAlignment  ) ;					
+				}
+				//this doesn;'t feel so safe ... someone migiht not be sending out proper event 
+				if ( this.layer.propChanged ==TextLayerVO.PROP_UPDATED_TEXT  || newLayerSetAllProps )
+				{
+					//this.txt.text  = layer.text; 
+					this.txt.text = layer.displayText; 
+					this.txtMeasure.text = this.layer.displayText;				
+				}	
+				
+				//09/12/11 had to comment this out ... why was this here? it will auto remove this 
+				//this.layer.propChanged = null
+				
+				
+				this.lastLayer =  this.layer
+				//this.txt.setStyle('fontFamily', asdf ) ; 
+				/* 
+				//this.txt.text  = layer.text; 
+				this.txt.text = layer.displayText; 
+				this.txtMeasure.text = this.layer.displayText; */
+				//handle any situations where this component might not resize 
+				if ( newLayerSetAllProps && this.layer.locked  ) 
+				{
+					txt_updateCompleteHandler(null);
+					return;
+				}
+				
+			}
+			
+			protected function img_resizeHandler(event:ResizeEvent):void
+			{
+				if ( this.active == false ) 
+					return; 
+				if ( this.layer == null ) 
+					return; 
+				//return;
+				
+				if ( this.layer.locked == false ) 
+				{
+					this.width = this.txt.width; 
+					this.height = this.txt.height; 
+					
+					this.layer.nonChromeWidth = this.width; 
+					this.layer.nonChromeHeight = this.height;
+				}
+				else
+				{
+					/* 	if ( this.txt.width > this.layer.width ) 
+					{
+					var offBy : Number =  this.layer.width / this.txt.width  
+					this.layer.setFontSize(offBy)
+					}
+					if ( this.txt.height > this.layer.height ) 
+					{
+					offBy  =  this.layer.height / this.txt.height  
+					this.layer.setFontSize(offBy)
+					} */
+				}
+				//this is detrimetnal 
+				/* this.layer.width = this.width; 
+				this.layer.height = this.height; 
+				*/
+				this.layer.update(); 
+				this.dispatchEvent( new  CustomEvent( layer_item_renderer.RESIZED_MANIALY ) ) ; 
+				return; 
+				//this.parentDocument.parentDocument.height = this.img.height; 
+				//this.parentDocument.parentDocument.width = this.img.width; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				this.txt.measuredWidth
+				if ( resetNext )
+				{
+					resetNext = false; 
+					return; 
+				}
+				//trace('1',this.layer.text, this.txt.width, this.txt.height ) ; 
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+			protected function onComplete(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				//this.dispatchEvent( ) ) ; 
+				//this.callLater( this.dispatchEvent, [new ResizeEvent(ResizeEvent.RESIZE)] )
+				this.notifyOfResize()
+				//				/this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//trace('2',this.layer.text, this.txt.width, this.txt.height ) ; 
+			}
+			
+			protected function txt_updateCompleteHandler(event:FlexEvent):void
+			{
+				if ( this.active == false ) 
+					return; 
+				if ( this.layer == null ) 
+					return; 
+				if ( this.parentDocument == null ) //y are these necessary? b/c txt update doesnt 'care?
+					return; 
+				
+				if ( resetNext )
+				{
+					this.parentDocument.resetting= false; 
+					resetNext = false; 
+					if ( this.layer.locked == false ) 
+					{	 
+						this.height = this.txt.height; 
+						this.width = this.txt.width; 
+					}
+					else
+					{
+						this.height =this.layer.height; 
+						this.width = this.layer.width; 
+						this.parentDocument.height =this.layer.height; 
+						this.parentDocument.width = this.layer.width; 
+					}
+					trace('3', this.layer.text, this.txt.width, this.txt.height ) ; 
+					this.notifyOfResize()
+				}
+				
+			}
+			
+			public function   notifyOfResize() : void{
+				var notify : Object = this.parentDocument; 
+				//notify = this.parentDocument.parentDocument
+				parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+			protected function txt_clickHandler(event:MouseEvent):void
+			{
+				return; 
+				this.currentState = ( this.currentState == 'normal' ) ? 'edit' : 'normal' 
+				if ( this.currentState =='edit' ) 
+					this.txtEdit.setFocus(); 
+			}
+			
+			protected function onChange(event:TextOperationEvent):void
+			{
+				this.layer.text = this.txtEdit.text; 
+				this.layer.update(); 
+			}
+			
+			public function setupTxtEdit() : void
+			{
+				txtEdit.text = this.layer.text; 
+			}
+			
+			protected function resize2( ):void
+			{
+				if ( this.layer == null ) 
+					return;
+				if ( this.txtMeasure.text == this.lastTimeCheckedText ) 
+				{
+					this.countOfResizeAttempts+=1
+					if ( countOfResizeAttempts > 50 ) 
+						return; 
+					/*
+					if ( this.layer.fontSize < this.lastTxtSize+2 && this.layer.fontSize > lastTxtSize -2 )
+					return; //close enough ...
+					*/
+				}
+				else
+				{
+					countOfResizeAttempts = 0; 
+				}
+				this.layer.incrementFontSize( this.txtMeasure.width, 
+					this.txtMeasure.height, this.txtMeasure.getStyle('fontSize')  ) ;
+				this.lastTxtSize = this.layer.fontSize
+				this.lastTimeCheckedText =  this.txtMeasure.text
+			}
+			
+			
+			
+			protected function txtMeasure_updateCompleteHandler(event:FlexEvent):void
+			{
+				resize2(); 
+			}
+			
+			/**
+			 * when used is x 
+			 * */
+			protected function txtMeasure_resizeHandler(event:ResizeEvent, callLate : Boolean = true):void
+			{
+				//resize2(); 
+				return; 
+				/* if ( callLate )
+				{
+				this.callLater( this.txtMeasure_resizeHandler, [event, false] )
+				return; 
+				} */
+				// TODO Auto-generated method stub
+				trace('xy', this.txtMeasure.width, this.txtMeasure.height ) ; 
+				//return;
+				if ( this.layer == null ) 
+					return; 
+				if ( this.layer.locked == false ) 
+					return; 
+				
+				
+				/* var dbg : Array = [ this.txt.getStyle('textAlign' ),this.txt.getStyle('verticalAlign' ),
+				this.txt.getStyle('fontSize' ),this.txt.getStyle('verticalAlign' )] */
+				var tx : String  =this.txtMeasure.text
+				if ( this.layer.displayText != this.txtMeasure.text ) 
+					return;
+				/* 				if ( this.lastTextChecked == this.layer.displayText ) 
+				return ; */
+				if ( this.lastTextChecked == this.layer.displayText ) 
+				{
+					/* return
+					lastTextCount++
+					if ( lastTextCount > 3 ) 
+					{
+					return;
+					}	  */
+				}
+				else
+				{
+					var dirty : Boolean = true; 
+					this.lastTextCount =0 
+				}
+				
+				if ( this.lastTextChecked.length  <= this.layer.displayText.length )
+					var smaller : Boolean = true
+				if ( this.lastTextChecked.length  > this.layer.displayText.length )
+					var larger : Boolean = true						
+				this.lastTextChecked = this.layer.displayText; 
+				
+				if ( this.layer.verticalText == false ) 
+				{
+					if ( this.txtMeasure.width > this.layer.width ) 
+					{
+						var offBy : Number =  (this.layer.width*.8) /  this.txtMeasure.width  
+						//offBy = offBy*2/3
+						if ( smaller   ) 
+						{
+							/* if ( offBy >= this.lastOffBy ) 
+							return;  */
+							offBy = Math.min( offBy, this.lastOffBy ) 
+						}
+						if ( larger    ) 
+						{
+							/* if ( offBy <= this.lastOffBy ) 
+							return;  */
+							offBy = Math.max( offBy, this.lastOffBy ) 	
+						}	
+						if ( offBy == this.lastOffBy ) 
+							return; 
+						this.lastOffBy = offBy
+						this.layer.setFontSize(offBy)
+						//trace('offBy', offBy ) ; 
+					}
+					else
+					{
+						offBy  =  (this.layer.width*.8) /  this.txtMeasure.width  
+						//don't reset after i have resized ...., only if just changed
+						if ( dirty == false ) 
+							return;
+						//only reset if offBy is greater than 1
+						if ( offBy > 1 ) 
+						{
+							this.lastOffBy = 1
+							this.layer.setFontSize(1)
+						}
+					}
+				}
+				else
+				{
+					if ( this.txtMeasure.height > this.layer.height ) 
+					{
+						offBy  =   ( this.layer.height  *.9)/this.txtMeasure.height 
+						if ( smaller   ) 
+						{
+							if ( offBy >= this.lastOffBy ) 
+								return; 
+							offBy = Math.min( offBy, this.lastOffBy ) 
+						}
+						if ( larger    ) 
+						{
+							if ( offBy <= this.lastOffBy ) 
+								return; 
+							offBy = Math.max( offBy, this.lastOffBy )
+						}
+						this.lastOffBy = offBy
+						
+						this.layer.setFontSize(offBy)
+						//trace('offBy', offBy ) ; 
+					}
+					else
+					{
+						//don't reset after i have resized ...., only if just changed
+						if ( dirty == false ) 
+							return; 
+						this.lastOffBy = 1
+						this.layer.setFontSize(1)
+					}
+				}
+				
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<fx:Array  id="dropFilters">
+			<!--<s:GlowFilter id="filterGlow"  strength="8" alpha="1"
+			color="0xd2d2d2" blurX="2" blurY="2" />
+			<s:GlowFilter alpha="0.6" color="0xd2d2d2" blurX="4" blurY="4" />-->
+			<!--<s:BlurFilter id="filterBlur"  blurX="2" blurY="2" />-->
+		</fx:Array>
+		
+	</fx:Declarations>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="edit"/>
+	</s:states>
+	<!--   top="0" left="0" right="0" bottom="0"  -->
+	<s:Rect  id="bg" visible="false" alpha="1">
+		<s:fill >
+			<s:SolidColor color="0xcdcdcd" />
+		</s:fill>
+		<!--	 <s:stroke>
+		<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke> -->
+	</s:Rect>
+	
+	<s:RichText id="txt" click="txt_clickHandler(event)" resize="img_resizeHandler(event)"
+				fontFamily="Helvetica"
+				horizontalCenter="0" verticalCenter="0"
+				updateComplete="txt_updateCompleteHandler(event)" >
+		
+	</s:RichText>
+	<!--	<s:Label id="txt" click="txt_clickHandler(event)" resize="img_resizeHandler(event)"
+	horizontalCenter="0" verticalCenter="0"
+	updateComplete="txt_updateCompleteHandler(event)"/>-->
+	
+	<s:TextInput id="txtEdit" visible="false" width="{this.txt.width}" height="{this.txt.height}"
+				 change="onChange(event)" click="txt_clickHandler(event)"
+				 creationComplete="this.setupTxtEdit()"
+				 horizontalCenter="0" verticalCenter="0"
+				 visible.edit="true"/>
+	
+	<!-- 
+	this is the text field used to measure for resiaing
+	-->
+	<s:Group width="1" height="1" visible="false">
+		<s:RichText id="txtMeasure"  updateComplete="txtMeasure_updateCompleteHandler(event)"
+					resize="txtMeasure_resizeHandler(event)" />
+	</s:Group>
+</s:Group>

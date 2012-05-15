@@ -1,0 +1,81 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+
+/*@font-face { 
+	src: url("../assets/MyriadWebPro.ttf"); 
+	fontFamily: myFontFamily; 
+	embedAsCFF: false; 
+}       */
+
+@font-face {
+	src: url("fonts/Helvetica.ttf");	
+	fontFamily: myFontFamily;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/Helvetica Bold.ttf");	
+	fontWeight: bold; 
+	fontFamily: myFontFamily;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/Helvetica Oblique.ttf");	
+	fontStyle: italic; 
+	fontFamily: myFontFamily;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/MostlyMono.ttf");	
+	fontFamily: Crysta;
+	embedAsCFF: false;
+}
+
+@font-face {
+	src: url("fonts/TRANA___.TTF");	
+	fontFamily: Tranga;
+	embedAsCFF: false;
+}
+@font-face {
+	src: url("fonts/TRANGA__.TTF");	
+	fontFamily: TrangaGrid;
+	embedAsCFF: false;
+}
+ 
+@font-face {
+	src: url("fonts/monof55.TTF");	
+	fontFamily: TPF;
+	embedAsCFF: true;
+}
+s|global
+{
+	fontFamily: myFontFamily;
+}
+ 
+ 
+@font-face {
+	src: url("fonts/MostlyMono.ttf");	
+	fontFamily: Crysta2;
+	embedAsCFF: true;
+}
+
+@font-face {
+	src: url("fonts/Helvetica.ttf");	
+	fontFamily: myFontFamily2;
+	embedAsCFF: true;
+}
+@font-face {
+	src: url("fonts/Helvetica Bold.ttf");	
+	fontWeight: bold; 
+	fontFamily: myFontFamily2;
+	embedAsCFF: true;
+}
+@font-face {
+	src: url("fonts/Helvetica Oblique.ttf");	
+	fontStyle: italic; 
+	fontFamily: myFontFamily2;
+	embedAsCFF: true;
+}
+
+s|Label
+{
+	fontFamily: myFontFamily2;
+}

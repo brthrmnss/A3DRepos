@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2009/04/29/using-virtual-layout-on-a-spark-list-control-in-flex-gumbo/ -->
+<!-- http://www.jeffryhouser.com/index.cfm/2011/1/25/How-do-you-force-rendereres-to-refresh-in-a-spark-list -->
+<s:Group name="Spark_List_layout_useVirtualLayout_test"
+		 xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 initialize="init();">
+	
+	<fx:Script>
+		<![CDATA[
+			import spark.skins.spark.VScrollBarSkin;
+			private function init():void {
+				for (var i : int =0; i<5; i++) {
+					//arr.push("Item #" + i);
+					var l : lister = new lister()
+					l.x = 100*i
+					l.y = 100*i
+				var ee : VScrollBarSkin
+					this.workspace.addElement( l ) 
+				}
+			}
+		]]>
+	</fx:Script>
+	<!--
+	<s:Scroller width="520" height="380" id="scroller" minViewportInset="1" focusEnabled="false">
+		<s:Group clipAndEnableScrolling="true" id="descriptionBox">
+			<s:RichText id="richText" creationComplete="updateText('add')"
+						width="490" textAlign="justify" fontFamily="Arial" fontSize="12" color="#999999" />
+		</s:Group>
+	</s:Scroller>
+	-->
+<!--	<s:Scroller  height="100%"  width="100%"   id="scroller" minViewportInset="1" focusEnabled="false">
+		<s:Group id="workspace" clipAndEnableScrolling="true"  >
+			
+		</s:Group>
+	</s:Scroller>-->
+	
+	
+	<s:Group id="workspace" clipAndEnableScrolling="true"  height="500" >
+		
+	</s:Group>
+	<s:VScrollBar viewport="{workspace}" 
+				  left="{workspace.x + workspace.width + 10}" 
+				  top="10" 
+				  height="{workspace.height}"
+				  fixedThumbSize="true"
+				  skinClass="spark.skins.spark.VScrollBarSkin"/>
+</s:Group>

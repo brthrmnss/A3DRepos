@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  creationComplete="onInit()" 
+					  implements="org.syncon.popups.view.IPopup"					  
+					  >
+ 
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.popups.view.IPopup;
+			import sss.Shelpers.Shelpers.ui.PopupCode;
+			
+			public var creationComplete : Boolean = false; 
+			public function onInit() : void 
+			{
+				this.creationComplete = true; 
+				this.popupCode.center()
+			}
+			
+			public  function create(app:Object)  : IPopup
+			{
+				var popup :  PopupBase = new PopupBase()
+				popup.popupCode =  PopupCode.Create( popup ,app ) 
+				return popup			
+			} 
+			
+			private var _popupCode :   PopupCode; 
+			public function get  popupCode () : PopupCode { return _popupCode  } 
+			public function set  popupCode ( _popupCode_ : PopupCode) : void {   _popupCode = _popupCode_  } 
+			
+			public function show(  )  : void
+			{
+				this.popupCode.open( false, false ) 
+			}
+			
+			public function hide( ) : void
+			{
+				this.popupCode.close() 
+			}
+			
+ 
+		]]>
+	</fx:Script>
+ 
+	
+</s:SkinnableContainer>

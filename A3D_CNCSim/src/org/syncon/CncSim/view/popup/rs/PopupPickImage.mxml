@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:popup1="org.syncon.NightStand.view.popup.*"
+					  width="100%" height="100%" backgroundAlpha="0.0" creationComplete="onInit()"
+					  implements="org.syncon.popups.view.IPopup" xmlns:popup="org.syncon.CncSim.view.popup.*" xmlns:mobile="org.syncon.TalkingClock.view.mobile.*">
+	
+	<fx:Metadata> 
+		[Event(name="cancel", type="flash.events.Event")] 		
+		[Event(name="setup", type="flash.events.Event")] 
+	</fx:Metadata> 	
+	
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.popups.view.IPopup;
+			
+			import spark.events.IndexChangeEvent;
+			
+			import sss.Shelpers.Shelpers.ui.PopupCode;
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			static public const OK : String = 'save'; 	
+			static public const CANCEL : String = 'cancel'; 	
+			static public const BACK : String = 'back'; 	
+			static public const SETUP : String = 'setup'; 	
+			
+			static public const SELECT : String = 'SELECT'; 	
+			static public const NEXT_LESSON : String = 'NEXT_LESSON'; 	
+			static public const GO_HOME : String = 'GO_HOME'; 	
+			
+			static public const UPLOAD : String = 'UPLOAD'; 	
+			
+			public var creationComplete : Boolean = false; 
+			public function onInit() : void 
+			{
+				this.creationComplete = true; 
+				this.popupCode.center()
+			}
+			
+			public  function create(app:Object)  : IPopup
+			{
+				var popup : PopupPickImage = new PopupPickImage()
+				popup.popupCode =  PopupCode.Create( popup ,app ) 
+				return popup			
+			} 
+			
+			private var _popupCode :   PopupCode; 
+			public function get  popupCode () : PopupCode { return _popupCode  } 
+			public function set  popupCode ( _popupCode_ : PopupCode) : void {   _popupCode = _popupCode_  } 
+			
+			public function show()  : void
+			{
+				this.popupCode.open( false, true ) ;  
+			}
+			public function hide( ) : void
+			{
+				this.popupCode.close() 
+			}
+			
+			
+			protected function onSave(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( OK) ) 
+			}
+			
+			protected function onCancel(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( CANCEL ) ) 
+			}
+			
+			
+			public var args : Array = [] ; 
+			public var fxDone:Function;
+			public function showPopup(   fxDone : Function = null ) : void
+			{
+				//this.width =  this.parentApplication.width*.8
+				//this.height =  this.parentApplication.height*.8
+				this.dispatchEvent( new Event (SETUP   )) 
+				this.show()
+				this.fxDone = fxDone; 
+			}
+			
+			protected function onRepeat(event:MouseEvent=null):void
+			{
+			}
+			
+			protected function onNext(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( NEXT_LESSON ) )  
+			}
+			
+			protected function noHome(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( GO_HOME ) ) 
+			}			
+			
+			protected function onBack(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( BACK ) )  
+			}
+			
+			/* 		protected function onCancel(event:MouseEvent=null):void
+			{
+			this.dispatchEvent( new Event( CANCEL ) ) 
+			}			 */
+			
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				var index : int = event.newIndex; 
+				if ( index == -1 ) 
+					return; 
+				
+				var selectedItem : Object = this.list.dataProvider.getItemAt( index ) ; 
+				var e : CustomEvent = new CustomEvent( SELECT, selectedItem ) 
+				this.dispatchEvent(  e ) ; 
+				
+			}
+			
+			protected function onUpload(event:MouseEvent):void
+			{
+				this.dispatchEvent( new Event( UPLOAD ) )  
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<!--	<s:Rect width="100%" height="100%" >
+	<s:stroke>
+	<s:SolidColorStroke color="0xFFFFFF" alpha="0.3" />
+	</s:stroke>
+	</s:Rect> -->
+	<!--	<popup:PopupBg alpha="0.56"/>
+	-->
+	
+	
+	<s:Rect left="0" right="0" top="0" bottom="0"  radiusX="25" radiusY="25" >
+		<s:stroke>
+			<s:SolidColorStroke color="0xA1A1A1" alpha="1"    weight="1" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xFFFFFF" alpha="1" />
+		</s:fill>
+	</s:Rect>
+	
+	<s:VGroup paddingBottom="12" paddingLeft="12" paddingRight="12" paddingTop="12" >
+		<s:Group id="header" width="620" clipAndEnableScrolling="true">
+			<s:BitmapImage source="assets/images/sprite_headers.png" smooth="true" height="100%" width="100%" />
+			<s:Label text="Zippo  Image  Library" x="10" fontSize="20" verticalCenter="6" color="0xffffff"/>
+		</s:Group>
+		
+		
+		<s:List id="list" width="620" height="200" borderVisible="false"
+				
+				change="list_changeHandler(event)" contentBackgroundAlpha="0"
+				itemRenderer="org.syncon.CncSim.view.popup.rs.PickImageRenderer">
+			<s:layout>
+				<s:TileLayout horizontalAlign="center" id="layoutT"
+							  columnWidth="90" rowHeight="90"
+							  paddingBottom="0" paddingTop="0" paddingLeft="0" paddingRight="0"
+							  verticalGap="10" horizontalGap="30"  />
+				<!--
+				columnWidth="{this.width*.9/2}" rowHeight="{this.width*.9/2}"
+				-->
+			</s:layout>
+		</s:List>
+		
+		<s:HGroup width="100%" horizontalAlign="center" >
+		<!--	<s:Button label="Back" click="onBack()" />
+			<s:Button label="Upload" click="onUpload(event)" />-->
+			<s:Button label="Cancel"  click="onCancel()" />
+		</s:HGroup>
+	</s:VGroup>
+	
+	
+	
+	
+	
+	<s:filters>
+		<s:DropShadowFilter alpha="0.2" angle="45.0" blurX="8.0" blurY="8.0" color="#0"
+							distance="8.0" hideObject="false" inner="false" knockout="false"
+							quality="2" strength="1"/> 
+	</s:filters> 
+	
+	
+	
+</s:SkinnableContainer>

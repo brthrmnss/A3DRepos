@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="onInit(event)"
+				autoDrawBackground="false">
+	
+	
+	<fx:Script> 
+		<![CDATA[ 
+			import mx.events.FlexEvent;
+			
+			import org.syncon.Customizer.model.CustomEvent;
+			import org.syncon.Customizer.model.NightStandConstants;
+			import org.syncon.Customizer.vo.ImageVO;
+			import org.syncon.Customizer.vo.ItemRendererHelpers;
+			static public const MOVE_UP : String = 'MOVE_UP.f'; 
+			static public const MOVE_DOWN : String = 'MOVE_DOWN.f' ; 
+			static public const DELETE : String = 'DELETE.f'; //export before delete 
+			static public const CHANGED_FILTER_FROM_RENDERER : String = 'CHANGED_FILTER';
+			static public const COPY_FILTER : String = 'COPY_FILTER';
+			
+			public var help : ItemRendererHelpers = new ItemRendererHelpers(this ) ; 
+			[Bindable] public var filter : ImageVO = new ImageVO()
+			override public function set data(value:Object):void { 
+				super.data = value; 
+				this.help.listenForObj(value,ImageVO.UPDATED, this.updateItemRenderer )
+				filter = value as ImageVO
+				this.help.disableIfNull( value, new ImageVO, 'filter' )  
+				this.updateItemRenderer()
+			} 
+			
+			
+			public function updateItemRenderer(e:Event=null)  : void
+			{
+				txtLbl.text = this.filter.name.toString()
+				if (this.selected == false && this.currentState == 'selected' )
+					this.currentState = ''; 
+				
+				this.img.source = this.filter.url; 
+			}
+			
+			protected function onUp():void
+			{
+				this.dispatchEvent( new CustomEvent( MOVE_UP, this.filter ) ) ; 
+			}
+			protected function onDown():void
+			{
+				this.dispatchEvent( new CustomEvent( MOVE_DOWN, this.filter ) ) ; 
+			}
+			protected function onDelete():void
+			{
+				this.dispatchEvent( new CustomEvent( DELETE, this.filter ) ) ; 
+			}			
+			
+			protected function onCopy():void
+			{
+				this.dispatchEvent( new CustomEvent( COPY_FILTER, this.filter ) ) ; 
+			}		
+			
+			protected function ch_Visible_changeHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				if ( NightStandConstants.flex == false ) 
+				{
+					// TODO Auto-generated method stub
+					this.width = this.parentApplication.width -20
+					txtLbl.setStyle('fontSize', this.txtLbl.getStyle('fontSize')*2 ) ;
+				}
+			}
+			
+		]]> 
+	</fx:Script> 
+	
+	<fx:Declarations>
+		<s:Sine id="sineIn" easeInFraction="0.3"/>
+	</fx:Declarations>	
+	<!--	<s:layout>
+	<s:HorizontalLayout gap="3"/>
+	</s:layout>-->
+	<s:states> 
+		<s:State name="normal"/> 
+		<s:State name="hovered"/> 
+		<s:State name="disabled"/> 
+		<s:State name="selected"/> 
+	</s:states> 
+	
+	<s:transitions>
+		
+		<s:Transition toState="*">
+			<s:Parallel>
+				
+				
+				<s:Fade duration="350" easer="{sineIn}" targets="{[this.bgRect]}"/>
+				<s:AnimateColor duration="500" easer="{this.sineIn}"
+								targets="{[this.txtLbl, this.borderFill ]}"/>
+			</s:Parallel>
+		</s:Transition>		
+		
+	</s:transitions>		
+	<!--
+	<s:Rect id="bgRect" width="100%" height="100%"
+	alpha.normal="0">
+	<s:fill>
+	<s:SolidColor color="0x598E52"
+	color.hovered="0x598E52"
+	color.selected="0x36722E"/>
+	</s:fill>
+	</s:Rect> 
+	-->
+	<s:VGroup horizontalAlign="center" verticalAlign="middle" verticalCenter="0">
+		<!--<s:Label id="seperator" text="|" color="0x6E6E6E"  />-->
+		
+		<s:Group height="60" width="90">
+			<s:Rect id="bgRect2" width="100%" height="100%"
+					>
+				<s:fill>
+					<s:SolidColor color="0xFFFFFF" id="borderFill"
+								  color.hovered="0xF50D1B"
+								  color.selected="0xF50D1B"/>
+				</s:fill>
+			</s:Rect> 
+			<s:Image    id="img" horizontalCenter="0" verticalCenter="0" 
+						 useHandCursor="true" buttonMode="true" smooth="true" smoothingQuality="default"
+						height="50" width="75" >
+				
+			</s:Image>
+			<s:filters>
+				<s:DropShadowFilter alpha="0.2" angle="45.0" blurX="4.0" blurY="4.0" color="#0"
+									distance="2.0" hideObject="false" inner="false" knockout="false"
+									quality="2" strength="1"/> 
+			</s:filters> 
+		</s:Group>
+		<s:Spacer height="3" width="100%" />
+		<s:Label id="txtLbl" x="5"   color="0"   verticalCenter="0" textAlign="center"
+				 buttonMode.hovered="true"  useHandCursor.hovered="true"
+				 />
+		
+	</s:VGroup>
+</s:ItemRenderer>

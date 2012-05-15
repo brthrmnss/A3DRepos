@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:skins="org.syncon.CncSim.view.skins.*"
+		 xmlns:component="org.virid.component.*" creationComplete="onInit(event)"
+		 width="100%" height="100%" xmlns:components="org.syncon.CncSim.view.ui.old.components.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.view.ui.old.smallComponents.FontDropDownItemRenderer;
+			public static var ADD_TEXT:String='ADD_TEXT';
+			
+			protected function onAddText(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.dispatchEvent( new CustomEvent( ADD_TEXT) ) ;
+			}
+			
+			
+			
+			import mx.collections.ArrayList;
+			import mx.events.ColorPickerEvent;
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			import org.syncon.CncSim.vo.TextLayerVO;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			public static const CHANGE_FONT_FAMILY:String='CHANGE_FONT_FAMILY';
+			public static const CHANGE_COLOR:String='CHANGE_COLOR';
+			public static const CHANGE_FONT_SIZE:String='CHANGE_FONT_SIZE';
+			public static const CHANGE_TEXT_ALIGN:String='CHANGE_TEXT_ALIGN';
+			public static const CHANGED_TEXT:String='CHANGED_TEXT';
+			public static const DATA_CHANGED:String='DATA_CHANGED';
+			
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			protected function onInit(event:FlexEvent):void
+			{
+				//FontDropDownItemRenderer
+			//	this.fontSelect.skin['dataGroup'].itemRenderer = new  ClassFactory(FontDropDownItemRenderer) 
+			}		
+			private var _layer :  TextLayerVO = new TextLayerVO() ;
+			public function get layer()  : TextLayerVO { return this._layer } 
+			public function set layer (layer_ : TextLayerVO ) : void
+			{
+				s.listenForObj( layer_, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this._layer = layer_; 
+				this.onUpdatedLayer(); 
+				this.dispatchEvent( new Event(DATA_CHANGED )  ) ; 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				this.txt.text = this.layer.text
+				
+				this.colorList.changeColor = this.layer.color; 
+				/* 	colorList.selectedItem = this.layer.color;
+				if ( this.layer.color is String ) 
+				{
+				colorList.selectedItem = uint(this.layer.color ) 
+				}
+				colorList.labelDisplay.data = this.layer.color */
+				//only if fresh loading ...	
+				if ( e == null ) 
+				{
+					this.txt.setFocus(); //try this for now 
+					this.txt.selectRange( 0, this.txt.text.length ) ;
+				}
+				//this.fontFamily.selectedItem = this.layer.fontFamily
+				//this.fontSize.selectedItem = this.layer.fontSize; 
+				//.chkVisible.selected = this.layer.visible ; 
+				txtMaxChars.text = ''; 
+				this.txt.maxChars = 0;
+				if ( this.layer.maxChars > 0 ) 
+				{
+					this.txtMaxChars.text = this.layer.maxChars.toString( )+ ' characters max'; 
+					this.txt.maxChars = this.layer.maxChars
+				}
+				
+				if ( this.layer.propChanged == 'fontSize' ) 
+				{
+					this.fontSize.selectedItem = this.layer.fontSize; 
+				}
+				
+				
+			}
+			
+			protected function chkVisible_changeHandler(event:Event):void
+			{
+				//this.layer.visible = this.chkVisible.selected; 
+				this.layer.update(); 
+			}
+			
+			
+			
+			private function fontSize_changeHandler(event:IndexChangeEvent):void {
+				var item:Object = event.currentTarget.selectedItem;
+				/* var fontStyle:TextLayoutFormat = new TextLayoutFormat();
+				fontStyle.fontSize = item;
+				editManager.applyLeafFormat(fontStyle); */
+				
+				this.dispatchEvent( new CustomEvent( CHANGE_FONT_SIZE, int(item )  ) ) 
+			}
+			
+			private function fontFamily_changeHandler(event:IndexChangeEvent):void {
+				var item:Object = event.currentTarget.selectedItem;
+				/* var fontStyle:TextLayoutFormat = new TextLayoutFormat();
+				fontStyle.fontFamily = item;
+				editManager.applyLeafFormat(fontStyle); */
+				this.dispatchEvent( new CustomEvent( CHANGE_FONT_FAMILY, item   ) ) 
+			}
+			
+			protected function txt_changeHandler(event:TextOperationEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( CHANGED_TEXT   ) ) 
+			}
+			protected function colorList_ClickHandler(event:Event):void
+			{
+				//this.oldFocus = this.getFocus()
+				return; 
+			}
+			
+			private function colorPicker_changeHandler(event:Event):void {
+				var colorFormat:uint;
+				if (event is ColorPickerEvent)
+					colorFormat = event.currentTarget.selectedColor as uint;
+				else if (event is IndexChangeEvent)
+					colorFormat = event.currentTarget.selectedItem as uint;
+				
+				this.dispatchEvent( new CustomEvent( CHANGE_COLOR, colorFormat   ) ) 
+			}
+			public function colorPicker_changeHandler2(event:Event):void {
+				var colorFormat:uint = this.colorList.getSelectedColor; 
+				this.dispatchEvent( new CustomEvent( CHANGE_COLOR, colorFormat   ) ) 
+			}
+			
+			
+			protected function colorList_focusInHandler(event:FocusEvent):void
+			{
+				return;
+				//this.oldFocus = this.getFocus()
+			}
+			
+			
+			
+
+			
+			protected function dropDown_FontSelect_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				if ( event.newIndex == -1 ) 
+					return; 
+				var item:Object = event.currentTarget.selectedItem;
+				this.dispatchEvent( new CustomEvent( CHANGE_FONT_FAMILY, item   ) ) 
+				
+				//this.fontSelect.closeDropDown(true)
+				this.txt.setFocus(); 
+				this.txt.selectRange( this.txt.text.length, this.txt.text.length );
+				
+				this.callLater( this.dropDown_FontSelect.closeDropDown, [true] )  ; 
+				
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--This component will need to know via json:
+		Engravable surfaces, arrray [true, true, true, true]
+		Eligible fonts and limits: map [font1:size limit,font2:size limit]
+		Product Images : map [font:zoom, back:zoom]
+		Any saved text already on the lighter - if the product is being edited - (we might handle this somewhere else)
+		-->
+		
+		<!--This component will send signals to controller/model for:
+		engraving text changed - whenever user deletes or adds text
+		Flip product image - whenever user needs to rotate main lighter image to show other side
+		New engraved surface - whenever user starts engraving a new surface, so we can update the right-most mini cart
+		remove engraved surface
+		
+		display notice - whenever user clicks question mark - let the main application handle displaying a message to the users
+		-->
+	</fx:Declarations>
+	<s:Rect width="100%" height="100%" radiusX="8" radiusY="8">
+		<s:fill>
+			<s:SolidColor color="0xffffff"/>
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Rect>
+	
+	
+	<s:VGroup id="menu" width="100%" height="100%" gap="10" paddingBottom="12" paddingLeft="12"
+			  paddingRight="12" paddingTop="16">
+		
+		
+		
+		<!--
+		
+		<s:HGroup width="100%" height="26">
+		<s:Label text="Front Top" styleName="arialSubHeading"/>
+		<s:Label text="|" styleName="arialSubHeading"/>
+		<s:Label text="Front Bottom" styleName="arialSubHeading"/>
+		<s:Label text="|" styleName="arialSubHeading"/>
+		<s:Label text="Back Top" styleName="arialSubHeading"/>
+		<s:Label text="|" styleName="arialSubHeading"/>
+		<s:Label text="Back Bottom" styleName="arialSubHeading" />	
+		</s:HGroup>-->
+		
+		
+		<s:HGroup id="rowFonts" width="100%" height="60" paddingTop="2">
+			<s:VGroup width="100%">
+				<s:HGroup width="50%">
+					<s:Label fontSize="16" styleName="subHeading" text="Choose A Font"/>
+					<s:Label id="txtMaxChars" styleName="Arial grayTxt" text="45 charectors max"/>
+					
+				</s:HGroup>
+				<s:HGroup id="holderDropdown" width="100%">
+					<s:DropDownList id="dropDown_FontSelect" width="100%" height="38" borderColor="0xe9e9e9"
+									change="dropDown_FontSelect_changeHandler(event)"
+									cornerRadius="8" dropShadowVisible="false"
+									prompt="SELECT A FONT"  fontSize="18"
+									skinClass="org.syncon.CncSim.view.ui.old.smallComponents.LightGrayRoundedDropDown_Fonts"
+									focusEnabled="false"
+									tabEnabled="false" tabFocusEnabled="false"/>	
+					<s:DropDownList id="fontSize" width="54" height="38" borderColor="0xe9e9e9"
+								change="fontSize_changeHandler(event)" cornerRadius="8"  
+								dataProvider="{new ArrayCollection([6,7,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,32,36,40,44,48,54,60,66,72,80,88,96])}"
+								dropShadowVisible="false" focusEnabled="false" selectedItem="12"
+								skinClass="org.syncon.CncSim.view.ui.old.smallComponents.LightGrayRoundedDropDown"
+								toolTip="Font size"/>
+				</s:HGroup>
+				
+			</s:VGroup>
+			
+			
+		</s:HGroup>
+		
+		
+		
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="0xf9f9f9"/>
+			</s:stroke>
+		</s:Line>
+		
+		
+		<s:VGroup width="100%" paddingTop="2">
+			<s:Group width="100%">
+				<s:Label fontSize="16" styleName="subHeading" text="FONT  COLOR" 
+						 textAlign="left" verticalCenter="0"/>
+			
+				<components:ColorPicker id="colorList" width="190" right="0"
+									   change="colorPicker_changeHandler2(event)"
+									   toolTip="Select Color"/>
+			</s:Group>
+		</s:VGroup> 
+		
+		
+		
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="0xf9f9f9"/>
+			</s:stroke>
+		</s:Line>
+		
+		
+		
+		<s:VGroup width="100%" paddingTop="10">
+			<s:HGroup width="100%" horizontalAlign="left">
+				<s:Label fontSize="16" styleName="subHeading" text="EDIT Text" textAlign="left"/>
+			</s:HGroup>
+			
+			
+			<s:HGroup width="100%">
+				<!-- no need to flip back and forth ... there is a seperate engrave panel -->
+				<!--<s:TextInput id="txt" width="100%" height="38" borderColor="0xe9e9e9"
+				change="txt_changeHandler(event)" focusAlpha="0" paddingTop="10"
+				skinClass="org.virid.skins.LightGrayRoundedFormField" text="Text"/>-->
+				<s:TextArea id="txt" width="100%" height="68" borderColor="0xe9e9e9"
+							change="txt_changeHandler(event)" focusAlpha="0" paddingTop="5"
+							 verticalAlign="top" 
+							skinClass="org.syncon.CncSim.view.skins.TextAreaSkin" text="Text"/>
+				<s:Button visible="false" height="20" label="ADD  MY  TEXT" click="onAddText(event)"
+						  includeInLayout="false" skinClass="org.syncon.CncSim.view.skins.simpleBlackBtn"
+						  verticalCenter="0"/>
+				
+			</s:HGroup>			
+			
+			<!--		<s:DropDownList id="dropDownFont" />
+			<s:DropDownList id="dropDownSize" dataProvider="{new ArrayList([8,10,12,16,24,36,48,72])}" />-->
+			<!--
+			<s:ComboBox id="fontSize" width="50" cornerRadius="0" selectedItem="12"
+			change="fontSize_changeHandler(event)" toolTip="Font size"
+			dataProvider="{new ArrayCollection([6,7,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,32,36,40,44,48,54,60,66,72,80,88,96])}"/>
+			
+			<s:ComboBox id="fontFamily" width="100" cornerRadius="0" selectedIndex="0"
+			change="fontFamily_changeHandler(event)" toolTip="Font family">
+			<s:dataProvider>
+			<s:ArrayCollection>
+			<fx:Object>Arial</fx:Object>
+			<fx:Object>Courier</fx:Object>
+			<fx:Object>Courier New</fx:Object>
+			<fx:Object>Geneva</fx:Object>
+			<fx:Object>Georgia</fx:Object>
+			<fx:Object>Helvetica</fx:Object>
+			<fx:Object>Times New Roman</fx:Object>
+			<fx:Object>Times</fx:Object>
+			<fx:Object>Verdana</fx:Object>
+			</s:ArrayCollection>
+			</s:dataProvider>
+			</s:ComboBox>
+			-->
+
+			<!--- @private -->
+			<!--- @private -->
+			<!--<skins:ColorList id="colorList" visible="false" width="50" height="23"
+			change="colorPicker_changeHandler(event)"
+			focusIn="colorList_focusInHandler(event)" includeInLayout="false"
+			itemRenderer="org.syncon.Customizer.view.skins.ColorListItemRenderer"
+			selectedIndex="0"
+			skinClass="org.syncon.Customizer.view.skins.ColorListSkin"
+			toolTip="Text color"/>-->
+			
+		</s:VGroup>
+	</s:VGroup>
+</s:Group>

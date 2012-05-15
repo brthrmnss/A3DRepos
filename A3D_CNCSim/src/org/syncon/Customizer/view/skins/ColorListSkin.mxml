@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+             xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled=".5"
+             xmlns:mx="library://ns.adobe.com/flex/mx"
+             xmlns:supportClasses="net.asciiworks.tlf.supportClasses.*" xmlns:skins="org.syncon.Customizer.view.skins.*">
+
+    <fx:Metadata>
+        <![CDATA[ 
+        	[HostComponent("org.syncon.Customizer.view.skins.ColorList")]
+    	]]>
+    </fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="open"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <!---
+         The PopUpAnchor control that opens the drop-down list.
+
+         <p>In a custom skin class that uses transitions, set the
+         <code>itemDestructionPolicy</code> property to <code>none</code>.</p>
+    -->
+    <s:PopUpAnchor id="popUp" displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+                   left="0" right="0" top="0" bottom="0" itemDestructionPolicy="auto"
+                   popUpPosition="below" popUpWidthMatchesAnchorWidth="true">
+
+        <!---
+             This includes borders, background colors, scrollers, and filters.
+             @copy spark.components.supportClasses.DropDownListBase#dropDown
+        -->
+        <s:Group id="dropDown" maxHeight="134" minHeight="22">
+
+            <!--- @private -->
+            <s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.45" distance="7"
+                                     angle="90" color="#000000" left="0" top="0" right="0"
+                                     bottom="0"/>
+
+            <!--- @private -->
+            <s:Rect id="border" left="0" right="0" top="0" bottom="0">
+                <s:stroke>
+                    <!--- border stroke @private -->
+                    <s:SolidColorStroke id="borderStroke" weight="1"/>
+                </s:stroke>
+            </s:Rect>
+
+            <!-- fill -->
+            <!--- Defines the appearance of drop-down list's background fill. -->
+            <s:Rect id="background" left="1" right="1" top="1" bottom="1">
+                <s:fill>
+                    <!---
+                         The color of the drop down's background fill.
+                         The default color is 0xFFFFFF.
+                    -->
+                    <s:SolidColor id="bgFill" color="0xFFFFFF"/>
+                </s:fill>
+            </s:Rect>
+
+            <!--- @private -->
+            <s:Scroller id="scroller" left="0" top="0" right="0" bottom="0"
+                        hasFocusableChildren="false" minViewportInset="1">
+                <!--- @copy spark.components.SkinnableDataContainer#dataGroup--> 
+                <s:DataGroup id="dataGroup" itemRenderer="spark.skins.spark.DefaultItemRenderer">
+                    <s:layout>
+                        <s:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+                    </s:layout>
+                </s:DataGroup>
+            </s:Scroller>
+        </s:Group>
+    </s:PopUpAnchor>
+
+    <s:Button id="openButton" left="0" right="0" top="0" bottom="0" focusEnabled="false"
+              skinClass="spark.skins.spark.DropDownListButtonSkin" cornerRadius="0"/>
+
+    <skins:ColorListItemRenderer id="labelDisplay" mouseEnabled="false"
+                                          mouseChildren="false" left="0" right="18" top="2"
+                                          bottom="2"/>
+</s:SparkSkin>

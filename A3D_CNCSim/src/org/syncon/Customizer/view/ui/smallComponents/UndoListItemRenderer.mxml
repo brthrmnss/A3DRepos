@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark"  creationComplete="group1_creationCompleteHandler(event)"
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="30"  
+				autoDrawBackground="false"
+				initialize="group1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.Customizer.controller.EditProductCommandTriggerEvent;
+			import org.syncon.Customizer.model.CustomEvent;
+			import org.syncon.Customizer.vo.ItemRendererHelpers;
+			import org.syncon.Customizer.vo.LayerBaseVO;
+			import org.syncon.Customizer.view.ui.components.layer_cart_panel;
+			[Bindable]
+			private var txtText:String = "";
+			public var creationComplete:Boolean = false
+			private var _labelText:String;
+			
+			
+			public var help : ItemRendererHelpers = new ItemRendererHelpers(this ) ; 
+			[Bindable] public var event : EditProductCommandTriggerEvent = new EditProductCommandTriggerEvent('null')
+			
+			override public function set data(value:Object):void { 
+				super.data = value; 
+				//this.help.listenForObj(value,LayerBaseVO.UPDATED, this.updateItemRenderer )
+				event = value as EditProductCommandTriggerEvent
+				this.help.disableIfNull( value, new EditProductCommandTriggerEvent('null'), 'event' )  
+				this.help.setupParent( this.owner ) ;
+				//this.help.fxSetup( null, null, this.btnDelete  ) ; 
+				this.updateItemRenderer()
+			} 
+			
+			public function updateItemRenderer(e:Event=null)  : void
+			{
+				txtLbl.text = /* this.layer.displayName +  */ this.event.type
+				if ( event.type != EditProductCommandTriggerEvent.CHANGE_IMAGE_URL ) 
+				{
+					txtData.text = [this.event.data, this.event.data2, this.event.data3].join(', '); 
+				}
+				else
+				{
+					txtData.text = [this.event.data, null, this.event.data3].join(', '); 
+				}
+				this.txtOldData.text =  [this.event.oldData, this.event.oldData2, this.event.oldData3].join(', '); 
+				//this.lblCount.text = this.layer.type; 
+				if (this.selected == false && this.currentState == 'selected' )
+					this.currentState = ''; 
+				
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public function set labelText(string:String):void
+			{
+				//this.txtText = string;
+				this._labelText = string; 
+				if ( this.creationComplete == false ) return; 
+				//this.lblName.text = string; 
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.creationComplete = true
+				// TODO Auto-generated method stub
+				//this.lblName.text = this._labelText
+				this.labelText = this._labelText; 
+			}
+			
+			protected function onRemove(event:MouseEvent):void
+			{
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:Elastic id="elasticEasing"/>
+	</fx:Declarations>
+	<s:states> 
+		<s:State name="normal"/> 
+		<s:State name="hovered"/> 
+		<s:State name="disabled"/> 
+		<s:State name="selected"/> 
+	</s:states> 
+	
+	<s:transitions>
+		<mx:Transition toState="*" autoReverse="true">
+			<s:Resize target="{this}" duration="300"  />
+		</mx:Transition>
+	</s:transitions>	
+	
+	<s:Rect id="bgRect" width="100%" height="100%"
+			alpha.normal="1">
+		<s:fill>
+			<s:SolidColor color="0xFFFFFF"
+						  color.hovered="0xe7e7e7"
+						  color.selected="0xeeeeee"/>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<s:Group width="100%" verticalCenter="0">
+		
+		<!--<s:Label id="lblName" text="{txtText}" styleName="grayTxt Arial"
+		color.selected="0"
+		left="0" y="4"/>-->
+		<s:HGroup right="0" verticalCenter="0" verticalAlign="middle">
+			<s:Label id="txtLbl" x="5" width="150" maxHeight="28" color="0" fontSize="12" verticalCenter="0"
+					 buttonMode.hovered="true" color.hovered="0x545454"
+					 color.selected="0" styleName="grayTxt Arial" />
+			<s:Label styleName="price"  id="txtData" text="$14.00" paddingTop="8" />
+			<s:Label styleName="price"  id="txtOldData" text="$14.00" paddingTop="8" />
+			<s:Image  id="btnDelete"  click="onRemove(event)"
+					  useHandCursor="true" buttonMode="true"
+					  toolTip="Disable Layer"
+					  styleName="removeBtn" source="assets/images/x.jpg"
+					  width="14" height="14" />
+		</s:HGroup>
+		
+		
+		
+	</s:Group>
+	
+	<s:Line width="100%" bottom="0" right="0" left="0">
+		<s:stroke> 
+			<s:SolidColorStroke color="0xe9e9e9"/>
+		</s:stroke>
+	</s:Line>
+	
+</s:ItemRenderer>

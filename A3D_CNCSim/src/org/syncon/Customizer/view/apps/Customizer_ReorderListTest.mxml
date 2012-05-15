@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.containers.Canvas;
+			import mx.core.DragSource;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.IUIComponent;
+			import mx.core.IUID;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			import mx.utils.ObjectUtil;
+			import mx.utils.UIDUtil;
+			
+			import spark.layouts.supportClasses.DropLocation;
+			private var dragMoveEnabled: Boolean=true;
+			
+			private function trashEnterHandler(e:DragEvent):void {
+				if ((e.dragInitiator as List).id == 'colorList') {
+					trashGlow.alpha = 1;
+					DragManager.acceptDragDrop(e.currentTarget as IUIComponent);
+				}
+			}
+			private function trashExitHandler(e:DragEvent):void {
+				trashGlow.alpha = 0;
+			}
+			private function trashDropHandler(e:DragEvent):void {
+				trashGlow.alpha = 0;
+				//since dragMoveEnable is true, the item is automatically removed
+				//from the source list (aka it is "moved")
+				
+				//if dragMoveEnable were false, we'd need to do this to removed it
+				//var idx:int = (e.dragInitiator as List).selectedIndex;
+				//colorList.dataProvider.removeItemAt(idx);
+			}
+			
+			private function setBackgroundEnterHandler(e:DragEvent):void {
+				if ((e.dragInitiator as List).id == 'colorList') {
+					help.visible = true;
+					DragManager.acceptDragDrop(e.currentTarget as IUIComponent);
+				}
+			}
+			private function setBackgroundExitHandler(e:DragEvent):void {
+				help.visible = false;
+			}
+			private function setBackgroundDropHandler(e:DragEvent):void {
+				help.visible = false;
+				var obj:Object = (e.dragInitiator as List).selectedItem;
+				bgColor.color = obj['color'];
+				
+				//recreate the original item since it is moved
+				var idx:int = (e.dragInitiator as List).selectedIndex;
+				colorList.dataProvider.addItemAt(obj, idx);
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function colorList_dragEnterHandler(event:DragEvent):void
+			{
+				this.dragEnterHandler(event)
+			}
+			protected function dragEnterHandler(event:DragEvent):void
+			{
+				if (event.isDefaultPrevented())
+					return;
+				
+				var dropLocation:DropLocation = this.colorList.layout.calculateDropLocation(event); 
+				if (dropLocation)
+				{
+					DragManager.acceptDragDrop(this.colorList);
+					
+					// Create the dropIndicator instance. The layout will take care of
+					// parenting, sizing, positioning and validating the dropIndicator.
+					this.colorList.createDropIndicator();
+					
+					// Show focus
+					//this.colorList.drawFocusAnyway = true;
+					drawFocus(true);
+					
+					// Notify manager we can drop
+					//DragManager.showFeedback(event.ctrlKey ? DragManager.COPY : DragManager.MOVE);
+					DragManager.showFeedback(  DragManager.MOVE);
+					// Show drop indicator
+					this.colorList.layout.showDropIndicator(dropLocation);
+				}
+				else
+				{
+					DragManager.showFeedback(DragManager.NONE);
+				}
+			}
+			
+			protected function dragExitHandler(event:DragEvent):void
+			{
+				if (event.isDefaultPrevented())
+					return;
+				
+				// Hide if previously showing
+				this.colorList.layout.hideDropIndicator();
+				
+				// Hide focus
+				colorList.drawFocus(false);
+				//drawFocusAnyway = false;
+				
+				// Destroy the dropIndicator instance
+				this.colorList.destroyDropIndicator();
+			}
+			
+			
+			
+			
+			protected function dragDropHandler(event:DragEvent):void
+			{
+				if (event.isDefaultPrevented())
+					return;
+				
+				// Hide the drop indicator
+				this.colorList.layout.hideDropIndicator();
+				this.colorList.destroyDropIndicator();
+				
+				// Hide focus
+				this.colorList.drawFocus(false);
+				//this.colorList.drawFocusAnyway = false;
+				
+				// Get the dropLocation
+				var dropLocation:DropLocation = this.colorList.layout.calculateDropLocation(event);
+				if (!dropLocation)
+					return;
+				
+				// Find the dropIndex
+				var dropIndex:int = dropLocation.dropIndex;
+				
+				// Make sure the manager has the appropriate action
+				DragManager.showFeedback(event.ctrlKey ? DragManager.COPY : DragManager.MOVE);
+				
+				var dragSource:DragSource = event.dragSource;
+				var items:Vector.<Object> = dragSource.dataForFormat("itemsByIndex") as Vector.<Object>;
+				
+				var caretIndex:int = -1;
+				if (dragSource.hasFormat("caretIndex"))
+					caretIndex = event.dragSource.dataForFormat("caretIndex") as int;
+				
+				// Clear the selection first to avoid extra work while adding and removing items.
+				// We will set a new selection further below in the method.
+				var indices:Vector.<int> = this.colorList.selectedIndices; 
+				this.colorList.selectedIndices = new Vector.<int>()
+				this.colorList.validateProperties(); // To commit the selection
+				
+				// If we are reordering the list, remove the items now,
+				// adjusting the dropIndex in the mean time.
+				// If the items are drag moved to this list from a different list,
+				// the drag initiator will remove the items when it receives the
+				// DragEvent.DRAG_COMPLETE event.
+				if (this.dragMoveEnabled &&
+					event.action == DragManager.MOVE &&
+					event.dragInitiator == this.colorList)
+				{
+					// Remove the previously selected items
+					indices.sort(this.compareValues);
+					for (var i:int = indices.length - 1; i >= 0; i--)
+					{
+						if (indices[i] < dropIndex)
+							dropIndex--;
+						this.colorList.dataProvider.removeItemAt(indices[i]);
+					}
+				}
+				
+				// Drop the items at the dropIndex
+				var newSelection:Vector.<int> = new Vector.<int>();
+				
+				// Update the selection with the index of the caret item
+				if (caretIndex != -1)
+					newSelection.push(dropIndex + caretIndex);
+				
+				// Create dataProvider if needed
+				if (!colorList.dataProvider)
+					colorList.dataProvider = new ArrayCollection();
+				
+				var copyItems:Boolean = (event.action == DragManager.COPY);
+				for (i = 0; i < items.length; i++)
+				{
+					// Get the item, clone if needed
+					var item:Object = items[i];
+					if (copyItems)
+						item = this.copyItemWithUID(item);
+					
+					// Copy the data
+					this.colorList.dataProvider.addItemAt(item, dropIndex + i);
+					
+					// Update the selection
+					if (i != caretIndex)
+						newSelection.push(dropIndex + i);
+				}
+				
+				// Set the selection
+				this.colorList.selectedIndices = newSelection
+				
+				// Scroll the caret index in view
+				if (caretIndex != -1)
+				{
+					// Sometimes we may need to scroll several times as for virtual layouts
+					// this is not guaranteed to bring in the element in view the first try
+					// as some items in between may not be loaded yet and their size is only
+					// estimated.
+					var delta:Point;
+					var loopCount:int = 0;
+					while (loopCount++ < 10)
+					{
+						validateNow();
+						delta = layout.getScrollPositionDeltaToElement(dropIndex + caretIndex);
+						if (!delta || (delta.x == 0 && delta.y == 0))
+							break;
+						layout.horizontalScrollPosition += delta.x;
+						layout.verticalScrollPosition += delta.y;
+					}
+				}
+			}
+			
+			
+			/**
+			 *  @private
+			 *  Used to sort the selected indices during drag and drop operations.
+			 */
+			private function compareValues(a:int, b:int):int
+			{
+				return a - b;
+			} 
+			
+			public function beginDrag( mouseEvent:MouseEvent ):void
+			{
+				// the drag initiator is the object being dragged (target of the mouse event)
+				var dragInitiator:IUIComponent = mouseEvent.currentTarget as IUIComponent;
+				
+				// the drag source contains data about what's being dragged
+				var dragSource:DragSource = new DragSource();
+				
+				// add some information to the drag source
+				dragSource.addData( "Red", "color" );
+				
+				// ask the DragManger to begin the drag
+				DragManager.doDrag( dragInitiator, dragSource, mouseEvent, null );
+			}
+			
+			private function mouseMoveHandler(event:MouseEvent):void {
+				
+				if ( this.colorList.selectedItems.length == 0 ) 
+					return; 
+				if ( event.buttonDown == false ) 
+					return; 
+				// Get the drag initiator component from the event object.
+				var dragInitiator: List=List(event.currentTarget);
+				
+				// Get the color of the drag initiator component.
+				//var dragColor:int = dragInitiator.getStyle('backgroundColor');
+				var dragColor  : Object= dragInitiator.selectedItem
+				// Create a DragSource object.
+				var ds:DragSource = new DragSource();
+				dragInitiator.addDragData(ds);
+				// Add the data to the object.
+				ds.addData(dragColor, 'color');
+				var dragged : IFlexDisplayObject = dragInitiator.createDragIndicator()
+				// Call the DragManager doDrag() method to start the drag. 
+				//DragManager.doDrag(dragInitiator, ds, event);
+				var dragMoveEnabled:Boolean=true;
+				
+				DragManager.doDrag(dragInitiator, 
+					ds, 
+					event, 
+					dragged, 
+					0 /*xOffset*/, 
+					0 /*yOffset*/, 
+					0.5 /*imageAlpha*/, 
+					dragMoveEnabled);
+			}
+			
+			
+			protected function copyItemWithUID(item:Object):Object
+			{
+				var copyObj:Object = ObjectUtil.copy(item);
+				
+				if (copyObj is IUID)
+				{
+					IUID(copyObj).uid = UIDUtil.createUID();
+				}
+				else if (copyObj is Object && "mx_internal_uid" in copyObj)
+				{
+					copyObj.mx_internal_uid = UIDUtil.createUID();
+				}
+				
+				return copyObj;
+			}
+			
+			
+			protected function dragOverHandler(event:DragEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (event.isDefaultPrevented())
+					return;
+				
+				var dropLocation:DropLocation = this.colorList.layout.calculateDropLocation(event);
+				if (dropLocation)
+				{
+					// Show focus
+					//drawFocusAnyway = true;
+					colorList.drawFocus(true);
+					
+					// Notify manager we can drop
+					DragManager.showFeedback(event.ctrlKey ? DragManager.COPY : DragManager.MOVE);
+					
+					// Show drop indicator
+					colorList.layout.showDropIndicator(dropLocation);
+				}
+				else
+				{
+					// Hide if previously showing
+					colorList.layout.hideDropIndicator();
+					
+					// Hide focus
+					colorList.drawFocus(false);
+					//drawFocusAnyway = false;
+					
+					// Notify manager we can't drop
+					DragManager.showFeedback(DragManager.NONE);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		
+		s|Panel {
+			dropShadowVisible: false;
+			borderColor: #666666;
+		}
+		s|List {
+			borderVisible: false;
+		}
+		/* 		s|List.drop {
+		skinClass:ClassReference('skins.DropIndicatorListSkin');
+		} */
+	</fx:Style>
+	
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#f8f8f8" ratio="0" />
+				<s:GradientEntry id="bgColor" color="#cccccc" ratio="1" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Panel title="Palette" left="8" top="8" width="120">
+		
+		<s:List id="paletteList" left="3" right="3" top="3" bottom="3"
+				dragEnabled="true"
+		 
+				itemRenderer="org.syncon.Customizer.view.subview.ColorBoxRenderer" >
+			
+			<s:ArrayCollection>
+				<fx:Object label="Red" color="#ff0000" />
+				<fx:Object label="Blue" color="#2255ff" />
+				<fx:Object label="Purple" color="#ff00ff" />
+			</s:ArrayCollection>
+			
+			<s:layout>
+				<s:VerticalLayout paddingLeft="7" paddingRight="7" paddingTop="7" paddingBottom="7" gap="7" />
+			</s:layout>
+		</s:List>
+	</s:Panel>
+	
+	<s:Panel title="Color List" left="136" top="8" bottom="8" width="248">
+		<s:List id="colorList" left="3" right="3" top="3" bottom="3"
+				mouseMove="mouseMoveHandler(event)"
+				dragExit="dragExitHandler(event)"
+				dragOver="dragOverHandler(event)"
+				dragDrop="dragDropHandler(event)"
+				dragEnter="colorList_dragEnterHandler(event)"
+				itemRenderer="org.syncon.Customizer.view.subview.ColorBoxRenderer"
+				styleName="drop">
+			
+			<!-- we MUST have a blank array -->
+			<s:ArrayCollection>
+				<fx:Object label="Red" color="#ff0000" />
+				<fx:Object label="Blue" color="#2255ff" />
+				<fx:Object label="Purple" color="#ff00ff" />
+			</s:ArrayCollection>
+			
+			<s:layout>
+				<s:VerticalLayout paddingLeft="7" paddingRight="7" paddingTop="7" paddingBottom="7" gap="7" />
+			</s:layout>
+		</s:List>
+	</s:Panel>
+	
+	<!-- trash can icon: http://cheezen.deviantart.com/art/Desktop-Icons-111879928 -->
+	<s:Panel id="trash" title="Trash" right="8" top="8" width="110" height="150"
+			 dragEnter="trashEnterHandler(event)"
+			 dragExit="trashExitHandler(event)"
+			 dragDrop="trashDropHandler(event)">
+		
+		<s:BitmapImage source="@Embed('assets/AppIcon72.png')" horizontalCenter="0" verticalCenter="0">
+			<s:filters>
+				<s:GlowFilter id="trashGlow" blurX="16" blurY="16" color="#3399ff" alpha="0" />
+			</s:filters>
+		</s:BitmapImage>
+	</s:Panel>
+	
+	<s:Panel id="bgPanel" title="Set Background" right="8" top="166" width="110" height="150"
+			 dragEnter="setBackgroundEnterHandler(event)"
+			 dragExit="setBackgroundExitHandler(event)"
+			 dragDrop="setBackgroundDropHandler(event)">
+		
+		<s:Label id="help" left="0" right="0" bottom="4" visible="false"
+				 textAlign="center" 
+				 fontSize="10" fontFamily="Verdana" color="#999999"
+				 text="drop here to set background color" />
+	</s:Panel>
+	
+</s:Group>

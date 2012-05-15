@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:popup1="org.syncon.NightStand.view.popup.*"
+					  xmlns:popup="org.syncon.TalkingClock.view.popup.*"
+					  xmlns:mobile="org.syncon.TalkingClock.view.mobile.*"
+					  xmlns:net="flash.net"
+					  width="100%" height="100%" backgroundAlpha="0.0" creationComplete="onInit()"
+					  implements="org.syncon.popups.view.IPopup" xmlns:popup2="org.syncon.Customizer.view.popup.*" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:smallComponents="org.syncon.Customizer.view.ui.smallComponents.*">
+	
+	<fx:Metadata> 
+		[Event(name="cancel", type="flash.events.Event")] 		
+		[Event(name="setup", type="flash.events.Event")] 
+	</fx:Metadata> 	
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			
+			import org.syncon.Customizer.view.skins.Heading;
+			
+			import spark.events.IndexChangeEvent;
+			
+			import sss.Shelpers.Shelpers.ui.PopupCode;
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			static public const OK : String = 'save'; 	
+			//static public const OK : String = 'save'; 	
+			static public const CANCEL : String = 'cancel'; 	
+			static public const SETUP : String = 'setup'; 	
+			
+			static public const REPEAT : String = 'REPEAT'; 	
+			static public const NEXT_LESSON : String = 'NEXT_LESSON'; 	
+			static public const GO_HOME : String = 'GO_HOME'; 	
+
+			public var creationComplete : Boolean = false; 
+			
+			private var fileRef:FileReference = new FileReference();
+			private var imageUploaded:Boolean = false;
+			
+			public function onInit() : void 
+			{
+				this.creationComplete = true; 
+				this.popupCode.center();
+				fileRef.addEventListener(Event.SELECT,onFileRefrenceSelect)
+				fileRef.addEventListener(Event.COMPLETE,onFileRefrenceComplete);
+			}
+			
+			public  function create(app:Object)  : IPopup
+			{
+				var popup :  PopupUploadImage = new PopupUploadImage()
+				popup.popupCode =  PopupCode.Create( popup ,app ) 
+				
+				return popup			
+			} 
+			
+			private var _popupCode :   PopupCode; 
+			public function get  popupCode () : PopupCode { return _popupCode  } 
+			public function set  popupCode ( _popupCode_ : PopupCode) : void {   _popupCode = _popupCode_  } 
+			
+			public function show()  : void
+			{
+				this.popupCode.open( false, true ) ;  
+			}
+			public function hide( ) : void
+			{
+				this.popupCode.close() 
+			}
+			
+			
+			protected function onSelect(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( OK) ) 
+			}
+			
+			
+			protected function onUpload(event:MouseEvent=null):void
+			{
+				this.onFindUploadImage(null); 
+			}
+			
+			protected function onCancel(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( CANCEL ) ) 
+			}
+			
+			
+			public var args : Array = [] ; 
+			public var fxDone:Function;
+			public function showPopup(   fxDone : Function = null ) : void
+			{
+				this.width =  this.parentApplication.width*.8
+				this.height =  this.parentApplication.height*.8
+				this.dispatchEvent( new Event (SETUP   )) 
+				this.show()
+				this.fxDone = fxDone; 
+				this.btnSelect.enabled = false; 
+				imageUploadedPic.source = null; 
+				this.imageUploaded = false; //remove this ...
+			}
+			
+			protected function onRepeat(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( REPEAT ) ) 
+			}
+			
+			protected function onNext(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( NEXT_LESSON ) )  
+			}
+			
+			protected function noHome(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( GO_HOME ) ) 
+			}			
+						
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			/*protected function h1_clickHandler(event:MouseEvent):void
+			{
+				this.setStyle("skinClass",Heading);
+				
+			}*/
+			
+			protected function onFindUploadImage(event:MouseEvent):void
+			{
+				if(!imageUploaded){
+					var arr:Array = [];
+					arr.push(new FileFilter("Images", ".gif;*.jpeg;*.jpg;*.png"));
+					fileRef.browse(arr);
+					//fileRef.
+				}
+				else{
+					
+				}
+			}
+
+			
+			protected function onFileRefrenceComplete(event:Event):void
+			{
+				if(this.fileRef.size > 4000000)
+				{
+					Alert.show("File larger than 4mb, please select a new Image");
+					return;
+				}
+				imageUploadedPic.source = fileRef.data;
+				imageUploaded = true;
+				this.btnSelect.enabled = true; 
+			}
+			
+			protected function onFileRefrenceSelect(event:Event):void
+			{
+				fileRef.load();
+				
+			}
+			
+		]]>
+	</fx:Script>
+
+	 
+<!--	<s:Rect width="100%" height="100%" >
+	<s:stroke>
+	<s:SolidColorStroke color="0xFFFFFF" alpha="0.3" />
+	</s:stroke>
+	</s:Rect> -->
+	<popup2:PopupBg alpha="1"/>
+	
+
+	<s:VGroup id="VGroup" paddingBottom="12" paddingLeft="12" paddingRight="12" paddingTop="12">
+		
+		<s:Group id="header" width="690" clipAndEnableScrolling="true">
+			<s:BitmapImage source="assets/images/sprite_headers.png" smooth="true" height="100%" width="100%" />
+			<s:Label text="Upload Images" x="10" fontSize="20" verticalCenter="6" color="0xffffff"/>
+		</s:Group>
+		
+		
+		<s:Group width="690" height="180" click="onFindUploadImage(event)" clipAndEnableScrolling="true" >
+			<s:Rect width="100%" height="100%">
+				<s:fill><s:SolidColor color="0xe8e8e8"/></s:fill>
+			</s:Rect>
+						<s:BitmapImage id="imageUploadedPic"
+						   source="assets/images/uploadImage.jpg"
+						   horizontalCenter="0" verticalCenter="0"/>
+		</s:Group>
+
+		
+		
+		
+
+	</s:VGroup>
+	<s:HGroup horizontalCenter="0"  bottom="12">
+		<!-- <smallComponents:TextButton label="Browse" icon="assets/buttons/browse.png" /> -->
+		<s:Button label="Browse" click="onUpload(event)" toolTip="Upload an Image" />
+		<s:Button label="Select" id="btnSelect" click="onSelect(event)"  toolTip="Select this Image" />
+		<s:Button label="Cancel" click="onCancel(event)" toolTip="Close"/>
+	</s:HGroup>
+	
+	
+	
+	
+	
+</s:SkinnableContainer>

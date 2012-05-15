@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 width="100%" height="100%" creationComplete="onInit(event)" xmlns:ui="org.syncon.CncSim.view.ui.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			public static const UPDATE_JSON:String='UpdateJSON';
+			
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			private var _layer : ImageLayerVO = new ImageLayerVO() ;
+			public function get layer()  : ImageLayerVO { return this._layer } 
+			public function set layer (layer_ : ImageLayerVO ) : void
+			{
+				//var unit : LayerBaseVO = this.model.currentUnit
+				//should call it now , warn users needs param
+				s.listenForObj( layer_, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this._layer = layer_; 
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				this.img.source = this.layer.url; 
+				this.chkVisible.selected = this.layer.visible ; 
+			}
+			
+			protected function chkVisible_changeHandler(event:Event):void
+			{
+				this.layer.visible = this.chkVisible.selected; 
+				this.layer.update(); 
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	<s:VGroup verticalAlign="middle">
+		<s:Label text="Image"  fontSize="24" fontWeight="bold"/>
+		
+		<s:Image id="img"  width="100" height="100"/>
+		<s:CheckBox id="chkVisible" change="chkVisible_changeHandler(event)" />
+		
+		
+	</s:VGroup>
+</s:Group>

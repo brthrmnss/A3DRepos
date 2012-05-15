@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:view="org.syncon.Customizer.view.*"
+		 xmlns:NightStand="org.syncon.NightStand.*"
+		 xmlns:FilterTester="org.syncon.TalkingClock.view.FilterTester.*"
+		 xmlns:subview="org.syncon.Customizer.view.subview.*"
+		 xmlns:lite="views.lite.*"
+		 xmlns:mobile="org.syncon.TalkingClock.view.mobile.*"
+		 xmlns:Customizer="org.syncon.Customizer.*"
+		 xmlns:edit="org.syncon.TalkingClock.view.edit.*"
+		 xmlns:view1="org.syncon2.utils.mobile.view.*"
+		 xmlns:ui="org.syncon.Customizer.view.ui.*"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.Customizer.ContextNightStand_PopupContext;
+			import mx.events.FlexEvent;
+			
+			import org.syncon.Customizer.ContextNightStand_ViewsSubContext;
+			import org.syncon.Customizer.model.NightStandConstants;
+			protected function onInit(event:FlexEvent):void
+			{
+				var xx : ContextNightStand_ViewsSubContext = new ContextNightStand_ViewsSubContext()
+				this.context.addSubContext( xx ) ;
+				
+				var xxx : ContextNightStand_PopupContext = new ContextNightStand_PopupContext()
+				this.context.addSubContext( xxx ) ;
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<Customizer:ContextNightStand id="context" contextView="{this}"/> 
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+	</s:layout>	
+	
+ 
+	<s:VGroup>
+		<s:HGroup>
+			<ui:Toolbar/>
+			
+		</s:HGroup>
+		<s:Spacer height="15"/>
+		<s:HGroup id="holderRow2">
+			<ui:LayerInspector id="inspector" width="200"/>
+			<ui:DesignView/>
+			<ui:LayersList width="200"/>
+		</s:HGroup>
+		<s:HGroup id="holderRow3">
+			<ui:BottomToolbar/>
+		</s:HGroup>
+	</s:VGroup>
+	
+</s:Group>

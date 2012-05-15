@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="100%" height="100%"   addedToStage="onAddedToStage(event)"
+		   creationComplete="onInit(event)" 
+		   initialize="onInitilze(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.core.Container;
+			import mx.events.FlexEvent;
+			
+			import org.syncon.RosettaStone.Context_RSPlayer;
+			import org.syncon.RosettaStone.controller.ConfigCommand;
+			import org.syncon.TalkingClock.ContextNightStand_AlarmsViewsSubContext;
+			import org.syncon.TalkingClock.model.NightStandConstants;
+			import org.syncon.TalkingClock.view.mobile.alarm.SoundBoardHomeView;
+			import org.syncon.popups.controller.default_commands.ShowAlertMessageCommand2;
+			import org.syncon2.utils.file.LoadConfig_Flex;
+			import org.syncon2.utils.mobile.controller.SwitchScreensCommand;
+			import org.syncon2.utils.mobile.controller.SwitchScreensTriggerEvent;
+			import org.syncon2.utils.openplug.PlatformGlobals_Flex;
+			import org.syncon2.utils.sound.PlaySound_Flex;
+			
+			public var mediateUI  : Function; 
+			public var goToScreen2 : Function; 
+			public var getScreen : Function; 
+			public var getAppWidth : Function; 
+			
+			protected function onInitilze(event:FlexEvent):void
+			{
+				
+				//Context.debugging = true;
+				NightStandConstants.flex = true; 
+				
+				ShowAlertMessageCommand2.fxAlert = Alert.show; //
+				NightStandConstants.PlatformGlobals = new PlatformGlobals_Flex()
+					
+					
+				NightStandConstants.PlatformGlobals.setFxMediate(  this.mediateUI );  
+				NightStandConstants.debug = true
+				SwitchScreensCommand.fxSwitchScreens = this.goToScreen2; 
+				
+				
+				SwitchScreensCommand.getScreenByName = getScreen; 
+				SwitchScreensCommand.getAppWidth = getAppWidth; 
+				
+					
+				NightStandConstants.PlaySound = new PlaySound_Flex(); 
+				//NightStandConstants.PlaySound.fxChangeSoundLocation = getProxy; 
+				NightStandConstants.debug = true
+					
+				NightStandConstants.loadFolder = 'jjudy'
+				NightStandConstants.FileLoader = new  LoadConfig_Flex(); 
+				LoadConfig_Flex.baseFolder = baseFolder
+				ConfigCommand.CONFIG_LOCATION = baseFolder
+			}
+			
+			public var baseFolder : String = 'G:/My Documents/work/mobile3/SoundboardFlex/bin-debug/assets/'; 
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				 
+			}
+			
+			/***
+			 * 
+			 * Need the mediation function to be set as soon as possible 
+			 * */
+			public function reInit() : void
+			{
+				this.onInitilze( null ) 
+			}
+			
+			protected function onAddedToStage(event:Event):void
+			{
+				this.stage.addEventListener(KeyboardEvent.KEY_UP, this.onKeyDown ) 
+			}
+			//http://www.lejnieks.com/2008/09/05/flex-keycodes/
+			protected function onKeyDown(event:KeyboardEvent):void
+			{
+				if ( event.keyCode == 77 && event.ctrlKey )
+				{
+					this.parent['base'].GoToMenu(); //goToScreen2( 	 SwitchScreensTriggerEvent.GoTo(SwitchScreensTriggerEvent.menu )  )   
+				}
+				if ( event.keyCode == 66 && event.ctrlKey )
+				{
+					SwitchScreensCommand.goBack()
+					//this.parent['base'].GoToMenu(); //goToScreen2( 	 SwitchScreensTriggerEvent.GoTo(SwitchScreensTriggerEvent.menu )  )   
+				}
+				if ( event.keyCode == 68 && event.ctrlKey ) //D
+				{
+					this.parent['base'].holder.home.onDebug(null); 
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

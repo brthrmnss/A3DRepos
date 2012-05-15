@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" verticalGap="-1"
+    verticalScrollPolicy="off" horizontalScrollPolicy="off"   styleName="popupSkin"
+    xmlns:ui="sss.Shelpers.Shelpers.ui.*" xmlns:Utils="sss2.Twit.Utils.*">
+    <mx:states>
+        <mx:State name="small">
+            <mx:RemoveChild target="{titleTxt}" />
+        </mx:State>
+        <mx:State name="htmlText">
+            <mx:RemoveChild target="{titleTxt}" />
+        </mx:State>        
+    </mx:states>
+    <mx:Script>
+        <![CDATA[
+        	//import sss.Shelpers.ui.SearchOnEnter;
+        	/**
+        	 * An  alert box that displays text messages. 
+			* Can be set for large/small sizing
+        	 * */
+	        import mx.managers.IFocusManagerComponent;
+	        import mx.core.UITextField;
+	        import mx.controls.TextInput;
+	        import mx.core.UIComponent;
+	        import sss.Shelpers.Shelpers.ui.PopupCode;
+	        import sss.Shelpers.Shelpers.Shelpers;
+	        import sss.Shelpers.Shelpers.ShelpersUI;
+	
+			//public var actionOnEnter :  SearchOnEnter
+	
+	        [Bindable]public var tTitle:String = '';
+	        /**
+	        *  //return focus to original place
+	        * */	        
+	        public var oldFocus:Object; 
+	        
+	        public function init(): void
+	        {
+	            ShelpersUI.pad(this)
+	
+	            if ( this.txtTxt_height != - 1 ) 
+	            {
+	                this.txtTxt.height = this.txtTxt_height
+	                this.txtTxt.width = this.txtTxt_width
+	            }
+	            //this.actionOnEnter = new SearchOnEnter( this.btnOk, this.close ) 
+	        }
+	
+	        public var popupCode:PopupCode;
+	
+	        static public function create( app:Object ):  popup_info
+	        {
+	            var popup:popup_info = new popup_info()
+	            popup.popupCode = PopupCode.Create(popup, app) 
+	            return popup
+	        }
+	
+	        public function show(): void
+	        {
+	            //var b:Object = [this.EclosetoModel.popupModal, this.EclosetoModel.popupModal.visible]
+	            this.popupCode.open(false, true)
+	            this.popupCode.stickTo(this.parentApplication as UIComponent, 'c', true)
+	            this.oldFocus = this.getFocus()
+	            this.btnOk.setFocus()
+	        }
+	
+	        public function close(): void
+	        {
+	            this.callLater(this.returnFocus)
+	            
+	            this.popupCode.close()
+	        }
+	
+	        public function returnFocus(): void
+	        {
+	            if ( this.oldFocus != null ) 
+	            {
+	                this.oldFocus.setFocus()
+	
+	                if ( oldFocus is TextInput || oldFocus is UITextField ) 
+	                {
+	                    var txt:UITextField = oldFocus as UITextField
+	                    txt.setSelection(txt.text.length, txt.text.length)
+	                }
+	            }
+	        }
+	
+	        public function loadAlert( msg:String, title:String ): void
+	        {
+	            this.load(title, msg, true, true)
+	        }
+	
+	        public function load( t:String, textt:String, small:Boolean = true, center:Boolean = false ): void
+	        {
+	             this.currentState = '' 
+	            if ( small ) {
+	                this.txtTxt.width = 250
+	                this.txtTxt.height = 20
+	            }
+	            else
+	            {
+	                this.txtTxt.width = 600
+	                this.txtTxt.height = 356
+	            }
+	
+	
+	            this.tTitle = t
+	            this.txtTxt.htmlText = textt
+	
+	            this.txtTxt.verticalScrollPosition = 0;
+	
+	            if ( this.tTitle == '' )
+	            {
+	                this.currentState = 'small'
+	            }
+	            else {
+	                this.currentState = ''
+	            }
+	            this.show()
+	
+	        }
+	        
+	        public function loadHtmlText(   htmlText:String, small:Boolean = false, center:Boolean = false ): void
+	        {
+	            this.currentState = 'htmlText'
+	            if ( small ) {
+	                this.txtTxt.width = 250
+	                this.txtTxt.height = 20
+	            }
+	            else
+	            {
+	                this.txtTxt.width = 600
+	                this.txtTxt.height = 356
+	            }
+	
+	
+	            this.txtTxt.htmlText = htmlText
+	
+	            this.txtTxt.verticalScrollPosition = 0;
+	
+ 
+	            this.show()
+	
+	        }
+	                
+	        public var txtTxt_width:int = - 1
+	        public var txtTxt_height:int = - 1
+	
+	        public function onChangeText( wait:Boolean = true ): void
+	        {
+	            if ( wait ) 
+	            {
+	                this.callLater(this.onChangeText, [false])
+	                return;
+	            }
+	            txtTxt.validateNow();
+	            txtTxt.mx_internal::getTextField().autoSize = TextFieldAutoSize.LEFT;
+	            txtTxt.height = txtTxt.mx_internal::getTextField().height + 10;
+	        }
+
+        ]]>
+    </mx:Script>
+	    
+	    <mx:Label id="titleTxt" text="{this.tTitle}" fontSize="14" />
+	    
+	    <mx:TextArea 
+	    	 backgroundAlpha="0.0" borderStyle="none"
+	    	id="txtTxt" fontSize="12" updateComplete="{this.onChangeText()}" condenseWhite="true"
+	        color="0" fontWeight="bold"  width="600" height="356"   />
+	    <mx:HBox horizontalAlign="center" width="100%">
+	        <mx:Button label="Ok" styleName="goButton" click="close()" id="btnOk" bottom="0" />
+	    </mx:HBox>
+</mx:VBox>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:controls="openplug.elips.controls.*" backgroundColor="0x000000"
+		   width="100%" height="80" creationComplete="onInit()" initialize="onInitliaize(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import openplug.elips.device.Capabilities;
+			
+			import org.syncon2.utils.openplug.Constants;
+			//public var adMob : AdMob; 
+			private var showAds:Boolean = true;
+			/**
+			 * true if on my phone
+			 * */
+			private var myPhone:Boolean;
+			/**
+			 * Get me Ads
+			 * */
+			static public  var   GetDeviceId  : Function; 
+			
+			protected function onInitliaize(event:FlexEvent):void
+			{
+			}
+			
+			
+			protected function onInit():void
+			{
+				//this.ss = new SmaatoProvider()
+				Constants.PlatformGlobals.addPlatformClickEvent( this.img, this.onClickImg ) ; 
+				Constants.PlatformGlobals.fxMediate( this ) ; 
+				
+				//NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.btnChange, this.onTestMove ) ; 
+				
+				
+			}
+			
+			/**
+			 * inits the ads, called by mediator 
+			 * */
+			public function loadAds() : void
+			{
+				
+				this.myPhone = Constants.personalDevice
+				var onC : Boolean = Constants.onCpu
+				if ( this.myPhone == false && onC == false ) 
+				{
+					this.inTestingMode(); 
+				}
+				else
+				{
+					Constants.PlatformGlobals.addPlatformClickEvent( this, this.onAdAddifInDebug ) ; 
+					if ( mode_onlyShowAdsOnDevice ) 
+					{ 
+						if ( onC  )
+						{
+							return
+						}
+					}
+					this.inTestingMode(false); 
+				}
+			}		
+			private function inTestingMode(loadReal :  Boolean = true    ):void
+			{
+				//URLRequestDefaults
+				SmaatoProvider.DEVICE = ''; // URLRequestDefaults.userAgent;
+				/* ss  = new SmaatoProvider( 0, 0, 60, false, true )  
+				ss.addEventListener( Event.CHANGE, onSmaatoProviderChanged, false, 0, true); */
+				if ( loadReal  ) 
+				{
+					ss  = new SmaatoProvider( 923846506, 65744800, 60*5, false, true )  
+					//ss.ownid =  SystemAPI.getDeviceUID()
+					ss.ownid = GetDeviceId()
+					ss.addEventListener( Event.CHANGE, onSmaatoProviderChanged, false, 0, true);
+				}
+				else
+				{
+					ss  = new SmaatoProvider( 0, 0, 60*5, false, true )  
+					
+					ss.addEventListener( Event.CHANGE, onSmaatoProviderChanged, false, 0, true);
+				}
+				// TODO Auto Generated method stub
+				if ( ss != null ) 
+					ss.addEventListener( ErrorEvent.ERROR, this.onError ) ; 
+			}
+			
+			[Bindable] public var ss : SmaatoProvider; 
+			private function onClickImg(e:Event):void
+			{
+				// TODO Auto Generated method stub
+				this.ss.onSmaatoAdClicked(null)	
+			}
+			
+			public function onSmaatoProviderChanged(evt:Event, wait : Boolean = true):void
+			{
+				if ( wait ) 
+				{
+					this.callLater( this.onSmaatoProviderChanged, [evt, false ] ) 
+					return
+				}
+				// Optional handler triggered when the banner is updated.
+				// Can be used for moving the banner around
+				/* 
+				trace("sm.variables.devip = " + sm.variables.devip);
+				_debugTxt.text = evt.target.ipProvider.listNetworkInfo(false) + "\n\n" + sm.data;
+				_debugTxt.appendText("\n\nGeolocation.isSupported = " + Geolocation.isSupported );
+				
+				if ( (Geolocation.isSupported) && (sm.geo) )
+				{
+				_debugTxt.appendText( "\nmuted = " + sm.geo.muted +
+				"\ngps = " + sm.variables.gps );
+				}
+				
+				trace(_debugTxt.text);
+				*/
+				/* 
+				try
+				{
+				this.img.source = this.ss.content; 
+				this.img.height = 80
+				this.img.width = this.width;  
+				return;
+				}
+				catch( e : Error ) 
+				{
+				trace('normal failed'); 
+				}
+				*/
+				// Reposition the ad (to the bottom of the sreen)
+				/* 	with(evt.target)
+				{ */
+				//img.y = this.stage.stageHeight - contentLoaderInfo.height;
+				//	img.x = (this.stage.stageWidth - contentLoaderInfo.width) * 0.5;
+				//img.source = this.ss.data; 
+				try 
+				{
+					//this.ss.content
+					
+					//img.source = this.ss.content
+					
+					//var imgBD:BitmapAsset = new img();
+					
+					
+					
+					if ( objBit != null && objBit.bitmapData != null ) 
+						objBit.bitmapData.dispose(); 
+					objBit = new Bitmap();
+					objBit.bitmapData = new BitmapData(this.ss.content.width, this.ss.content.height,true, 0xffffff);
+					objBit.bitmapData.draw(this.ss.content, new Matrix(),null, null, null, true);
+					oRect = new Rectangle(0,0,this.ss.content.width,this.ss.content.height);
+					oPoint = new Point(0, 0);
+					if ( cBit != null ) 
+						cBit.dispose() 						
+					cBit = new BitmapData(this.ss.content.width, this.ss.content.height,true, 0xffffff);
+					cBit.copyPixels(objBit.bitmapData,oRect,oPoint);
+					
+					var b : BitmapAsset = new BitmapAsset(); 
+					b.bitmapData = cBit; 
+					//this.adBg.graphics.beginBitmapFill(
+					img.source = b;  
+					img.width = this.width; 
+					img.height = 80
+					
+					
+					
+					
+					/* 
+					obj = new Object();
+					obj.x = 300;
+					obj.y = 300;
+					objBit = new Bitmap();
+					objBit.bitmapData = new BitmapData(20, 20,true, 0xffffff);
+					objBit.bitmapData.draw(this.ss.content, new Matrix());
+					obj.width = objBit.width;
+					obj.height = objBit.height;
+					oRect = new Rectangle(0,0,obj.width,obj.height);
+					oPoint = new Point(obj.x, obj.y);
+					
+					cRect = new Rectangle(0,0,480,800);
+					cPoint = new Point(0,0);
+					bg = new BitmapData(480,800,false,0x5a5a5a);
+					canv= new BitmapData(480,800,false,0xff0000);
+					var canvBit:Bitmap = new Bitmap(canv);
+					
+					Scene.addChild(canvBit);
+					
+					
+					timer = new Timer(17,0);
+					timer.addEventListener(TimerEvent.TIMER, loop);
+					timer.start(); */
+					/* 	
+					img.height = this.ss.content.height; 
+					img.width = this.ss.content.width;  
+					*/
+				}
+				catch ( e : Error  ) 
+				{
+					trace('error loading ad')
+				}
+				/* img.height = this.ss.content.height; 
+				img.width = this.ss.content.width;  */
+				/* 
+				if ( NightStandConstants.PlatformGlobals.onComputer == false ) 
+				{
+				img.width = this.width;
+				//img.height = 80;
+				//img.height = this.height; 
+				}
+				*/
+				/* } */
+				return;
+			}
+			
+			private function onAdAddifInDebug(e:Event):void
+			{
+				if ( this.myPhone  ) 
+				{
+					trace('onAdAddifInDebug' , 'trying to load ad' ) ; 
+					this.inTestingMode()
+					//NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.adBg, this.onAdAddifInDebug ) ; 	
+				}
+				if (   Constants.PlatformGlobals.onComputer ) 
+				{
+					if ( this.mode_onlyShowAdsOnDevice ) 
+						return; 
+					trace('onAdAddifInDebug' , 'trying to load ad' ) ; 
+					this.inTestingMode(false)
+					//NightStandConstants.PlatformGlobals.addPlatformClickEvent( this.adBg, this.onAdAddifInDebug ) ; 	
+				}
+				// TODO Auto Generated method stub
+				
+			}
+			
+			
+			
+			
+			import flash.display.Bitmap;
+			import mx.core.BitmapAsset;
+			import mx.events.FlexEvent;
+			private var bg:BitmapData;
+			private var canv:BitmapData;
+			private var cRect:Rectangle;
+			private var cPoint:Point;
+			
+			private var obj:Object;
+			private var objBit:Bitmap;
+			private var cBit : BitmapData
+			private var oRect:Rectangle;
+			private var oPoint:Point;
+			
+			private var vx:Number = 10;
+			private var vy:Number = 10;
+			
+			private var s:Sprite;
+			private var timer:Timer;
+			/**
+			 * Prob: on computer, keeps on pinging server and messing up stout with nonsense
+			 * sol: if true, will skip loading ads 
+			 * */
+			private var mode_onlyShowAdsOnDevice:Boolean=true;
+			
+			
+			
+			
+			
+			
+			protected function onError(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				trace('error')
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<!--	
+	<mx:Canvas id="adBg" bottom="0" width="100%" height="80" backgroundColor="0x000000">
+	<controls:Image id="img" bottom="0" horizontalCenter="0"/>
+	</mx:Canvas>-->
+	<controls:Image id="img" bottom="0" horizontalCenter="0"/>
+</mx:Canvas>

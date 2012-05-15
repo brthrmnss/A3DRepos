@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:ui="org.syncon.CncSim.view.ui.*"
+		 xmlns:skins="org.syncon.CncSim.view.skins.*"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.ColorPickerEvent;
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.vo.ColorLayerVO;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			public static const CHANGE_COLOR:String='CHANGE_COLOR';
+			
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			private var _layer :  ColorLayerVO = new ColorLayerVO() ;
+			public function get layer()  : ColorLayerVO { return this._layer } 
+			public function set layer (layer_ : ColorLayerVO ) : void
+			{
+				s.listenForObj( layer_, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this._layer = layer_; 
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				//this.txt.text = this.layer.text
+				this.colorPicker.selectedColor  = this.layer.color; 
+				this.chkVisible.selected = this.layer.visible ; 
+				//this.txt.maxChars
+			}
+			
+			protected function chkVisible_changeHandler(event:Event):void
+			{
+				this.layer.visible = this.chkVisible.selected; 
+				this.layer.update(); 
+			}
+			
+			
+			
+			
+			
+			protected function txt_changeHandler(event:TextOperationEvent):void
+			{
+				//this.layer.text = this.txt.text; 
+				this.layer.update(); 
+			}
+			protected function colorList_ClickHandler(event:Event):void
+			{
+				//this.oldFocus = this.getFocus()
+				return; 
+			}
+			
+			private function colorPicker_changeHandler(event:Event):void {
+				var colorFormat:uint;
+				if (event is ColorPickerEvent)
+					colorFormat = event.currentTarget.selectedColor as uint;
+				else if (event is IndexChangeEvent)
+					colorFormat = event.currentTarget.selectedItem as uint;
+				
+				//this.colorPicker.close()
+				//		.closeDropDown(true); 
+				//this.controller.changeColor(colorFormat ); 
+				//this.callLater( this.oldFocus.setFocus ); 	
+				this.dispatchEvent( new CustomEvent( CHANGE_COLOR, colorFormat   ) ) 
+			}
+			
+			
+			protected function colorList_focusInHandler(event:FocusEvent):void
+			{
+				return;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	<s:VGroup verticalAlign="middle">
+		<s:Label fontSize="24" fontWeight="bold" text="Color"/>
+	 
+		<s:CheckBox id="chkVisible" change="chkVisible_changeHandler(event)"/>
+		
+		<!--- @private -->
+		<mx:ColorPicker id="colorPicker" height="23" change="colorPicker_changeHandler(event)"
+						color="0x000000" focusAlpha="0.1"
+						mouseOver="this.colorList_ClickHandler(event)" toolTip="Text color"/>
+		<!--- @private -->
+		<skins:ColorList id="colorList" visible="false" width="50" height="23"
+						 change="colorPicker_changeHandler(event)"
+						 focusIn="colorList_focusInHandler(event)" includeInLayout="false"
+						 itemRenderer="org.syncon.CncSim.view.skins.ColorListItemRenderer"
+						 selectedIndex="0"
+						 skinClass="org.syncon.CncSim.view.skins.ColorListSkin"
+						 toolTip="Text color"/>
+	</s:VGroup>
+</s:Group>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx" autoDrawBackground="true" minHeight="16">
+
+    <s:Rect top="2" bottom="2" left="5" right="5">
+        <s:stroke>
+            <s:SolidColorStroke weight="1" color="0x000000"/>
+        </s:stroke>
+        <s:fill>
+            <s:SolidColor color="{data}"/>
+        </s:fill>
+    </s:Rect>
+</s:ItemRenderer>

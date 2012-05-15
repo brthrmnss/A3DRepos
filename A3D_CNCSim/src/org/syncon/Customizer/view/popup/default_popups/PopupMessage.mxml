@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:popup="org.syncon.evernote.basic.view.popup.*"
+					  xmlns:popup1="org.syncon.NightStand.view.popup.*"
+					  xmlns:view="org.syncon2.utils.mobile.view.*"
+					  creationComplete="onInit()" backgroundAlpha="0.0"
+					  implements="org.syncon.popups.view.IPopup" 
+					  xmlns:popup2="org.syncon.Customizer.view.popup.*" 
+					  xmlns:mobile="org.syncon.TalkingClock.view.mobile.*">
+	
+	<fx:Metadata> 
+		[Event(name="cancel", type="flash.events.Event")] 		
+		[Event(name="ok", type="flash.events.Event")] 
+	</fx:Metadata> 	
+	<s:states>
+		<s:State name="normal" />		
+		<s:State name="small" />
+		<s:State name="htmlText" />
+	</s:states>	
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.Customizer.model.CustomEvent;
+			
+			import spark.components.supportClasses.StyleableTextField;
+			import spark.events.IndexChangeEvent;
+			
+			import sss.Shelpers.Shelpers.ui.PopupCode;
+			
+			static public const LIST_CHANGED : String = 'listChanged'; 	
+			static public const OK : String = 'save'; 	
+			static public const CANCEL : String = 'cancel'; 	
+			static public const SETUP : String = 'setup'; 				
+			public var creationComplete : Boolean = false; 
+			[Bindable]public var tTitle:String = '';
+			
+			public function onInit() : void 
+			{
+				this.creationComplete = true; 
+				this.popupCode.center()
+				
+				var arr : Array = [
+					['OK', this.onSave], 
+					//['Cancel', this.onCancel], 
+				]
+				this.bottomMenu.load('', arr )
+			}
+			
+			public  function create(app:Object)  : IPopup
+			{
+				var popup :  PopupMessage = new PopupMessage()
+				popup.popupCode =  PopupCode.Create( popup ,app ) 
+				return popup			
+			} 
+			
+			private var _popupCode :   PopupCode; 
+			public function get  popupCode () : PopupCode { return _popupCode  } 
+			public function set  popupCode ( _popupCode_ : PopupCode) : void {   _popupCode = _popupCode_  } 
+			
+			public function show()  : void
+			{
+				this.popupCode.open( false, false ) 
+				
+			}
+			public function hide( ) : void
+			{
+				this.popupCode.close() 
+			}
+			
+			
+			protected function onSave(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( OK) ) 
+				this.hide(); 
+			}
+			
+			protected function onCancel(event:MouseEvent=null):void
+			{
+				this.dispatchEvent( new Event( CANCEL ) ) 
+			}
+			
+			public function loadAlert( msg:String, title:String, buttonLabel : String = 'OK', 
+									   showButton : Boolean = true  ): void
+			{
+				this.load(title, msg, true, true) 
+				this.adjustButton( buttonLabel, showButton)
+				this.resize()
+			}
+			
+			
+			private function adjustButton(buttonLabel_ : String = 'OK', 
+										  showButton_ : Boolean = true  )  : void
+			{
+				//this.btnOk.label = buttonLabel_
+				if (  showButton_ ) 
+				{
+					bottomMenu.includeInLayout = true; 
+				}
+				else
+				{
+					bottomMenu.includeInLayout = false; 
+				}
+			}
+			
+			public function load( t:String, textt:String, small:Boolean = true, center:Boolean = false ): void
+			{
+				this.currentState = '' 
+				if ( small ) {
+					//this.txtTxt.width = 250
+					//this.txtTxt.height = 20
+					//this.txtTxt.setStyle('textAlign', 'center')
+					this.txtTxt.setStyle('textAlign', 'left')
+				}
+				else
+				{
+					//this.txtTxt.width = 600
+					//this.txtTxt.height = 356
+					this.txtTxt.setStyle('textAlign', 'left')
+				}
+				
+				
+				this.tTitle = t
+				this.txtTxt.text = textt
+				
+				if ( this.tTitle == '' )
+				{
+					this.currentState = 'small'
+				}
+				else {
+					this.currentState = ''
+				}
+				this.show()
+				
+			}
+			
+			public function resize(wait:Boolean=true):void
+			{
+				if ( wait ) 
+				{
+					this.callLater( this.resize, [false] )
+					return
+				}
+				this.parentApplication.width; 
+				this.parentApplication.height; 
+				this.height = this.parentApplication.height-40-40-40-100
+				//this.list.height = this.height - this.header.height - 30 + 30 - 60 + +20 - this.bottomMenu.height; 
+				this.width = this.parentApplication.width-40//-40
+				this.bottomMenu.width = this.width-30
+				this.txtTxt.width = this.width-30
+				
+				var t : Object = this.txtTxt.textDisplay;
+				if ( t is StyleableTextField ) 
+				{
+					var txt : StyleableTextField = t as StyleableTextField; 
+					txt.textHeight
+					this.txtTxt.measuredHeight
+					this.txtTxt;
+					var offset : Number = this.header.height + 20 + this.bottomMenu.height+ 20+10
+					this.txtTxt.maxHeight =  this.height- offset
+					/* 	if ( txt.textHeight < this.height- offset ) 
+					{
+					this.txtTxt.height = txt.textHeight; 
+					this.height = this.txtTxt.height + offset
+					}
+					else
+					{
+					this.txtTxt.height  = this.height- offset
+					} */
+					var textHeight : Number =  txt.textHeight*1.1
+					if (textHeight < this.height- offset ) 
+					{
+						this.txtTxt.height = textHeight; 
+						this.height = textHeight + offset
+					}
+					else
+					{
+						this.txtTxt.height  = this.height- offset
+					} 
+				}
+				
+				this.popupCode.center(); 
+			}
+			public function close(): void
+			{
+				//this.callLater(this.returnFocus)
+				this.popupCode.close()
+			}
+			public function onChangeText( wait:Boolean = true ): void
+			{
+				if ( wait ) 
+				{
+					this.callLater(this.onChangeText, [false])
+					return;
+				}
+				//txtTxt.validateNow();
+				/*  txtTxt.mx_internal::getTextField().autoSize = TextFieldAutoSize.LEFT;
+				txtTxt.height = txtTxt.mx_internal::getTextField().height + 10; */
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<!--	
+	<s:Rect width="100%" height="100%" >
+	<s:stroke>
+	<s:SolidColorStroke color="0" />
+	</s:stroke>
+	</s:Rect>-->
+	
+	
+	<popup2:PopupBg/>
+	
+	<s:VGroup paddingBottom="15" paddingLeft="15" paddingRight="15" paddingTop="15"  width="100%">
+		<!--
+		<popup:PopupHeader  label.edit="Edit Tag" label="New Tag" padding="0"  width="100%"/>
+		-->
+		<popup2:PopupHeader id="header"  label="{this.tTitle}"  width="100%" />
+		
+		
+		<mobile:TextAreaLabel  color="0xFFFFFF" paddingTop="0"  
+							   id="txtTxt"   updateComplete="{this.onChangeText()}"  
+							   fontWeight="bold"   />
+		<!--<s:Spacer height="10" />-->
+		<!--		<s:HGroup  id="hbo" horizontalAlign="center" width="100%">
+		<s:Button label="OK" styleName="goButton" click="close()"
+		useHandCursor="true" buttonMode="true"
+		id="btnOk" bottom="0" />
+		</s:HGroup>-->
+		<popup2:PopupBottomBarBg   id="bottomMenu" width="100%"  />
+	</s:VGroup>
+	
+</s:SkinnableContainer>

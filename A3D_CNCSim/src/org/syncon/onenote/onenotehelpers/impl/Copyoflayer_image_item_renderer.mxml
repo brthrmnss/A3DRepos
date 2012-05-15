@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 creationComplete="onInit(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.ItemRendererHelpers;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			
+			//public var list : ListVO; 
+			
+			//public var dp : ArrayCollection = new ArrayCollection(); 
+			
+			public var creationComplete : Boolean = false; 
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				this.creationComplete = true
+			}
+			private function init():void {
+				
+			}
+			
+			private var _layer : ImageLayerVO = new ImageLayerVO(); 
+			
+			public function get layer():ImageLayerVO
+			{
+				return _layer;
+			}
+			
+			public function set layer(value:ImageLayerVO):void
+			{
+				if ( value == null ) 
+				{ 
+					trace('set image layer to null'); 
+				}
+				_layer = value;
+			}
+			
+			public var active:Boolean=true;
+			public var resizedOnce:Boolean;
+			private var tesntin:Boolean;
+			
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+			
+			public function set data ( value :   Object ) : void
+			{
+				this.img.source = null; 
+				
+				layer = value as ImageLayerVO
+				s.listenForObj( layer, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				if ( this.parentDocument == null ) 
+					return; 
+				this.onUpdatedLayer(); 
+			}
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				//do not accept events that are not related to the source being changed
+				if ( e != null ) 
+				{
+					if (  this.layer.propChanged == ImageLayerVO.RESIZE_COMPLETE ) 
+						return;					
+					trace('returned'); 
+					if ( this.layer.propChanged != ImageLayerVO.SOURCE_CHANGED ) 
+						return; 
+					this.dispatchEvent( new CustomEvent(layer_item_renderer.REPOSITION) ) 
+				}
+				this.parentDocument.resetting= true; 
+				this.img.height = NaN ; 
+				this.img.width = NaN; //this doesn't seem to help, still have to transfer back the sourth width ...
+				//this.parentDocument.height = NaN ; 
+				//this.parentDocument.width = NaN; 
+				
+				
+				
+				
+				if ( layer == null ) 
+				{
+					this.img.source = null; 
+					return; 
+				}
+				this.img.source  = layer.url; 
+				if ( this.layer.source != null ) 
+				{
+					this.img.source = layer.source; 
+				}
+				this.resizedOnce = false; 
+				
+				//hardcore
+				//if no image source is set, notify of resize quikcly 
+				if  (( this.layer.url == '' || this.layer.url == null  ) && ( this.layer.source == null ) )   
+				{
+					this.img.height = 1
+					this.img.width = 1; 
+					this.img_resizeHandler(null); 
+				}
+			}
+			
+			protected function img_resizeHandler(event:ResizeEvent, wait : Boolean = true ):void
+			{
+				if ( wait ) 
+				{
+					this.callLater( this.img_resizeHandler, [event, false] )
+					return; 
+				}
+				if ( this.tesntin )
+					return; 
+				if ( this.active == false ) 
+					return; 
+				if ( this.layer == null ) 
+					return; 
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( isNaN(this.img.height ) ) 
+					return;
+				if ( this.img.height == 0 ) 
+					return;
+				this.img.sourceWidth
+				
+				trace( 'ratios', (this.img.sourceWidth/this.img.sourceHeight).toFixed(2), 
+					(this.img.loaderInfo.content.width/this.img.loaderInfo.content.height).toFixed(2), 
+					(this.img.width/this.img.height).toFixed(2) )
+				/* 
+				this.img.height = this.img.sourceHeight
+				this.img.width = this.img.sourceWidth; 
+				*/
+				if ( this.img != null ) 
+				{
+					/* try{
+					this.img.validateNow()
+					this.img.validateProperties()
+					}
+					catch(e:Error) {} */
+					this.img.loaderInfo.content.width; 
+					this.img.loaderInfo.content.height; 
+					//this.img.validateProperties()
+				}
+				if ( this.layer == null ) 
+					return;
+				this.height = this.img.height; 
+				this.width = this.img.width; 
+				
+				/* this.layer.height = this.img.height; 
+				this.layer.width = this.img.width;  */
+				this.layer.nonChromeWidth = this.width; 
+				this.layer.nonChromeHeight = this.height; 
+				this.layer.height = this.img.height; 
+				this.layer.width = this.img.width;
+				this.layer.update(ImageLayerVO.RESIZE_COMPLETE); 
+				
+				
+				
+				if ( this.parentDocument.resetting== true ) 
+				{
+					//we have to set the parentDocument height, or else 
+					//viewer3 will resize the layer to it's old size 
+					this.parentDocument.height = this.img.height; 
+					this.parentDocument.width = this.img.width; 
+					this.parentDocument.resetting=  false;
+					this.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+					
+				}
+				
+				
+				//this.parentDocument.parentDocument.height = this.img.height; 
+				//this.parentDocument.parentDocument.width = this.img.width; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				/* if ( this.resizedOnce == true && ! isNaN( this.img.height ) )//wasn't invalidatte 
+				this.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ;
+				this.resizedOnce = true;  */
+			}
+			
+			protected function onComplete(event:Event):void
+			{
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( this.active == false ) 
+					return; 
+				// TODO Auto-generated method stub
+				//this.dispatchEvent( ) ) ; 
+				//this.callLater( this.dispatchEvent, [new ResizeEvent(ResizeEvent.RESIZE)] )
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				trace('loading complete', this.layer.url, this.img.sourceHeight, this.img.sourceWidth, this.parentDocument.resetting ) ;
+				trace('loading complete', this.layer.url, this.img.height, this.img.width, this.parentDocument.resetting ) ;
+				/* this.img.height = this.img.sourceHeight
+				this.img.width = this.img.sourceWidth;  */
+				this.tesntin = true; 
+				/* 
+				this.img.width = this.img.sourceWidth
+				this.img.height = this.img.sourceHeight
+				*/
+				this.tesntin = false; 
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:Image id="img" smooth="true" smoothingQuality="high" complete="onComplete(event)" resize="img_resizeHandler(event)"/>
+</s:Group>

@@ -1,0 +1,298 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+global
+{
+	font-family: "Helvetica";
+	color:#151517;
+/*	typographicCase:uppercase;*/
+}
+@font-face {
+	src: url("styles/fonts/Helvetica.ttf");	
+	fontFamily: Helvetica;
+	embedAsCFF: true;
+}
+/*@font-face {
+	src: url("styles/fonts/monof55.ttf");	
+	fontFamily: Arial;
+	embedAsCFF: true;
+}*/
+/*@font-face {
+	src: url("styles/fonts/TRANA___.TtF");	
+	fontFamily: TimesFont;
+	embedAsCFF: true;
+}*/
+
+@font-face
+{
+	fontFamily: "ARIALN";
+	src: url("images/ARIAL.TTF");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "ARIALN";
+	src: url("images/ARIALBD.TTF");
+	embedAsCFF: true;
+	fontWeight:bold;
+}
+
+/*
+@font-face
+{
+	fontFamily: "BEBAS___";
+	src: url("images/BEBAS___.TTF");
+	embedAsCFF: true;
+}
+
+@font-face
+{
+	fontFamily: "ArialMX";
+	src: url("images/BEBAS___.TTF");
+	embedAsCFF: false;
+}*/
+
+
+.redTxt{
+	color:#f60e1c;
+}
+.grayTxt{
+	color:#898989;
+}
+.bbbTxt{
+	color:#bbbbbb;	
+}
+.whiteTxt{
+	color:#ffffff;	
+}
+.tight{
+	letterSpacing:0px;	
+}
+.subHeading{
+	fontSize:14px;	
+}
+.arialSubHeading{
+	fontSize:11px;
+	fontWeight:bold;
+	color:#898989;
+	fontFamily:"ARIALN";
+	fontAntiAliasType:advanced;
+	typographicCase:default;
+	letterSpacing:-1px;
+}
+.note
+{
+	fontFamily:"ARIALN";
+	color:#898989;
+	fontSize:11px;
+	typographicCase:default;
+}
+.price{
+	color:#f60e1c;
+}
+.bold{fontWeight:bold;}
+.Arial{
+	fontFamily:"ARIALN";
+	fontSize:12px;
+	typographicCase:default;
+	letterSpacing:-1px;
+	fontAntiAliasType:advanced;
+}
+
+s|Button{fontSize:12px;}
+.removeBtn{backgroundImage:url("");
+}
+
+mx|Alert{
+	fontFamily:Verdana;
+}
+ 
+mx|ToolTip {
+	backgroundAlpha: 1.0;
+	backgroundColor: black;
+	color: white;
+	cornerRadius: 0;
+	fontSize: 12;
+	fontFamily: ArialMX; 
+}
+/*customization fonts*/
+/*CI fonts from personal collection*/
+
+/*engraving from zippo*/
+@font-face
+{
+	fontFamily: "Avalon";
+	src: url("fonts/itc_avant_garde_gothic.ttf");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "Century";
+	src: url("fonts/itc_century.ttf");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "Connecting Script";
+	src: url("fonts/CI/Commercial_Script_BT.ttf");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "Helvetica";
+	src: url("fonts/Helvetica.ttf");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "Roman";
+	src: url("fonts/times.ttf");
+	embedAsCFF: true;
+}
+@font-face
+{
+	fontFamily: "Old English";
+	src: url("fonts/EngraversOldEnglish.TTF");
+	embedAsCFF: true;
+}
+/*CI fonts from zippo*/
+/*times*/
+
+/*futura*/
+@font-face
+{
+	fontFamily: "Futura";
+	src: url("fonts/CI/Futura_Book_BT.ttf");
+	embedAsCFF: true;
+}
+/*brush script*/
+@font-face
+{
+	fontFamily: "Brush Script";
+	src: url("fonts/CI/Brush_Script_BT.ttf");
+	embedAsCFF: true;
+}
+/*Commercial Script*/
+@font-face
+{
+	fontFamily: "Commercial Script";
+	src: url("fonts/CI/Commercial_Script_BT.ttf");
+	embedAsCFF: true;
+}
+/*Marker Felt*/
+@font-face
+{
+	fontFamily: "Marker Felt";
+	src: url("fonts/CI/MarkerFeltWide_Regular.ttf");
+	embedAsCFF: true;
+}
+/*Times - Roman*/
+	/*already defined*/
+/*Franklin Gothic*/
+@font-face
+{
+	fontFamily: "Franklin Gothic";
+	src: url("fonts/CI/Franklin_Gothic_ITC_Heavy_BT.ttf");
+	embedAsCFF: true;
+}
+/*Stencil*/
+@font-face
+{
+	fontFamily: "Stencil";
+	src: url("fonts/CI/Stencil_BT.TTF");
+	embedAsCFF: true;
+}
+/*Engravers Old English*/
+	/*already defined*/
+/*Impact*/
+@font-face
+{
+	fontFamily: "Impact";
+	src: url("fonts/CI/Impact.TTF");
+	embedAsCFF: true;
+}
+/*Clarendon*/
+
+@font-face
+{
+	fontFamily: "Clarendon";
+	src: url("fonts/CI/Clarendon.TTF");
+	embedAsCFF: true;
+}
+
+
+/*
+@font-face
+{
+fontFamily: "Futura";
+src: url("images/fonts/FuturaStd-Condensed.otf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "BrushScript";
+src: url("images/fonts/BrushScriptStd_0.otf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "MarkerFelt";
+src: url("images/fonts/MarkerFelt.ttf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Times";
+src: url("images/fonts/timesbd.ttf");
+embedAsCFF: true;
+}
+
+
+@font-face
+{
+fontFamily: "Engravers";
+src: url("images/fonts/OLDENGL.TTF");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Impact";
+src: url("images/fonts/impact.ttf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Clarendon";
+src: url("images/fonts/TriniteNo1-Bold.otf");
+embedAsCFF: true;
+}
+*/
+/*engraving from personal collection*/
+/*
+@font-face
+{
+fontFamily: "Avalon";
+src: url("images/fonts/arial.ttf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Century";
+src: url("images/fonts/ACaslonPro-Semibold_0.otf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Script";
+src: url("images/fonts/BickhamScriptPro-Semibold.otf");
+embedAsCFF: true;
+}
+@font-face
+{
+fontFamily: "Helv";
+src: url("images/fonts/HelveticaLTStdBoldCond.otf");
+embedAsCFF: true;
+}
+*/

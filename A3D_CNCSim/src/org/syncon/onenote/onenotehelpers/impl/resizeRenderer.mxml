@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"     
+				autoDrawBackground="false">
+<fx:Script>
+	<![CDATA[
+		import mx.core.UIComponent;
+		import mx.events.FlexEvent;
+		import mx.events.ResizeEvent;
+		override public function set data(value:Object):void
+		{
+			if(value != null)
+			{
+				if ( value == super.data ) 
+				{
+					return;
+				}
+				
+				super.data = value;
+				this.ta.text = value.toString();
+				//this.ta.addEventListener(FlexEvent.UPDATE_COMPLETE, this.onUpdateComplete ) 
+			}
+		}	
+		public function onUpdateComplete(e:Object):void
+		{
+			
+			this.ta.removeEventListener(FlexEvent.UPDATE_COMPLETE, this.onUpdateComplete ) 
+			if ( e != null ) 
+			{
+			this.callLater( this.onUpdateComplete , [null] )
+				return ; 
+			}
+			var dbg : Array = [this.height, this.ta.height]
+			//this.forceResize(); 
+			//this.minHeight = this.ta.height; 
+			this.invalidateSize()
+			var o : Object = this.owner as UIComponent
+			o.invalidateSize()
+		}
+		
+		public function forceResize() : void
+		{
+			this.ta.heightInLines = NaN; 
+			this.ta.invalidateDisplayList()
+			this.ta.invalidateSize()
+			this.ta.width = 50; 
+			var  measuredHeight_ : Number  = this.ta.measureText( this.ta.text ).height; 
+			trace('forced resize',  measuredHeight_, this.ta.height ) ; 
+		}
+		private var oldHeight : Number = 0; 
+		protected function ta_resizeHandler(event:ResizeEvent):void
+		{
+			if ( this.ta.height == this.oldHeight ) 
+				return; 
+			//return; 
+			this.oldHeight = this.ta.height; 
+			trace('resized',  this.ta.height );
+			this.dispatchEvent( new Event('resizeManually',true) ) 
+			//var  o : Object = this.owner; 
+			//this.callLater(o.dataProvider.refesh)
+			//o.dataProvider.refesh(); //.itemUpdated( this.data )
+			//this.height = this.ta.height; 
+		}
+
+	]]>
+</fx:Script>
+	<!--<s:TextArea maxWidth="30" text="{data}"/>-->
+<!--	<s:Group>
+		
+	-->
+	<s:RichEditableText id="ta" resize="ta_resizeHandler(event)"  paddingBottom="2"
+						backgroundAlpha="0.0" focusEnabled="false"
+						focusThickness="2" 
+						tabFocusEnabled="false"
+						tabEnabled="false"
+						textAlign="left"
+						selectionHighlighting="always"
+				  width="50"
+				 />
+<!--	</s:Group>-->
+</s:ItemRenderer>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"  
+				height="100%" width="100%" creationComplete="onInit()"
+				autoDrawBackground="false" xmlns:alarm="org.syncon.RosettaStone.view.mobile.alarm.*">
+	
+	
+	<fx:Script> 
+		<![CDATA[ 
+			import org.syncon.RosettaStone.vo.AlarmVO;
+			[Bindable] private var first : Boolean = false;
+			[Bindable] private var middle : Boolean = false;
+			[Bindable] private var last : Boolean = false		;
+			[Bindable] public var theme :   AlarmVO = new AlarmVO()
+			override public function set data(value:Object):void { 
+				super.data = value; 
+				// Check to see if the data property is null. 
+				if (value== null) 
+					return; 
+				// If the data property is not null,
+				theme = value as AlarmVO
+				// set the Label controls appropriately. 
+				
+				this.updateItemRenderer()
+				//.firstName + ', ' + value.lastName;
+				//compLabel.text = value.companyID;
+			} 
+			private var creationComplete : Boolean = false; 
+			public function onInit() : void
+			{
+				this.creationComplete = true; 
+				this.updateItemRenderer();
+			}
+			
+			public function updateItemRenderer() : void
+			{
+				if ( this.creationComplete == false ) return; 
+			/* 	if ( theme.enabled )
+				{
+					txtLbl.text = theme.name.toString(); 
+					this.currentState = 'normal'
+					if ( this.theme.toolTip != null ) 
+						this.txtLbl.toolTip = theme.toolTip.toString(); 
+				}
+				else
+				{
+					if ( this.txtLblDisabled != null ) 
+					{
+						txtLblDisabled.text = theme.name.toString(); 
+						if ( this.theme.toolTip != null ) 
+							this.txtLblDisabled.toolTip = ''; 
+					}
+					this.currentState = 'disabled';
+					
+					
+				} */
+				
+				this.txtLbl.text = this.theme.name; 
+				//this.img.source = this.theme.pic; 
+				this.asdf.data = this.data; 
+			}
+			
+			
+		]]> 
+	</fx:Script> 
+	
+	<s:states> 
+		<s:State name="normal"/> 
+		<s:State name="hovered"/> 
+		<s:State name="disabled"/> 
+	</s:states> 
+	<s:Image id="img" />
+	<s:Label id="txtLbl" color="0"     includeIn="normal"
+			 verticalCenter="0" paddingLeft="5" paddingRight="5"
+			 useHandCursor="true" buttonMode="true"
+			 fontSize="12"   />
+	<s:Label id="txtLblDisabled"    color="0x808080" includeIn="disabled"
+			 verticalCenter="0" paddingLeft="5"  paddingRight="5" 
+			 creationComplete="this.updateItemRenderer()"
+			 fontSize="12"   />	
+	<alarm:AlarmRenderer  id="asdf" width="100%" height="100%"/>
+</s:ItemRenderer>

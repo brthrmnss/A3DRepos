@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2009/04/29/using-virtual-layout-on-a-spark-list-control-in-flex-gumbo/ -->
+<!-- http://www.jeffryhouser.com/index.cfm/2011/1/25/How-do-you-force-rendereres-to-refresh-in-a-spark-list -->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 xmlns:local="*"
+		 xmlns:onenotehelpers="org.syncon.onenote.onenotehelpers.*"
+		 xmlns:base="org.syncon.onenote.onenotehelpers.base.*"
+		 xmlns:impl="org.syncon.onenote.onenotehelpers.impl.*"
+		 contentBackgroundColor="0xff0000" creationComplete="onInit(event)" initialize="init();"
+		 name="Spark_List_layout_useVirtualLayout_test">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.CncSim.vo.ImageLayerVO;
+			import org.syncon.CncSim.vo.LayerBaseVO;
+			import org.syncon.CncSim.vo.TextLayerVO;
+			import org.syncon.onenote.onenotehelpers.base.Viewer3;
+			private function init():void {}
+			public var page :  PageVO; 
+			public function setDp () : void{
+				this.controller.dataProvider  = page; 
+			}
+			//public var containerController  : ContainerController
+			/**
+			 * load inital dp 
+			 * */
+			public var loadDefault: Boolean=true
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				this.init()
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				var p : PageVO = new PageVO();
+				var lists : Array = []; 
+				for (var i : int =0; i<5-0+10; i++) {
+					//continue; 
+					//arr.push("Item #" + i);
+					var list :  LayerBaseVO;// = new LayerBaseVO()
+					/* if ( Math.random() > 0.5 ) 
+					list.entries = ListVO.makeRandom(50); //var l : lister = new lister()
+					else
+					list.entries = ListVO.make1(1); //var l : lister = new lister()
+					*/
+					if ( Math.random() > 0.5 ) 
+					{
+						var imgL  : ImageLayerVO = new ImageLayerVO(); 
+						imgL.url =  this.randomPic().toString();
+						list = imgL; 
+					}
+					else
+					{
+						var textL  :  TextLayerVO = new TextLayerVO(); 
+						textL.text = 'Yo yo';// =  this.randomPic()
+						textL.fontSize = 6*(Math.ceil(Math.random()*4 ) ) 
+						list = textL; 
+						textL.url = 'demo'
+					}
+					
+					list.x = 100*i
+					list.y = 100*i
+					lists.push( list ) ; 
+					list.name = i.toString();
+				}
+				p.lists = new ArrayCollection(lists); 
+				page = p; 
+				import flash.utils.setTimeout; 
+				this.controller.setup( layer_item_renderer, measureList, workspace, groupBg, scroller ) ;  
+				//setTimeout( this.setDp , 2000/2000 ) ; 
+				if ( loadDefault ) 
+				this.setDp()
+				
+			}
+			
+			public function randomPic()  :  Object
+			{
+				var arr : Array = ['assets/AppIcon36.png', 'assets/AppIcon48.png',
+					'assets/AppIcon72.png']
+				var select : Object = arr[Math.round(Math.random()*(arr.length-1)) ]
+				return select
+			}
+			public var controller : Viewer3 = new  Viewer3(); 
+			
+			protected function maskLayer__resizeHandler(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				//Alert.show('test', 'ss'); 
+			}
+			
+			protected function img__removeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show('removed', 'ss'); 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	<!--<fx:Declarations>
+	<local:Viewer3	 id="workspace"    classForListers="{lister2}"
+	listsMeasure="{measureList}" groupBg="{bo2o}"
+	group="{this.boo}"   scroller="{scroller}"  />
+	</fx:Declarations>-->
+	<!--	<s:RichText id="container" visible="true" width="350" />-->
+	<!--<local:TLFContainer id="tlfContainer" visible="false" />-->
+	<impl:layer_item_renderer id="measureList" visible="false"/>
+	<!--<s:HScrollBar />-->
+	<!--
+	<s:Scroller width="520" height="380" id="scroller" minViewportInset="1" focusEnabled="false">
+	<s:Group clipAndEnableScrolling="true" id="descriptionBox">
+	<s:RichText id="richText" creationComplete="updateText('add')"
+	width="490" textAlign="justify" fontFamily="Arial" fontSize="12" color="#999999" />
+	</s:Group>
+	</s:Scroller>
+	-->
+	<!--	<s:Scroller  height="100%"  width="100%"   id="scroller" minViewportInset="1" focusEnabled="false">
+	<s:Group id="workspace" clipAndEnableScrolling="true"  >
+	
+	</s:Group>
+	</s:Scroller>-->
+	<!--	<s:Group id="groupBg"   left="0" right="0" top="0" bottom="0" >
+	<s:Rect left="0" right="0" top="0" bottom="0">
+	<s:stroke>
+	<s:SolidColorStroke color="0x000000" weight="1"/>
+	</s:stroke>
+	<s:fill>
+	<s:SolidColor color="#F5F5F5"/>
+	</s:fill>
+	</s:Rect>
+	</s:Group>
+	-->
+	
+	<s:Group id="groupBg3"    width="100%" height="100%">
+		<s:Rect left="0" right="0" top="0" bottom="0">
+			<s:stroke>
+				<s:SolidColorStroke  id="bgBorder" color="0x000000" weight="1"/>
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor color="#FFFFFF"  alpha="0"/>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+
+	
+	
+	<!-- should line up wiht scroller -->
+	<s:Group id="layerBg"  
+			 mouseEnabled="false" mouseChildren="false" cacheAsBitmap="true"   
+			 mouseEnabledWhereTransparent="false" alpha="1"   width="100%" height="100%">
+		
+		<s:Image id="imgBg"    mouseEnabled="false" mouseChildren="false"  
+				 />
+	</s:Group>
+	
+	<s:Scroller id="scroller" width="100%" height="100%"  horizontalScrollPolicy="off" verticalScrollPolicy="off"
+				focusEnabled="false" minViewportInset="1" measuredSizeIncludesScrollBars="false">
+		<s:Group id="workspace"  cacheAsBitmap="true"   >
+			
+			<!-- will grow as ocntent grows ... not what was wanted -->
+			
+			<s:Group id="groupBg" >
+				<s:Rect left="0" right="0" top="0" bottom="0">
+					<s:stroke>
+						<s:SolidColorStroke color="0x000000" weight="1"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="#F5F5F5"/>
+					</s:fill>
+				</s:Rect>
+			</s:Group>
+			
+		</s:Group>
+	</s:Scroller>
+	<!--
+	<local:TLFContainer id="contain" />-->
+	<!--
+	<s:Group id="maskLayer" blendMode="erase"
+	mouseEnabled="false" mouseChildren="false"
+	mouseEnabledWhereTransparent="false" alpha="1"   width="100%" height="100%">
+	
+	<s:Image id="img"    mouseEnabled="false" mouseChildren="false"
+	/>
+	</s:Group>
+	-->
+	
+	<!-- layer replicates existing stage -->
+	<s:Group id="maskLayer_" blendMode="erase" 
+			 mouseEnabled="false" mouseChildren="false" cacheAsBitmap="true"   
+			 mouseEnabledWhereTransparent="false" alpha="1"   width="100%" height="100%">
+		<s:Rect left="0" right="0" top="0" bottom="0" >
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1"/>
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor color="#FF0000"  id="maskBg" alpha="0.1"/>
+			</s:fill>
+		</s:Rect>
+		<s:Image id="img_"    mouseEnabled="false" mouseChildren="false"  
+				   cacheAsBitmap="true"  remove="img__removeHandler(event)"
+				 />
+	</s:Group>
+
+	
+</s:Group>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			 xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:mx="library://ns.adobe.com/flex/mx" 
+			 alpha.disabled="0.5" 
+			 blendMode="normal" xmlns:view="sss2.Onenote.views.OnenotePage.view.*" xmlns:others="org.syncon.onenote.onenotehelpers.base.others.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			/**
+			 * Prevents multiple selection when touching this object
+			 * */
+			public var blockMultipleSelection : Boolean = true; 
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<s:State name="hidden" />
+		<s:State name="normalWithControlBar" />
+		<s:State name="disabledWithControlBar" />
+		<s:State name="topless" />		
+	</s:states>
+	
+	<fx:Metadata>
+		[HostComponent("org.syncon.onenote.onenotehelpers.base.others.SuperPanel3")]
+	</fx:Metadata> 
+	
+	<s:transitions>
+		<s:Transition fromState="*" toState="*"  >
+			<s:Parallel>
+				<!--<s:AnimateColor colorPropertyName="color" targets="{[this.fill1, this.fill2, 
+								btnNotebookOpen, btnNotebookClosed]}" />
+				<mx:AnimateProperty property="x"   targets="{[this.holder]}" />-->
+				<s:Fade targets="{[bgBorders,titleBar]}" duration="0.3"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
+	
+	<s:Group id="bgBorders" alpha.hidden="0" 
+			 left="0" top="0" right="0" bottom="0"   >
+		
+	
+	<!-- this is too confusing, just draw a path -->
+	<!-- Outer Shadow Border -->	
+	<s:Rect  radiusX="6" radiusY="6"  alpha="1" visible="false"
+			 left="2" top="2" right="0" bottom="0">
+		<s:stroke>
+			<!--<s:SolidColorStroke color="0xf8f8f8" />-->
+			<s:LinearGradientStroke  rotation="45">
+				<s:entries>
+					<s:GradientEntry color="0xf8f8f8" ratio="0"  alpha="0.0"  />
+					<s:GradientEntry color="0xf8f8f8" ratio="0.49"  alpha="0" />
+					<s:GradientEntry color="0xf8f8f8" ratio="0.5"  alpha="1" />					
+					<s:GradientEntry color="0xf8f8f8"  ratio="1"/>
+				</s:entries>
+			</s:LinearGradientStroke>			
+		</s:stroke>
+	</s:Rect>	
+	
+	<s:Rect  radiusX="6" radiusY="6"    alpha="0.20"  visible="true"
+			 left="2" top="2" right="0" bottom="0">
+		<s:stroke>
+			<!--<s:SolidColorStroke color="0xf8f8f8" />-->
+			<s:LinearGradientStroke  rotation="45">
+				<s:entries>
+					<s:GradientEntry color="0xC8c8c8" ratio="0"  alpha="0.0"  />
+					<s:GradientEntry color="0xC8c8c8" ratio="0.49"  alpha="0" />
+					<s:GradientEntry color="0xC8c8c8" ratio="0.5"  alpha="1" />					
+					<s:GradientEntry color="0xC8c8c8"  ratio="1"/>
+				</s:entries>
+			</s:LinearGradientStroke>			
+		</s:stroke>
+	</s:Rect>	
+	
+	
+	<!-- Outer Shadow Border - 1 -->	
+	<s:Rect  radiusX="6" radiusY="6"  alpha="0.85"   visible="false"
+			 left="1" top="1" right="1" bottom="1">
+		<s:stroke>
+			<!--<s:SolidColorStroke color="0xF1f1f1" />-->
+			<s:LinearGradientStroke  rotation="45" >
+				<s:entries>
+					<s:GradientEntry color="#FF0000" ratio="0"  alpha="0.0"  />
+					<s:GradientEntry color="0xC8c8c8" ratio="0.4"  alpha="0" />
+					<s:GradientEntry color="0xC8c8c8"  ratio="1"/>
+				</s:entries>
+			</s:LinearGradientStroke>					
+		</s:stroke>
+	</s:Rect>
+	
+	
+	<s:Rect  radiusX="6" radiusY="6"    alpha="0.3"   visible="true"
+			 left="1" top="1" right="1" bottom="1">
+		<s:stroke>
+			<!--<s:SolidColorStroke color="0xf8f8f8" />-->
+			<s:LinearGradientStroke  rotation="45">
+				<s:entries>
+					<s:GradientEntry color="0xC8c8c8" ratio="0"  alpha="0.0"  />
+					<s:GradientEntry color="0xC8c8c8" ratio="0.49"  alpha="0" />
+					<s:GradientEntry color="0xC8c8c8" ratio="0.5"  alpha="1" />					
+					<s:GradientEntry color="0xC8c8c8"  ratio="1"/>
+				</s:entries>
+			</s:LinearGradientStroke>			
+		</s:stroke>
+	</s:Rect>	
+	
+	<!--Outside Border-->
+	<s:Rect  radiusX="5" radiusY="5"  
+			 topLeftRadiusX.topless="0" topLeftRadiusY.topless="0"
+			 topRightRadiusX.topless="0" topRightRadiusY.topless="0"
+			 left="0" top="0" right="2" bottom="2">
+		
+		<s:stroke>
+			<s:SolidColorStroke color="0xC8c8c8" />
+			<!--
+			<s:LinearGradientStroke  rotation="45">
+			<s:entries>
+			<s:GradientEntry color="#FF0000" ratio="0" />
+			<s:GradientEntry color="0xC8c8c8"  ratio="0.6"/>
+			</s:entries>
+			</s:LinearGradientStroke>
+			-->
+		</s:stroke>
+		
+	</s:Rect>
+	
+	</s:Group>
+		
+	<s:Group top="0" left="0" right="2"
+			 buttonMode="true"  useHandCursor="true"
+			 alpha.hidden="0"
+			 height="10"  id="titleBar" excludeFrom="topless">
+		<s:Rect 
+				left="0" top="0" right="0" bottom="0"
+				topLeftRadiusX="3" topLeftRadiusY="3" topRightRadiusX="3" topRightRadiusY="3"
+				>
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:entries>
+						<s:GradientEntry color="#F4F8EA" />
+						<s:GradientEntry color="#DEDFDC" />
+					</s:entries> 
+				</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:SolidColorStroke color="0xC8c8c8" />
+			</s:stroke>		
+		</s:Rect> 
+		
+		<!-- shadow below the title bar -->
+		<s:Line y="10" right="1" left="1"      >
+			<s:stroke>
+				<s:SolidColorStroke color="0xEBEBEB" />
+			</s:stroke>		
+		</s:Line>
+		
+		
+		<others:OnenoteGrips  excludeFrom="topless"   />
+	</s:Group>
+	
+	<!-- line to hide top of outside border -->
+	<s:Line y="0" right="0" left="0"   includeIn="topless">
+		<s:stroke>
+			<s:SolidColorStroke color="0xFFFFFF" />
+		</s:stroke>		
+	</s:Line>
+	<!-- hide rect shadow, that should be path -->
+	<s:Line y="1" right="0" left="0"   includeIn="topless">
+		<s:stroke>
+			<s:SolidColorStroke color="0xFFFFFF" />
+		</s:stroke>		
+	</s:Line>
+	<s:Line y="2" right="0" left="0"   includeIn="topless">
+		<s:stroke>
+			<s:SolidColorStroke color="0xFFFFFF" />
+		</s:stroke>		
+	</s:Line>	
+	
+
+	<s:Group top="0" bottom="0" alpha.hidden="0"
+			 width="20" right="0"  buttonMode="true"  useHandCursor="true"   id="resizablePanelArea">
+		
+	</s:Group>
+	
+	<!--
+	<s:Rect  radiusX="5" radiusY="5"
+	x="20" y="20"
+	width="20" height="20">
+	<s:stroke>
+	<s:LinearGradientStroke  rotation="135">
+	<s:entries>
+	<s:GradientEntry color="#FF0000" ratio="0"  alpha="0.0"  />
+	<s:GradientEntry color="#FFF000" ratio="0.5"  alpha="0" />
+	<s:GradientEntry color="#FFF000"  ratio="1"/>
+	</s:entries>
+	</s:LinearGradientStroke>			
+	</s:stroke>
+	
+	</s:Rect>	
+	
+	
+	<s:Rect  radiusX="5" radiusY="5"
+	x="45" y="20"
+	width="20" height="20">
+	<s:stroke>
+	<s:LinearGradientStroke  rotation="45">
+	<s:entries>
+	<s:GradientEntry color="#FF0000" ratio="0"  alpha="0.0"  />
+	<s:GradientEntry color="#FFF000" ratio="0.5"  alpha="0" />
+	<s:GradientEntry color="#FFF000"  ratio="1"/>
+	</s:entries>
+	</s:LinearGradientStroke>			
+	</s:stroke>
+	
+	</s:Rect>		
+	
+	-->
+	<!--
+	
+	<s:Label id="titleDisplay" 
+	paddingLeft="15" paddingRight="15" paddingTop="15"
+	color="white"
+	fontSize="18"
+	fontWeight="bold"
+	fontStyle="italic"/>
+	-->
+	<!--	<s:Group id="contentGroup">
+	<s:layout>
+	<s:VerticalLayout paddingTop="15" paddingBottom="10" paddingLeft="8" paddingRight="8"
+	/>
+	</s:layout>		
+	
+	</s:Group>-->
+	<!--
+	<s:Group id="contentGroup">
+	<s:layout>
+	<s:VerticalLayout paddingTop="55" paddingBottom="10" paddingLeft="15" paddingRight="15"
+	paddingBottom.disabledWithControlBar="55" paddingTop.disabledWithControlBar="55"
+	paddingBottom.normalWithControlBar="55" paddingTop.normalWithControlBar="55"/>
+	</s:layout> 
+	</s:Group>	
+	-->
+	
+	<s:Group id="contentGroup" top="10" bottom="10" left="5" right="8"  >
+	</s:Group>
+	
+	<!--
+	<s:Group id="controlBarGroup" bottom="10">
+	<s:layout>
+	<s:HorizontalLayout paddingLeft="5" paddingRight="5"/>
+	</s:layout>
+	</s:Group>
+	-->
+</s:SparkSkin>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Administrator</author>
+      <authoring_tool>3dsMax 11 - Feeling ColladaMax v3.05B.</authoring_tool>
+      <comments>ColladaMax Export Options: ExportNormals=1;ExportEPolyAsTriangles=1;ExportXRefs=1;ExportSelected=1;ExportTangents=0;ExportAnimations=1;SampleAnim=0;ExportAnimClip=0;BakeMatrices=0;ExportRelativePaths=0;AnimStart=0;AnimEnd=3.33333;</comments>
+    </contributor>
+    <created>2010-05-18T18:58:05Z</created>
+    <modified>2010-05-18T18:58:09Z</modified>
+    <unit meter="0.0254" name="inch"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images>
+    <image id="camTop.jpg" name="camTop_jpg">
+      <init_from>file:///D:/Stefan/CGD/3DSMAX/egna%20modeller/3dtotalCompCam/texturer/camTop.jpg</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="__-_Default" name="__-_Default">
+      <instance_effect url="#__-_Default-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="__-_Default-fx" name="__-_Default">
+      <profile_COMMON>
+        <newparam sid="camTop_jpg-surface">
+          <surface type="2D">
+            <init_from>camTop.jpg</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </newparam>
+        <newparam sid="camTop_jpg-sampler">
+          <sampler2D>
+            <source>camTop_jpg-surface</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>NONE</minfilter>
+            <magfilter>NONE</magfilter>
+            <mipfilter>NONE</mipfilter>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <ambient>
+              <color>0.588235 0.588235 0.588235 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="camTop_jpg-sampler" texcoord="CHANNEL1">
+                <extra>
+                  <technique profile="MAYA">
+                    <mirrorU>0</mirrorU>
+                    <mirrorV>0</mirrorV>
+                    <wrapU>1</wrapU>
+                    <wrapV>1</wrapV>
+                    <repeatU>1</repeatU>
+                    <repeatV>1</repeatV>
+                    <offsetU>0</offsetU>
+                    <offsetV>0</offsetV>
+                    <rotateUV>0</rotateUV>
+                  </technique>
+                  <technique profile="MAX3D">
+                    <amount>1</amount>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.415939</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <reflectivity>
+              <float>1</float>
+            </reflectivity>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+          <extra>
+            <technique profile="FCOLLADA">
+              <spec_level>
+                <float>0</float>
+              </spec_level>
+              <emission_level>
+                <float>0</float>
+              </emission_level>
+            </technique>
+          </extra>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="MAX3D">
+          <faceted>0</faceted>
+          <double_sided>0</double_sided>
+          <wireframe>0</wireframe>
+          <face_map>0</face_map>
+        </technique>
+      </extra>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="Box01-mesh" name="Box01">
+      <mesh>
+        <source id="Box01-mesh-positions">
+          <float_array id="Box01-mesh-positions-array" count="24">-3.4963 -16.2881 0 3.4963 -16.2881 0 -3.4963 16.2881 0 3.4963 16.2881 0 -3.4963 -16.2881 6.81371 3.4963 -16.2881 6.81371 -3.4963 16.2881 6.81371 3.4963 16.2881 6.81371</float_array>
+          <technique_common>
+            <accessor source="#Box01-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box01-mesh-normals">
+          <float_array id="Box01-mesh-normals-array" count="72">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0</float_array>
+          <technique_common>
+            <accessor source="#Box01-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box01-mesh-map-channel1">
+          <float_array id="Box01-mesh-map-channel1-array" count="72">1 0 0 -5.99259 0 0 1 32.5762 0 -5.99259 32.5762 0 0 0 0 6.99259 0 0 0 32.5762 0 6.99259 32.5762 0 0 0 0 6.99259 0 0 0 6.81371 0 6.99259 6.81371 0 0 0 0 32.5762 0 0 0 6.81371 0 32.5762 6.81371 0 0 0 0 6.99259 0 0 0 6.81371 0 6.99259 6.81371 0 0 0 0 32.5762 0 0 0 6.81371 0 32.5762 6.81371 0</float_array>
+          <technique_common>
+            <accessor source="#Box01-mesh-map-channel1-array" count="24" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Box01-mesh-vertices">
+          <input semantic="POSITION" source="#Box01-mesh-positions"/>
+        </vertices>
+        <triangles material="__-_Default" count="12">
+          <input semantic="VERTEX" source="#Box01-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Box01-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Box01-mesh-map-channel1" offset="2" set="1"/>
+          <p>0 0 0 2 1 2 3 2 3 3 2 3 1 3 1 0 0 0 4 4 4 5 5 5 7 6 7 7 6 7 6 7 6 4 4 4 0 8 8 1 9 9 5 10 11 5 10 11 4 11 10 0 8 8 1 12 12 3 13 13 7 14 15 7 14 15 5 15 14 1 12 12 3 16 16 2 17 17 6 18 19 6 18 19 7 19 18 3 16 16 2 20 20 0 21 21 4 22 23 4 22 23 6 23 22 2 20 20</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Box03-mesh" name="Box03">
+      <mesh>
+        <source id="Box03-mesh-positions">
+          <float_array id="Box03-mesh-positions-array" count="24">-3.56076 -7.68965 0 3.56076 -7.68965 0 -3.56076 7.68965 0 3.56076 7.68965 0 -3.56076 -7.68965 6.96834 3.56076 -7.68965 6.96834 -3.56076 7.68965 6.96834 3.56076 7.68965 6.96834</float_array>
+          <technique_common>
+            <accessor source="#Box03-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box03-mesh-normals">
+          <float_array id="Box03-mesh-normals-array" count="72">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0</float_array>
+          <technique_common>
+            <accessor source="#Box03-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box03-mesh-map-channel1">
+          <float_array id="Box03-mesh-map-channel1-array" count="72">1 0 0 -6.12152 0 0 1 15.3793 0 -6.12152 15.3793 0 0 0 0 7.12152 0 0 0 15.3793 0 7.12152 15.3793 0 0 0 0 7.12152 0 0 0 6.96834 0 7.12152 6.96834 0 0 0 0 15.3793 0 0 0 6.96834 0 15.3793 6.96834 0 0 0 0 7.12152 0 0 0 6.96834 0 7.12152 6.96834 0 0 0 0 15.3793 0 0 0 6.96834 0 15.3793 6.96834 0</float_array>
+          <technique_common>
+            <accessor source="#Box03-mesh-map-channel1-array" count="24" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Box03-mesh-vertices">
+          <input semantic="POSITION" source="#Box03-mesh-positions"/>
+        </vertices>
+        <triangles material="__-_Default" count="12">
+          <input semantic="VERTEX" source="#Box03-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Box03-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Box03-mesh-map-channel1" offset="2" set="1"/>
+          <p>0 0 0 2 1 2 3 2 3 3 2 3 1 3 1 0 0 0 4 4 4 5 5 5 7 6 7 7 6 7 6 7 6 4 4 4 0 8 8 1 9 9 5 10 11 5 10 11 4 11 10 0 8 8 1 12 12 3 13 13 7 14 15 7 14 15 5 15 14 1 12 12 3 16 16 2 17 17 6 18 19 6 18 19 7 19 18 3 16 16 2 20 20 0 21 21 4 22 23 4 22 23 6 23 22 2 20 20</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Box02-mesh" name="Box02">
+      <mesh>
+        <source id="Box02-mesh-positions">
+          <float_array id="Box02-mesh-positions-array" count="24">-4.81134 -10.0307 0 4.81134 -10.0307 0 -4.81134 10.0307 0 4.81134 10.0307 0 -4.81134 -10.0307 8.22956 4.81134 -10.0307 8.22956 -4.81134 10.0307 8.22956 4.81134 10.0307 8.22956</float_array>
+          <technique_common>
+            <accessor source="#Box02-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box02-mesh-normals">
+          <float_array id="Box02-mesh-normals-array" count="72">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0</float_array>
+          <technique_common>
+            <accessor source="#Box02-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Box02-mesh-map-channel1">
+          <float_array id="Box02-mesh-map-channel1-array" count="72">1 0 0 -8.62268 0 0 1 20.0614 0 -8.62268 20.0614 0 0 0 0 9.62268 0 0 0 20.0614 0 9.62268 20.0614 0 0 0 0 9.62268 0 0 0 8.22956 0 9.62268 8.22956 0 0 0 0 20.0614 0 0 0 8.22956 0 20.0614 8.22956 0 0 0 0 9.62268 0 0 0 8.22956 0 9.62268 8.22956 0 0 0 0 20.0614 0 0 0 8.22956 0 20.0614 8.22956 0</float_array>
+          <technique_common>
+            <accessor source="#Box02-mesh-map-channel1-array" count="24" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Box02-mesh-vertices">
+          <input semantic="POSITION" source="#Box02-mesh-positions"/>
+        </vertices>
+        <triangles material="__-_Default" count="12">
+          <input semantic="VERTEX" source="#Box02-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Box02-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Box02-mesh-map-channel1" offset="2" set="1"/>
+          <p>0 0 0 2 1 2 3 2 3 3 2 3 1 3 1 0 0 0 4 4 4 5 5 5 7 6 7 7 6 7 6 7 6 4 4 4 0 8 8 1 9 9 5 10 11 5 10 11 4 11 10 0 8 8 1 12 12 3 13 13 7 14 15 7 14 15 5 15 14 1 12 12 3 16 16 2 17 17 6 18 19 6 18 19 7 19 18 3 16 16 2 20 20 0 21 21 4 22 23 4 22 23 6 23 22 2 20 20</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="unnamed_scene" name="unnamed_scene">
+      <node id="Box01-node" name="Box01" type="NODE">
+        <translate>13.9666 -8.2083 0</translate>
+        <scale>1 1 2.62267</scale>
+        <instance_geometry url="#Box01-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="__-_Default" target="#__-_Default">
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="1"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Box03-node" name="Box03" type="NODE">
+        <translate>-0.229607 29.1421 0</translate>
+        <instance_geometry url="#Box03-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="__-_Default" target="#__-_Default">
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="1"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Box02-node" name="Box02" type="NODE">
+        <translate>-12.4203 -8.82996 0</translate>
+        <scale>1 1 1.57584</scale>
+        <instance_geometry url="#Box02-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="__-_Default" target="#__-_Default">
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="1"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <extra>
+        <technique profile="FCOLLADA">
+          <start_time>0</start_time>
+          <end_time>3.33333</end_time>
+        </technique>
+      </extra>
+      <extra>
+        <technique profile="MAX3D">
+          <frame_rate>30</frame_rate>
+        </technique>
+      </extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#unnamed_scene"/>
+  </scene>
+</COLLADA>

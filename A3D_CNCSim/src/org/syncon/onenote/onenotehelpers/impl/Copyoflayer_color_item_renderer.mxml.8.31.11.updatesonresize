@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/halo"
+		 creationComplete="onInit(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.Customizer.vo.ColorLayerVO;
+			import org.syncon.Customizer.vo.ItemRendererHelpers;
+			import org.syncon.Customizer.vo.LayerBaseVO;
+			
+			public var creationComplete : Boolean = false; 
+			
+			//public var list : ListVO; 
+			//public var dp : ArrayCollection = new ArrayCollection(); 
+			public var s : ItemRendererHelpers = new ItemRendererHelpers(null)
+				
+			/**
+			 * stores token for each request ...
+			 * */
+			private var loadingToken: String=null;
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				this.creationComplete = true
+			}
+			private function init():void {
+				
+			}
+			
+			public var layer : ColorLayerVO = new ColorLayerVO(); 
+			public var active:Boolean=true;
+			public var resizedOnce:Boolean;
+			private var lastLayer:ColorLayerVO;
+			
+			public function set data ( value :   Object ) : void
+			{
+				this.img.source = null; 
+				
+				layer = value as ColorLayerVO
+				if ( this.parentDocument == null ) 
+					return; 
+
+				s.listenForObj( layer, LayerBaseVO.UPDATED, this.onUpdatedLayer ) ; 	
+				this.onUpdatedLayer(); 
+			}
+			
+			private function onUpdatedLayer(e:Event=null):void
+			{
+				if ( this.parentDocument != null ) 
+				{
+					var d : Object = this.parentDocument.parentDocument
+				}
+				if ( this.active == false ) 
+					return; 
+				if ( layer == null ) 
+					return; 
+				
+				this.parentDocument.resetting= true; 
+				this.img.height = NaN ; 
+				this.img.width = NaN; 
+				
+				if ( layer == null ) 
+				{
+					this.img.source = null; 
+					return; 
+				}
+				this.img.source  = layer.url; 
+				
+				//set errouneous event inhibitors
+				this.resizedOnce = false; 
+				this.loadingToken = (new Date).toString()
+				
+				//set the alpha here too TODO
+				//this.img.alpha = this.layer.alpha; 
+				
+				if ( this.lastLayer != this.layer ) 
+				{
+					this.bgColor.color = this.layer.color; 
+				}
+				else
+				{
+					if ( this.layer.propChanged == 'color' )
+					{
+						this.bgColor.color = this.layer.color; 
+					}					
+					this.layer.propChanged = null
+				}
+				this.lastLayer =  this.layer
+				
+					//if image is blank or invalid show nothing 
+					//if no image source is set, notify of resize quikcly 
+				if  (( this.layer.url == '' || this.layer.url == null  )  )   
+				{
+					this.img.height = 1
+					this.img.width = 1; 
+					this.loadingToken = null; 
+					this.img_resizeHandler(null); 
+				}
+			}
+			
+			protected function img_resizeHandler(event:ResizeEvent):void
+			{
+				if ( this.loadingToken != null ) 
+					return; 
+				if ( this.active == false ) 
+					return; 
+				if ( this.layer == null ) 
+					return; 
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( isNaN(this.img.height ) ) 
+					return;
+				if ( this.img.height == 0 ) 
+					return;
+				
+				this.resizedOnce = true; 
+				this.height = this.img.height; 
+				this.width = this.img.width; 
+				
+				/* this.layer.height = this.img.height; 
+				this.layer.width = this.img.width;  */
+				this.layer.nonChromeWidth = this.width; 
+				this.layer.nonChromeHeight = this.height; 
+				this.layer.height = this.img.height; 
+				this.layer.width = this.img.width;
+				this.layer.update(); 
+				
+				if ( this.parentDocument.resetting== true ) 
+				{
+					this.parentDocument.height = this.img.height; 
+					this.parentDocument.width = this.img.width; 
+					this.parentDocument.resetting=  false;
+					this.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				}
+				
+				
+				//this.parentDocument.parentDocument.height = this.img.height; 
+				//this.parentDocument.parentDocument.width = this.img.width; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			/* 
+			protected function onComplete(event:Event):void
+			{
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( this.active == false ) 
+					return; 
+				// TODO Auto-generated method stub
+				//this.dispatchEvent( ) ) ; 
+				//this.callLater( this.dispatchEvent, [new ResizeEvent(ResizeEvent.RESIZE)] )
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+			 */
+			protected function onComplete(event:Event):void
+			{
+				if ( this.parentDocument == null ) 
+					return; 
+				if ( this.active == false ) 
+					return; 
+				
+				this.loadingToken = null; 
+				// TODO Auto-generated method stub
+				//this.dispatchEvent( ) ) ; 
+				//this.callLater( this.dispatchEvent, [new ResizeEvent(ResizeEvent.RESIZE)] )
+				//this.parentDocument.parentDocument.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+				trace('loading complete', this.layer.url, this.img.sourceHeight, this.img.sourceWidth, this.parentDocument.resetting ) ;
+				trace('loading complete', this.layer.url, this.img.height, this.img.width, this.parentDocument.resetting ) ;
+				/* this.img.height = this.img.sourceHeight
+				this.img.width = this.img.sourceWidth;  */
+				//this.tesntin = true; 
+				/* 
+				this.img.width = this.img.sourceWidth
+				this.img.height = this.img.sourceHeight
+				*/
+				//this.tesntin = false; 
+				
+				if ( this.layer.repositionedOnce  )  //do nto resize it again ....
+					return; 
+				
+				this.img.width = this.img.sourceWidth
+				this.img.height = this.img.sourceHeight
+			}
+			
+			
+			
+			protected function img_securityErrorHandler(event:SecurityErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show('Could not load the image ' + this.layer.url + '  '  +
+					'for layer named ' + this.layer.name, 'Secuirty Error') ; 
+			}
+			
+			protected function img_ioErrorHandler(event:IOErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show('Could not load the image ' + this.layer.url+ '  '  +
+					'for layer named ' + this.layer.name, 'IO Error' ) ; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	
+	
+	<s:Image blendMode="erase"  alpha="0.6"
+			 id="img" smooth="true" smoothingQuality="high" 
+			 securityError="img_securityErrorHandler(event)"
+			 ioError="img_ioErrorHandler(event)"
+			 complete="onComplete(event)" resize="img_resizeHandler(event)"/> 
+	<s:Group id="colorLayer" width="100%" height="100%" maskType="alpha" mask="{this.img}">
+		<s:Rect left="0" right="0" top="0" bottom="0">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1"/>
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor id="bgColor" color="#FF0000"/>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	
+</s:Group>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2009/04/29/using-virtual-layout-on-a-spark-list-control-in-flex-gumbo/ -->
+<!-- http://www.jeffryhouser.com/index.cfm/2011/1/25/How-do-you-force-rendereres-to-refresh-in-a-spark-list -->
+<others:SuperPanel3 name="Spark_List_layout_useVirtualLayout_test"
+		 xmlns:fx="http://ns.adobe.com/mxml/2009" implements="org.syncon.onenote.onenotehelpers.base.IListable"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 skinClass="org.syncon.onenote.onenotehelpers.base.others.CustomSkin"
+		 xmlns:mx="library://ns.adobe.com/flex/halo" creationComplete="onInit(event)"
+		 initialize="init();" xmlns:others="org.syncon.onenote.onenotehelpers.base.others.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.onenote.onenotehelpers.base.IListVO;
+			
+			import spark.components.List;
+			import spark.layouts.supportClasses.LayoutBase;
+			
+			//public var list : ListVO; 
+			
+			//public var dp : ArrayCollection = new ArrayCollection(); 
+
+			public var creationComplete : Boolean = false; 
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				this.addEventListener('EvtMovingState_Moved', this.onMoved ) 
+				this.creationComplete = true
+			}
+			private function init():void {
+			
+				//this.lister.dataGroup.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, handle);
+				//this.lister.addEventListener( 'resizeManually', this.onResizeManually  )
+				//this.lister.scroller.setStyle('verticalScrollPolicy', 'off');			
+			}
+			
+			private function handle(e: PropertyChangeEvent):void {
+				if (e.source == e.target && e.property == "contentHeight")
+				{
+					trace('inside', e.property, "changed to", e.newValue);
+				}
+			}			
+			private function onResizeManually(e:Event):void
+			{
+				this.callLater( this.arrList.refresh )	
+				return; 
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var numDigits : int =  Math.random()*20 
+				this.lister.dataProvider.addItem( 'New thing ... ' + (Math.random()*12) .toFixed(numDigits)  )
+				this.callLater( pat2 )
+				//this.list.dataProvider.addItem( '' )
+				this.arrList.refresh()
+				this.callLater( this.arrList.refresh )	
+				this.lister.layout.measure()
+				
+			}
+			
+			private function pat2() : void
+			{
+				//this.list.invalidateSize()
+				//this.list.dataProvider.removeItemAt( this.list.dataProvider.length -1 ) 
+				//this.list.dataProvider.refresh()
+				//this.list.dataGroup.invalidateDisplayList();
+			}
+			
+			[Bindable] public var currentLayout : LayoutBase= new LayoutBase();//=this.noScrollLayout; 
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				//this.arrList.itemUpdated(
+				//this.list.updateRenderer(
+				//this.list.dataGroup.invalidateDisplayList();
+				// TODO Auto-generated method stub
+				this.arrList.refresh()
+			}
+			
+			public function saveUiPositionToList()  :  void
+			{
+				this.listData.x = this.x
+				this.listData.y = this.y 
+				this.listData.width = this.width
+				this.listData.height = this.height; 
+			}
+	 
+			public function onMoved(e:Event):void
+			{
+				this.saveUiPositionToList()
+			}
+			
+			public function set data ( a :   Object ) : void
+			{
+				this._resetting = true;
+				this.img.source = null; 
+				this._resetting = false;
+				this.img.source = a; 
+				 
+			}
+			[Bindable] public var dp  :   ArrayCollection = new ArrayCollection()//.getInstance(); 
+				
+ 
+			
+			
+			private var   _resetting  : Boolean = false 
+			public function get resetting():Boolean
+			{
+				return _resetting;
+			}
+			
+			public function set resetting(value:Boolean):void
+			{
+				_resetting = value;
+			}
+			public function set scrollHeight(b :  Number ) : void
+			{
+				//this.height = b; 
+			//	this.lister.height = b; 
+			}
+
+			public function get lister( ): List  
+			{
+				return this.list_ as List
+			}
+			
+			public var list__ : IListVO
+			public function  set listData( b :   IListVO ) : void
+			{
+				list__ = b; 
+			}
+			public function  get  listData() :  IListVO 
+			{
+				return list__; 
+			}			
+			
+			public var list_ : Object = {}
+			
+			protected function img_resizeHandler(event:ResizeEvent):void
+			{
+				this.height = this.img.height; 
+				this.width = this.img.width; 
+				//this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+			protected function onComplete(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				this.dispatchEvent( new ResizeEvent(ResizeEvent.RESIZE) ) ; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:ArrayCollection  id="arrList" />
+	</fx:Declarations>
+	<!--<s:layout>
+		<s:VerticalLayout />
+	</s:layout>-->
+ 
+	<s:Image id="img"  complete="onComplete(event)" resize="img_resizeHandler(event)" />
+</others:SuperPanel3>

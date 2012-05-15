@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:ui="org.syncon.CncSim.view.ui.*"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			
+			import spark.events.IndexChangeEvent;
+			public static var UPDATE_JSON:String='UpdateJSON';
+			static public const  CHANGE_LIST : String = 'changeList'  ; 
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			
+			public function export(str : String ) : void
+			{
+			}
+			
+			protected function onRedo(event:MouseEvent):void
+			{
+			}
+			
+			protected function onCopy(event:MouseEvent):void
+			{
+			}
+			protected function onUndo(event:MouseEvent):void
+			{
+			}
+			protected function onPaste(event:MouseEvent):void
+			{
+			}	
+			
+			
+			protected function list_changeHandler(event: IndexChangeEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( CHANGE_LIST,  
+					this.list.dataProvider.getItemAt(event.newIndex)  ) )
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	
+	<s:List id="list" width="100%" height="80%" borderVisible="false"
+			change="list_changeHandler(event)" contentBackgroundAlpha="0"
+			itemRenderer="org.syncon.CncSim.view.ui.old.LayerListItemRenderer">
+		<s:layout>
+			<s:VerticalLayout gap="0" paddingBottom="0" paddingLeft="0" paddingRight="0"/>
+		</s:layout>
+		
+	</s:List>
+	
+	
+</s:Group>

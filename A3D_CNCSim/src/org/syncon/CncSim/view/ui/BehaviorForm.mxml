@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:ui="org.syncon.CncSim.view.ui.*"
+		 xmlns:impl="org.syncon.onenote.onenotehelpers.impl.*"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import org.syncon.onenote.onenotehelpers.base.Viewer3;
+			import mx.events.FlexEvent;
+			public static var UPDATE_JSON:String='UpdateJSON';
+			[Bindable] public var controller : Viewer3 = new  Viewer3(); 
+			protected function onInit(event:FlexEvent):void
+			{
+				//this.controller.setup( onenote_lister, measureList, workspace, groupBg, scroller ) ; 
+			}		
+			
+			public function export(str : String ) : void
+			{
+			}
+			
+			protected function onRedo(event:MouseEvent):void
+			{
+			}
+			
+			protected function onCopy(event:MouseEvent):void
+			{
+			}
+			protected function onUndo(event:MouseEvent):void
+			{
+			}
+			protected function onPaste(event:MouseEvent):void
+			{
+			}			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+	<s:Image source="assets/david.jpg"/>
+</s:Group>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:apps="org.syncon.CncSim.view.apps.*"
+			   height="900" width="900"
+			   initialize="application1_initializeHandler(event)"
+			   creationComplete="application1_creationCompleteHandler(event)">
+	<!--
+	width="1700" height="850"
+	width="480" height="800"
+	height="580" width="750"
+	-->
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import org.robotlegs.mvcs.Mediator;
+			import org.syncon.CncSim.controller.ExportJSONCommandTriggerEvent;
+			import org.syncon.CncSim.model.NightStandConstants;
+			
+			import spark.skins.spark.ButtonSkin;
+			
+			protected function application1_initializeHandler(event:FlexEvent):void
+			{
+				NightStandConstants.flex = true;
+				//NightStandConstants.FileLoader = new LoadConfig_Flex()
+				NightStandConstants.ResourcesDir = 'assets' + '/'// why is this  aproblem
+				
+				/* 	var dbg : Array = [	LoadConfig_Flex.getDir('/d/g'),
+				LoadConfig_Flex.getDir('/d/g/'),LoadConfig_Flex.getDir('/d/g.json')
+				] 
+				*/
+				ButtonSkin
+				this.addEventListener(MouseEvent.CLICK, this.onClick ) ; 
+				//allow us to detect when next button is clicked from application
+				if(ExternalInterface.available){
+					ExternalInterface.addCallback("saveApp", this.saveApp);
+				}
+				return;
+			}
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				processFlashVars();
+				
+			}
+			
+			public function saveApp():void{
+				
+				var trgevent : ExportJSONCommandTriggerEvent = new ExportJSONCommandTriggerEvent(
+					ExportJSONCommandTriggerEvent.EXPORT_JSON, 'gotoNextStep');
+				this.mainApp.context.dispatchEvent(trgevent);
+				
+				
+			}
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				var dbg : Array = [ event.currentTarget, event.target] // TODO Auto-generated method stub
+				return
+				
+			}
+			private function processFlashVars():void
+			{
+				var str:String;
+				str = FlexGlobals.topLevelApplication.parameters.settings;
+				
+				if ( this.hasOwnProperty('mainApp' ) ) 
+					this['mainApp'].context.importViridJson(str);
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	<!-- width="1350" height="450"
+	width="900" height="850"
+	width="480" height="800"
+	--> 
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!-- fonts are loaded in on base app -->
+	<!--	<fx:Style source="assets/styles/font.css"/> 
+	<fx:Style source="assets/styles/Main.css"/> -->
+	<!--
+	<apps:FlexBaseTester />
+	-->
+	<!--
+	<apps:FlexWebHelpersTester />
+	-->
+	<!--<apps:FlexBaseTester/>-->
+	<!--<apps:RS_MobileAppAprox />-->
+	<!--
+	<s:Scroller  width="100%" height="100%"     >
+	<apps:FlexBaseTester/>
+	</s:Scroller>
+	<apps:Customizer_MaskTest />
+	<apps:FlexBaseTester/>
+	--> 
+	<!--	<apps:Customizer_MaskTest />-->
+	<fx:Style source="assets/ZippoConfiguratorViews.css"/>
+	<s:Scroller  width="100%" height="100%"     >
+		<!--<apps:Deliverable x="10" y="10"/>-->
+		<!--<apps:FlexBaseTester/>-->
+		<!--<apps:Customizer_ReorderListTest />-->
+		<!--
+		<apps:FlexBaseTester/>
+		-->
+		<!--
+		<apps:Deliverable id="mainApp" x="0" y="0"/>
+		-->
+		<apps:CncBase  id="mainApp" x="0" y="0"/>
+		<!--<apps:EngraveDeliverable id="engraveYo" x="0" y="0"/>-->
+		
+	</s:Scroller>
+	<!--<apps:Customizer_MaskTest />-->
+</s:Application>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" resize="group1_resizeHandler(event)"
+		 width="100%" height="100%" creationComplete="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.syncon.CncSim.model.CustomEvent;
+			public static var PLAY:String='PLAY';
+			public static var PAUSE:String='PAUSE';
+			public static var STOP:String='STOP';
+			public static var REWIND:String='REWIND';
+			public static var JUMP_TO:String='JUMP_TO';
+			protected function onInit(event:FlexEvent):void
+			{
+			}		
+			
+			protected function onPlay(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( PlayheadNavigation.PLAY) ) 
+			}
+			protected function onPause(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( PlayheadNavigation.PAUSE) ) 
+			}
+			
+			protected function onStop(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( PlayheadNavigation.STOP) ) 
+			}
+			
+			protected function onRewind(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( PlayheadNavigation.REWIND) ) 
+			}
+			
+			protected function onGoTo(event:MouseEvent):void
+			{
+				this.dispatchEvent( new CustomEvent( PlayheadNavigation.JUMP_TO, this.numLine.value) ) 
+			}			
+			
+			protected function group1_resizeHandler(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace( this.height ) ; 
+				this.numLine.height;
+				this.holder.height; 
+				return; 
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+<!--	
+	<s:Rect id="bgRect" width="100%" height="100%"
+			>
+		<s:fill>
+			<s:SolidColor color="0x598E52" />
+		</s:fill>
+	</s:Rect>
+	-->
+	
+	<s:HGroup id="holder" >
+		<s:Button id="btnPlay" label="Play" click="onPlay(event)" />
+		<s:Button id="btnPause" label="Plause" click="onPause(event)" />
+		<s:Button id="btnStop"  label="Stop" click="onStop(event)" />
+		<s:Button id="btnRewind"  label="Rewind" click="onRewind(event)" />
+		<s:Button  label="Go To" click="onGoTo(event)"   />
+		<s:NumericStepper  id="numLine" width="40"  minimum="0"/>
+	</s:HGroup>
+	
+</s:Group>
